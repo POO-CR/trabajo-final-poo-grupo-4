@@ -39,11 +39,26 @@ public class Juego extends JPanel{
     //metodo para poder dibujar en el JPanel, tanto el jugador laberinto fantasmas 
     //el override hace referencia a que es un metodo heredado de JPanel 
     @Override
-    public void paint(Graphics grafico){
-        laberinto.paintComponent(grafico);
-        jugador.paint(grafico);
+protected void paintComponent(Graphics g) {
+    super.paintComponent(g);
 
-    }
+    // tamaño del tablero en píxeles
+    int boardW = laberinto.getPixelWidth();
+    int boardH = laberinto.getPixelHeight();
+
+    // offset para centrar dentro del JPanel actual
+    int offX = (getWidth()  - boardW) / 2;
+    int offY = (getHeight() - boardH) / 2;
+
+    // dibujar todo trasladado
+    Graphics g2 = g.create();
+    g2.translate(offX, offY);
+
+    laberinto.paintComponent(g2);
+    jugador.paint(g2);
+
+    g2.dispose();
+}
 
 
     public static void main(String[] args) {
@@ -60,12 +75,8 @@ public class Juego extends JPanel{
         //Propiedades de la ventana 
 
         //Para establecer el tamaño del objeto ventana
-        ventana.setSize(700,500);
-        
-        //Donde se va a posicionar en mi pantalla la ventana
-        ventana.setLocation(200,100);
-
-        //Para que la ventana se muestre en la ventana
+        ventana.setSize(700, 500);          // o pack() si usás preferredSize
+        ventana.setLocationRelativeTo(null); // <- centra el JFrame en la pantalla
         ventana.setVisible(true);
         
         //Bucle 

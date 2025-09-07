@@ -202,4 +202,12 @@ public class Labyrinth {
     }
 
 
+    public int getCols() { return cantidadColumnas; }
+    public int getRows() { return cantidadFila; }
+    public int getTileW() { return anchoBloque; }
+    public int getTileH() { return altoBloque; }
+    public int getPixelWidth()  { return cantidadColumnas * anchoBloque; }
+    public int getPixelHeight() { return cantidadFila    * altoBloque; }
+
+
 }

@@ -24,10 +24,10 @@ public class Labyrinth {
     private Image llaveImg;
 
     public Labyrinth(){
-        baldosaImg = new ImageIcon("C:/Users/Lucas/Documents/POO/Ghostly_Labyrinth/img/baldosa.jpg").getImage();
-        muroImg = new ImageIcon("C:/Users/Lucas/Documents/POO/Ghostly_Labyrinth/img/muro.jpg").getImage();
-        puertaImg = new ImageIcon("C:/Users/Lucas/Documents/POO/Ghostly_Labyrinth/img/puerta.jpg").getImage();
-        llaveImg = new ImageIcon("C:/Users/Lucas/Documents/POO/Ghostly_Labyrinth/img/llave.jpg").getImage();
+        baldosaImg = new ImageIcon("C:\\Users\\belin\\Documents\\GitHub\\trabajo-final-poo-grupo-4\\Ghostly_Labyrinth\\img\\baldosa.jpg").getImage();
+        muroImg = new ImageIcon("C:\\Users\\belin\\Documents\\GitHub\\trabajo-final-poo-grupo-4\\Ghostly_Labyrinth\\img\\muro.jpg").getImage();
+        puertaImg = new ImageIcon("C:\\\\Users\\\\belin\\\\Documents\\\\GitHub\\\\trabajo-final-poo-grupo-4\\\\Ghostly_Labyrinth\\\\img\\\\puerta.jpg").getImage();
+        llaveImg = new ImageIcon("C:\\\\Users\\\\belin\\\\Documents\\\\GitHub\\\\trabajo-final-poo-grupo-4\\\\Ghostly_Labyrinth\\\\img\\\\llave.jpg").getImage();
 
         //incializa la lista de items
         items = new ArrayList<>();

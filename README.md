@@ -1,42 +1,63 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/LhnUoRsc)
-# Trabajo_Final
-Template de trabajo final
-# Proyecto: Tower Defense - El Último Bastión
+# Trabajo Final
+# Proyecto: Ghostly Mansion
 
 ## 1. Integrantes del Equipo 
 
-- Pizzonia, Carolina Belen
-- Ruiz, Lucas
-- Segurado, Matias  
-- Verdasco, Ana Victoria
+- Pizzonia, Carolina Belen.
+- Ruiz, Lucas.
+- Segurado, Matias.  
+- Verdasco, Ana Victoria.
 
 ## 2. Dominio y Alcance del Sistema 
 
 ### Descripción del Problema
-Se busca desarrollar una aplicación de escritorio del clásico videojuego **Tower Defense**. El jugador debe utilizar recursos limitados para construir torres defensivas en un mapa con un camino predefinido. Oleadas de enemigos avanzarán por este camino, y el objetivo es destruir a todos los enemigos antes de que lleguen al final del recorrido.
+Se busca desarrollar un juego de escritorio tipo laberinto, inspirado en **Pac-Man** con temática de terror. El jugador se genera en una ubicación de un laberinto con una visibilidad reducida, y debe buscar una llave de una sala de escape para completar el nivel. Para realizar esto, se debe evitar diversos fantasmas los cuales en caso de entrar en contacto provocaran una pérdida de vida o de la partida.
 
 ### Objetivo del Sistema
-El sistema será un juego funcional y extensible que permitirá al jugador experimentar las mecánicas básicas del género. El diseño debe ser modular para facilitar la adición de nuevos tipos de torres, enemigos o mapas en el futuro, aplicando rigurosamente los conceptos del paradigma orientado a objetos.
+Entregar un juego funcional y escalable, el cual permita experimentar las mecánicas de **Survival and Horror**. El diseño será modular para facilitar la adición de nuevos niveles, texturas, habilidades del jugador, radios de visión, movimiento de los fantasmas, aplicando los cuatro pilares claves de la materia (encapsulamiento, abstracción, herencia y polimorfismo).
 
 ### Funcionalidades Principales (Features)
-- **Gestión de Torres:**
-    - El jugador puede seleccionar distintos tipos de torres desde un panel.
-    - El jugador puede posicionar las torres en ubicaciones válidas del mapa.
-    - Cada torre tiene un costo, un rango de ataque y un daño específico.
-- **Sistema de Oleadas de Enemigos:**
-    - Los enemigos aparecen en oleadas de dificultad creciente.
-    - Existen diferentes tipos de enemigos (ej: rápidos pero débiles, lentos pero resistentes).
-    - Los enemigos siguen un camino preestablecido en el mapa.
+    
+- **Mapa:**
+    - Los mapas cambiaran según el nivel.
+    -Los mapas incluyen: 
+        -Sala de escape cerca del inicio.
+        -Puerta en sala de escape. 
+        -Llave lejos del inicio.
+        -Diversos fantasmas.
+        -Paredes y caminos del laberinto.
+        -Jugador.
+
+- **Fantasmas:**
+    - Se irán moviendo a lo largo del mapa. 
+    - Dañan al jugador al entrar en contacto. 
+    - No atraviesan paredes.
+
+- **Jugador**
+    -Posee un movimiento lineal (en eje x e y).
+    -Vidas (total de 3).
+
 - **Mecánicas de Juego:**
-    - El jugador cuenta con una cantidad inicial de "recursos" (oro) para construir torres.
-    - Destruir enemigos otorga recursos adicionales.
-    - El jugador tiene un número limitado de "vidas", que disminuyen si un enemigo llega al final del camino. El juego termina si las vidas llegan a cero.
+    - visión Reducida:  círculo de radio R = 5 celdas (este valor puede llegar a cambiar), bloqueando la vista del resto.  
+    - El jugador tiene un número limitado de "vidas", que disminuyen si un fantasma entra en contacto con él. El juego termina si las vidas llegan a cero.
+    -La llave desbloqueara la puerta de escape. 
+    - Tutorial: laberinto (15x15) fijo para explicar mecánicas. 
+
 - **Interfaz Gráfica (IGU):**
-    - Visualización del mapa, el camino, las torres y los enemigos.
-    - Panel de control para seleccionar torres, ver recursos, vidas y número de oleada.
-    - Botón para iniciar la siguiente oleada.
+    -Pantallas: Usuario, Menú, Juego, Pausa, Win/Game Over.
+    -visualización del personaje y de los enemigos.
+    -Botones:
+        -Usuario: Crear/cargar usuario.
+        -Menú: Comenzar, tutorial, Salir, volumen, Puntuaciones.
+        -Juego: Pausa.
+        -Pausa: Continuar, salir, menú principal, volumen.
+        -Win/game over: menú principal.
+
 - **Persistencia:**
-    - Sistema de guardado y carga de los puntajes más altos (High Scores) en una base de datos.
+    - Sistema de guardado y carga de los tiempos más bajos en completar los niveles en una base de datos.
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## 3. Arquitectura y Diseño 
 

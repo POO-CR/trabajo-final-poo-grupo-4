@@ -1,7 +1,9 @@
+package entidades;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import javax.swing.ImageIcon;
+
 import java.util.ArrayList;
 import java.awt.Font;
 
@@ -24,10 +26,10 @@ public class Labyrinth {
     private Image llaveImg;
 
     public Labyrinth(){
-        baldosaImg = new ImageIcon("C:\\Users\\belin\\Documents\\GitHub\\trabajo-final-poo-grupo-4\\Ghostly_Labyrinth\\img\\baldosa.jpg").getImage();
-        muroImg = new ImageIcon("C:\\Users\\belin\\Documents\\GitHub\\trabajo-final-poo-grupo-4\\Ghostly_Labyrinth\\img\\muro.jpg").getImage();
-        puertaImg = new ImageIcon("C:\\\\Users\\\\belin\\\\Documents\\\\GitHub\\\\trabajo-final-poo-grupo-4\\\\Ghostly_Labyrinth\\\\img\\\\puerta.jpg").getImage();
-        llaveImg = new ImageIcon("C:\\\\Users\\\\belin\\\\Documents\\\\GitHub\\\\trabajo-final-poo-grupo-4\\\\Ghostly_Labyrinth\\\\img\\\\llave.jpg").getImage();
+        baldosaImg = new ImageIcon("Ghostly_Labyrinth\\assets\\img\\baldosa.jpg").getImage();
+        muroImg = new ImageIcon("Ghostly_Labyrinth\\assets\\img\\muro.jpg").getImage();
+        puertaImg = new ImageIcon("Ghostly_Labyrinth\\assets\\img\\puerta.jpg").getImage();
+        llaveImg = new ImageIcon("Ghostly_Labyrinth\\assets\\img\\llave.jpg").getImage();
 
         //incializa la lista de items
         items = new ArrayList<>();
@@ -109,7 +111,7 @@ public class Labyrinth {
             
             // buscar si hay un item en esta celda
             for(Item item : items){
-                if(item.fila == fila && item.columna == columna){
+                if(item.getFila() == fila && item.getColumna() == columna){
                     if(item.tipo.equals("llave")){
                         grafico.drawImage(llaveImg, columna * anchoBloque, fila * altoBloque, anchoBloque, altoBloque, null);
                         dibujarItem = true;

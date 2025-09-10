@@ -32,7 +32,7 @@ public class MenuView extends JFrame {
     public MenuView() {
 
         this.setTitle("Ghostly Mansion");
-        this.setSize(1536, 1024);
+        this.setSize(1236, 724);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
 
@@ -56,9 +56,9 @@ public class MenuView extends JFrame {
 
         try {
             ImageIcon logoIcon = new ImageIcon(getClass().getResource("/assets/img/GhostlyMansionLogo.png"));
-            Image scaledLogoImage = logoIcon.getImage().getScaledInstance(500, 400, Image.SCALE_SMOOTH);
+            Image scaledLogoImage = logoIcon.getImage().getScaledInstance(420, 320, Image.SCALE_SMOOTH);
             lblLogo = new JLabel(new ImageIcon(scaledLogoImage));
-            lblLogo.setBounds(30,550,500,400);
+            lblLogo.setBounds(20,350,420,320);
             background.add(lblLogo);
         } catch(Exception e) {
             System.err.println("Error al cargar el logo en el menú: " + e.getMessage());
@@ -69,13 +69,13 @@ public class MenuView extends JFrame {
         }
 
         ImageIcon playIcon = new ImageIcon(getClass().getResource("/assets/img/PlayButton.png"));
-        Image scaledPlayIcon = playIcon.getImage().getScaledInstance(280,90,Image.SCALE_SMOOTH);
+        Image scaledPlayIcon = playIcon.getImage().getScaledInstance(200,60,Image.SCALE_SMOOTH);
 
         ImageIcon playIconHover = new ImageIcon(getClass().getResource("/assets/img/PlayButtonHover.png"));
-        Image scaledPlayIconHover = playIconHover.getImage().getScaledInstance(280,90,Image.SCALE_SMOOTH);
+        Image scaledPlayIconHover = playIconHover.getImage().getScaledInstance(200,60,Image.SCALE_SMOOTH);
 
         this.bttnJugar = new JButton(new ImageIcon(scaledPlayIcon));
-        this.bttnJugar.setBounds(600, 250, 280, 90);
+        this.bttnJugar.setBounds(520, 200, 200, 60);
         bttnJugar.setOpaque(false);       // hace el fondo transparente
         bttnJugar.setContentAreaFilled(false); // quita el area rellena
         bttnJugar.setBorderPainted(false);     // quita el borde
@@ -84,13 +84,13 @@ public class MenuView extends JFrame {
 
 
         ImageIcon tutorialIcon = new ImageIcon(getClass().getResource("/assets/img/TutorialButton.png"));
-        Image scaledTutorialIcon = tutorialIcon.getImage().getScaledInstance(280,90,Image.SCALE_SMOOTH);
+        Image scaledTutorialIcon = tutorialIcon.getImage().getScaledInstance(200,60,Image.SCALE_SMOOTH);
 
         ImageIcon tutorialIconHover = new ImageIcon(getClass().getResource("/assets/img/TutorialButtonHover.png"));
-        Image scaledTutorialIconHover = tutorialIconHover.getImage().getScaledInstance(280,90,Image.SCALE_SMOOTH);
+        Image scaledTutorialIconHover = tutorialIconHover.getImage().getScaledInstance(200,60,Image.SCALE_SMOOTH);
 
         this.bttnTutorial = new JButton(new ImageIcon(scaledTutorialIcon));
-        this.bttnTutorial.setBounds(600, 370, 280,90);
+        this.bttnTutorial.setBounds(520, 270, 200,60);
         bttnTutorial.setOpaque(false);       
         bttnTutorial.setContentAreaFilled(false); 
         bttnTutorial.setBorderPainted(false); 
@@ -99,13 +99,13 @@ public class MenuView extends JFrame {
 
 
         ImageIcon optionsIcon = new ImageIcon(getClass().getResource("/assets/img/OptionsButton.png"));
-        Image scaledOptionsIcon = optionsIcon.getImage().getScaledInstance(280,90,Image.SCALE_SMOOTH);
+        Image scaledOptionsIcon = optionsIcon.getImage().getScaledInstance(200,60,Image.SCALE_SMOOTH);
 
         ImageIcon optionsIconHover = new ImageIcon(getClass().getResource("/assets/img/OptionsButtonHover.png"));
-        Image scaledOptionsIconHover = optionsIconHover.getImage().getScaledInstance(280,90,Image.SCALE_SMOOTH);
+        Image scaledOptionsIconHover = optionsIconHover.getImage().getScaledInstance(200,60,Image.SCALE_SMOOTH);
 
         this.bttnOpciones = new JButton(new ImageIcon(scaledOptionsIcon));
-        this.bttnOpciones.setBounds(600, 490, 280,90);
+        this.bttnOpciones.setBounds(520, 340, 200,60);
         bttnOpciones.setOpaque(false);       
         bttnOpciones.setContentAreaFilled(false); 
         bttnOpciones.setBorderPainted(false);
@@ -114,13 +114,13 @@ public class MenuView extends JFrame {
 
 
         ImageIcon exitIcon = new ImageIcon(getClass().getResource("/assets/img/ExitButton.png"));
-        Image scaledExitIcon = exitIcon.getImage().getScaledInstance(280,90,Image.SCALE_SMOOTH);
+        Image scaledExitIcon = exitIcon.getImage().getScaledInstance(200,60,Image.SCALE_SMOOTH);
         ImageIcon exitIconHover = new ImageIcon(getClass().getResource("/assets/img/ExitButtonHover.png"));
-        Image scaledExitIconHover = exitIconHover.getImage().getScaledInstance(280,90,Image.SCALE_SMOOTH);
+        Image scaledExitIconHover = exitIconHover.getImage().getScaledInstance(200,60,Image.SCALE_SMOOTH);
 
 
         this.bttnSalir = new JButton(new ImageIcon(scaledExitIcon));
-        this.bttnSalir.setBounds(600, 610, 280,90);
+        this.bttnSalir.setBounds(520, 410, 200,60);
         bttnSalir.setOpaque(false);       
         bttnSalir.setContentAreaFilled(false); 
         bttnSalir.setBorderPainted(false);
@@ -143,7 +143,7 @@ public class MenuView extends JFrame {
         musicOffHover = new ImageIcon(musicOffHover.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
 
         this.bttnSonido = new JButton(musicOnIcon);
-        this.bttnSonido.setBounds(1400, 880, 50, 50);
+        this.bttnSonido.setBounds(1130, 590, 50, 50);
         bttnSonido.setOpaque(false);       
         bttnSonido.setContentAreaFilled(false); 
         bttnSonido.setBorderPainted(false);
@@ -161,10 +161,10 @@ public class MenuView extends JFrame {
         */
 
 
-        JLabel version = new JLabel("Version: 0.0.1");
+        JLabel version = new JLabel("Version: 0.0.2");
 		version.setForeground(Color.white); 
 		version.setFont(new Font("Calibri", Font.BOLD, 18));
-		version.setBounds(1350, 950, 150, 30); 
+		version.setBounds(1100, 650, 150, 30); 
 		background.add(version);
     }
 

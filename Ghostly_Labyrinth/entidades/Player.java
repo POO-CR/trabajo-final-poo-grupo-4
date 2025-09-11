@@ -12,11 +12,20 @@ public class Player extends Entity{
     //variable que indica si el jugador agarro la llave
     private boolean tieneLlave = false;
 
+    private String nombre;
+
     private int x = 20;
     private int y = 20;
     private final int ancho = 20;
     private final int alto = 20;
     private final int movimiento = 5;
+
+    public Player (String nombre) {
+        this.nombre = nombre;
+    }
+
+    public Player () {
+    }
 
     public void paint(Graphics grafico){
         grafico.setColor(Color.red);
@@ -51,6 +60,14 @@ public class Player extends Entity{
 
     public void setTieneLlave(boolean tieneLlave){
         this.tieneLlave = tieneLlave;
+    }
+
+      public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
 

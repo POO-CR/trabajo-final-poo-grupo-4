@@ -3,11 +3,17 @@ package controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JLabel;
 //import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
+import main.App;
 //import model.MenuModel;
 import model.Music;
+import view.MenuUser;
 import view.MenuView;
 
 public class MenuController {
@@ -35,25 +41,93 @@ public class MenuController {
         this.view.getBttnJugar().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(view, "Juego iniciado");
+
+            MenuUser seleccionarUsuario = new MenuUser(view);
+
+            // para la opcion de nuevo usuario
+            seleccionarUsuario.getBttnNuevoUsuario().addActionListener(ev -> {
+
+            JTextField txtUsuario = new JTextField();
+            JPasswordField txtPassword = new JPasswordField();
+
+            // limitar contraseña a 10 caracteres
+            txtPassword.setDocument(new javax.swing.text.PlainDocument() {
+                @Override
+                public void insertString(int offs, String str, javax.swing.text.AttributeSet a) 
+                        throws javax.swing.text.BadLocationException {
+                    if (str == null) return;
+                    if ((getLength() + str.length()) <= 10) {
+                        super.insertString(offs, str, a);
+                    }
+                }
+            });
+
+            // Panel con usuario + contraseña
+            JPanel panel = new JPanel(new java.awt.GridLayout(2, 2, 5, 5));
+            panel.add(new JLabel("Usuario:"));
+            panel.add(txtUsuario);
+            panel.add(new JLabel("Contraseña:"));
+            panel.add(txtPassword);
+
+            int result = JOptionPane.showConfirmDialog(
+                    seleccionarUsuario,
+                    panel,
+                    "Crear nuevo usuario",
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE
+            );
+
+            if (result == JOptionPane.OK_OPTION) {
+                String nombre = txtUsuario.getText().trim();
+                String contrasena = new String(txtPassword.getPassword());
+
+                if (!nombre.isEmpty() && !contrasena.isEmpty()) {
+                    JOptionPane.showMessageDialog(seleccionarUsuario, 
+                        "Usuario creado: " + nombre);
+                    
+                    seleccionarUsuario.dispose();
+
+                    //se abre el juego
+                    App.iniciarJuego(nombre);
+                }
             }
         });
 
+
+        // para la opcion de cargar usuario 
+        seleccionarUsuario.getBttnCargarUsuario().addActionListener(ev -> {
+            String nombre = JOptionPane.showInputDialog(seleccionarUsuario, "Ingrese nombre del usuario a cargar:");
+            if (nombre != null && !nombre.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(seleccionarUsuario, "Usuario cargado: " + nombre);
+                seleccionarUsuario.dispose();
+                // aca tambien se puede iniciar el juego 
+            }
+        });
+
+        seleccionarUsuario.setVisible(true);
+        }
+        });
+
+       
         // boton Tutorial
         this.view.getBttnTutorial().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(view,"Tutorial iniciado");
-            }
+                JOptionPane.showMessageDialog(view,"Mostrar tutorial");
+        }        
         });
+            
+        
+    
 
         // boton Opciones
         this.view.getBttnOpciones().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(view,"Mostrar el menu de opciones");
-            }
+        }        
         });
+    
 
         // boton Salir
         this.view.getBttnSalir().addActionListener(new ActionListener() {

@@ -1,0 +1,10 @@
+{
+    "java.project.sourcePaths": [
+        "Ghostly_Labyrinth\\src"
+    ],
+    
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar"
+    ],
+    "java.debug.settings.onBuildFailureProceed": true
+}

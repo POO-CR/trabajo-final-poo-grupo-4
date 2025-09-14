@@ -43,7 +43,7 @@ public class MenuRegisterStart extends JDialog{
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); //para cerrar bien con la X de la ventana
 
         // se carga el fondo  
-        backgroundRegisterStart = new MenuBackground("/assets/img/backgroundmenuusuario.png");
+        backgroundRegisterStart = new MenuBackground("/assets/img/backgroundlogin.png");
         backgroundRegisterStart.setLayout(new BorderLayout());
         setContentPane(backgroundRegisterStart);
 
@@ -171,15 +171,17 @@ public class MenuRegisterStart extends JDialog{
             Font fuenteTerror2 = null;
 
             try {
-                fuenteTerror = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream("menu/src/assets/font/shloprg.otf"));
-                fuenteTerror2 = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream("menu/src/assets/font/shloprg.otf"));
+            // carga desde recursos dentro del proyecto /assets/font/shloprg.otf
+            fuenteTerror = Font.createFont(Font.TRUETYPE_FONT,
+                            getClass().getResourceAsStream("/assets/font/shloprg.otf"));
+            fuenteTerror2 = fuenteTerror.deriveFont(Font.PLAIN, 35f);
+            fuenteTerror = fuenteTerror.deriveFont(Font.PLAIN, 15f);
             } catch (Exception e) {
                 e.printStackTrace();
+                // derivar tamaño y estilo 
+                fuenteTerror = new Font("Arial", Font.PLAIN, 15);
+                fuenteTerror2 = new Font("Arial", Font.PLAIN, 35);
             }
-    
-            //derivar tamaño y estilo
-            fuenteTerror = fuenteTerror.deriveFont(Font.PLAIN, 15f); 
-            fuenteTerror2 = fuenteTerror.deriveFont(Font.PLAIN, 35f);
 
 
             //cambiar fuente a los Jlabel

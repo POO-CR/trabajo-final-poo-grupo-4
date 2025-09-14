@@ -1,6 +1,7 @@
 package main;
 import javax.swing.JFrame;
 import entidades.Player;
+import juego.PanelJuego;
 
 import controlador.GameController;
 

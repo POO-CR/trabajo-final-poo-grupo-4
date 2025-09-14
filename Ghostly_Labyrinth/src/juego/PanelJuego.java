@@ -1,14 +1,12 @@
-package main;
+package juego;
 
-import javax.swing.JPanel;
-
-import controlador.KeyHandler;
 import controlador.GameController;
 import entidades.*;
-
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Color;
+import java.awt.Graphics2D;
+import javax.swing.JPanel;
 
 
 //Clase Juego debe heredar los atributos y metodos de JPanel
@@ -100,43 +98,14 @@ protected void paintComponent(Graphics g) {
     int offY = (getHeight() - boardH) / 2;
 
     // dibujar todo trasladado
-    Graphics g2 = g.create();
+    Graphics2D g2 = (Graphics2D)g.create();
     g2.translate(offX, offY);
 
     laberinto.paintComponent(g2);
-    jugador.paint(g2);
+    jugador.draw(g2);
 
     g2.dispose();
 }
 
 
-    // public static void main(String[] args) {
-        
-        // //JFrame para mostrar graficos de la aplicacion
-        // JFrame ventana = new JFrame("Ghostly Labyrinth");
-
-        // //Objeto de la clase para poderla implementar
-        // PanelJuego game = new PanelJuego();
-        
-        // //Se agrega a JFrame el objeto de la clase juego 
-        // ventana.add(game);
-
-        // //Propiedades de la ventana 
-
-        // //Para establecer el tamaño del objeto ventana
-        // ventana.setSize(700, 500);          // o pack() si usás preferredSize
-        // ventana.setLocationRelativeTo(null); // <- centra el JFrame en la pantalla
-        // ventana.setVisible(true);
-        
-        //Bucle 
-        
-            //     while (true) {
-            // //hilo para mostrar el retraso en milisegundos 
-            // try {
-            //     Thread.sleep(10);
-            // } catch (InterruptedException e) {
-
-            //     e.printStackTrace();
-            // }
-            // game.repaint();
 }

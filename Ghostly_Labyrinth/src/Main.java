@@ -1,8 +1,5 @@
-import javax.swing.SwingUtilities;
-//import javax.swing.UIManager;
-//import com.formdev.flatlaf.FlatDarkLaf;
-
 import controller.MenuController;
+import javax.swing.SwingUtilities;
 
 
 
@@ -19,8 +16,6 @@ public class Main {
         SwingUtilities.invokeLater(() -> {
             new MenuController();
         });
-
-
 
     }
 }

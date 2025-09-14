@@ -1,11 +1,10 @@
 package entidades;
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Image;
-import javax.swing.ImageIcon;
-
-import java.util.ArrayList;
 import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.util.ArrayList;
+import javax.swing.ImageIcon;
 
 
 public class Labyrinth {
@@ -26,10 +25,10 @@ public class Labyrinth {
     private Image llaveImg;
 
     public Labyrinth(){
-        baldosaImg = new ImageIcon("C:\\Users\\Lucas\\Documents\\GitHub\\trabajo-final-poo-grupo-4\\Ghostly_Labyrinth\\assets\\img\\baldosa.jpg").getImage();
-        muroImg = new ImageIcon("C:\\Users\\Lucas\\Documents\\GitHub\\trabajo-final-poo-grupo-4\\Ghostly_Labyrinth\\assets\\img\\muro.jpg").getImage();
-        puertaImg = new ImageIcon("C:\\\\Users\\\\Lucas\\\\Documents\\\\GitHub\\\\trabajo-final-poo-grupo-4\\\\Ghostly_Labyrinth\\\\assets\\\\img\\\\puerta.jpg").getImage();
-        llaveImg = new ImageIcon("C:\\\\Users\\\\Lucas\\\\Documents\\\\GitHub\\\\trabajo-final-poo-grupo-4\\\\Ghostly_Labyrinth\\\\assets\\\\img\\\\llave.jpg").getImage();
+        baldosaImg = new ImageIcon("Ghostly_Labyrinth\\src\\assets\\img\\baldosa.jpg").getImage();
+        muroImg = new ImageIcon("Ghostly_Labyrinth\\src\\assets\\img\\muro.jpg").getImage();
+        puertaImg = new ImageIcon("Ghostly_Labyrinth\\src\\assets\\img\\puerta.jpg").getImage();
+        llaveImg = new ImageIcon("Ghostly_Labyrinth\\src\\assets\\img\\llave.jpg").getImage();
 
         //incializa la lista de items
         items = new ArrayList<>();
@@ -86,18 +85,25 @@ public class Labyrinth {
     //para contadores
     private int fila = 0;
     private int columna = 0;
+    //valores iniciales
+    final int originalTileSize = 20; // tamaño standard de tiles, dijimos de cambiarlo a 32x32
+    final int escala = 3; // escala para agrandar los tiles
+    final int tileSize = originalTileSize * escala; 
     //para cantidad de fil y col
     private final int cantidadFila = 20;
     private final int cantidadColumnas = 30;
     //para ancho y alto de cada bloque 
-    private final int anchoBloque = 20;
-    private final int altoBloque = 20;
+    public final int anchoBloque = 20;
+    public final int altoBloque = 20;
+
+
+
 
 
 
 
     //Para poder utilizar graficos
-    public void paintComponent(Graphics grafico){
+    public void paintComponent(Graphics2D grafico){
         int [][]laberinto = obtenerLaberinto();
 
 

@@ -1,6 +1,6 @@
 package controlador;
-import main.PanelJuego;
 import entidades.*;
+import juego.PanelJuego;
 
 public class GameController {
 
@@ -21,17 +21,43 @@ public class GameController {
         int nuevaY = jugador.getY();
         int movimiento = jugador.getMovimiento();
         
-        if (keyH.upPressed == true){
+        if (keyH.upPressed == true || keyH.downPressed == true ||
+            keyH.leftPressed == true || keyH.rightPressed == true){
+        
+                if (keyH.upPressed == true){
+            jugador.setDireccion("up");
+            jugador.setUltimaDireccion("up");
             nuevaY -= movimiento;
-        }
-        else if (keyH.downPressed == true){
+            }
+            else if (keyH.downPressed == true){
+            jugador.setDireccion("down");
+            jugador.setUltimaDireccion("down");
             nuevaY += movimiento;
-        }
-        else if (keyH.leftPressed == true){
+            }
+            else if (keyH.leftPressed == true){
+            jugador.setDireccion("left");
+            jugador.setUltimaDireccion("left");
             nuevaX -= movimiento;
-        }
-        else if (keyH.rightPressed == true){
+            }
+            else if (keyH.rightPressed == true){
+            jugador.setDireccion("right");
+            jugador.setUltimaDireccion("right");
             nuevaX += movimiento;
+            }
+        }
+        
+        else {
+            jugador.setDireccion("quieto");
+        }
+
+        jugador.spriteCounter++;
+        if (jugador.spriteCounter > 10) {
+            if (jugador.spriteNum == 1) {
+                jugador.spriteNum = 2;
+            } else if (jugador.spriteNum == 2) {
+                jugador.spriteNum = 1;
+            }
+            jugador.spriteCounter = 0;
         }
 
     // Convertir a fila y columna de la matriz

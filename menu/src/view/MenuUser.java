@@ -12,7 +12,7 @@ public class MenuUser extends JDialog {
 
 
     public MenuUser(JFrame parent) {
-        super(parent, "Usuario", true);
+        super(parent, "User", true);
         setSize(500, 400);
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); //para cerrar bien con la X de la ventana

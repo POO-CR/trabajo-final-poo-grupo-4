@@ -5,7 +5,18 @@ import entidades.Player;
 import controlador.GameController;
 
 public class App {
+
+
     public static void iniciarJuego(String usuario) {
+    
+        // cerrar todas las ventanas abiertas de Swing
+        for (java.awt.Window window : java.awt.Window.getWindows()) {
+            if (window.isShowing()) {
+                window.dispose();
+            }
+        }
+        
+        
         JFrame ventana = new JFrame();
 
         int ancho = 800;
@@ -22,16 +33,28 @@ public class App {
         Player jugador = new Player();
         jugador.setNombre(usuario);
 
-        // Crear panel de juego
         PanelJuego juego = new PanelJuego();
+        juego.setFocusable(true);       //puede recibir foco
+        juego.requestFocusInWindow();   //pedir foco para teclado
+
         ventana.add(juego);
         ventana.setVisible(true);
+
+            
+        // se fuerza que este al frente y tenga foco
+        ventana.toFront();
+        ventana.requestFocus();
+        ventana.setAlwaysOnTop(true);   // para que quede al frente
+        ventana.setAlwaysOnTop(false);  // lo volvemos a normal
+
+        // despues de hacer visible la ventana, asegurar foco en el panel
+        javax.swing.SwingUtilities.invokeLater(() -> {
+        juego.requestFocusInWindow();
+        });
 
         // Controlador
         GameController controlador = new GameController();
         juego.iniciarGameThread();
     }
-
-    // main solo para testear
     
 }

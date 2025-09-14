@@ -11,10 +11,12 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import main.App;
+import model.MenuLoginModel;
 //import model.MenuModel;
 import model.Music;
 import view.MenuUser;
 import view.MenuView;
+import view.MenuRegisterStart;
 
 public class MenuController {
 
@@ -42,57 +44,28 @@ public class MenuController {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+            // Abre el menú de usuario
             MenuUser seleccionarUsuario = new MenuUser(view);
 
-            // para la opcion de nuevo usuario
-            seleccionarUsuario.getBttnNuevoUsuario().addActionListener(ev -> {
+            // accion para abrir la ventana de registro al apretar nuevo usuario
+            seleccionarUsuario.getBttnNuevoUsuario().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
-            JTextField txtUsuario = new JTextField();
-            JPasswordField txtPassword = new JPasswordField();
+                MenuRegisterStart ventanaRegistro = new MenuRegisterStart(view); // la vista
+                MenuLoginModel modeloRegistro = new MenuLoginModel();           // el modelo
+                MenuLoginController controladorRegistro = new MenuLoginController(modeloRegistro, ventanaRegistro, usuario -> {
+                    // Se inicia el juego con el usuario recien creado
+                    App.iniciarJuego(usuario);
+                }); // el controlador
 
-            // limitar contraseña a 10 caracteres
-            txtPassword.setDocument(new javax.swing.text.PlainDocument() {
-                @Override
-                public void insertString(int offs, String str, javax.swing.text.AttributeSet a) 
-                        throws javax.swing.text.BadLocationException {
-                    if (str == null) return;
-                    if ((getLength() + str.length()) <= 10) {
-                        super.insertString(offs, str, a);
-                    }
-                }
-            });
+                ventanaRegistro.setVisible(true);
 
-            // Panel con usuario + contraseña
-            JPanel panel = new JPanel(new java.awt.GridLayout(2, 2, 5, 5));
-            panel.add(new JLabel("Usuario:"));
-            panel.add(txtUsuario);
-            panel.add(new JLabel("Contraseña:"));
-            panel.add(txtPassword);
+                
 
-            int result = JOptionPane.showConfirmDialog(
-                    seleccionarUsuario,
-                    panel,
-                    "Crear nuevo usuario",
-                    JOptionPane.OK_CANCEL_OPTION,
-                    JOptionPane.PLAIN_MESSAGE
-            );
 
-            if (result == JOptionPane.OK_OPTION) {
-                String nombre = txtUsuario.getText().trim();
-                String contrasena = new String(txtPassword.getPassword());
-
-                if (!nombre.isEmpty() && !contrasena.isEmpty()) {
-                    JOptionPane.showMessageDialog(seleccionarUsuario, 
-                        "Usuario creado: " + nombre);
-                    
-                    seleccionarUsuario.dispose();
-
-                    //se abre el juego
-                    App.iniciarJuego(nombre);
-                }
             }
         });
-
 
         // para la opcion de cargar usuario 
         seleccionarUsuario.getBttnCargarUsuario().addActionListener(ev -> {

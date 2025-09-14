@@ -31,10 +31,10 @@ public class MenuUser extends JDialog {
         ImageIcon originalIcon = new ImageIcon(getClass().getResource("/assets/img/NewUserButton.png"));
         ImageIcon originalHoverIcon = new ImageIcon(getClass().getResource("/assets/img/NewUserButtonHover.png"));
 
-        Image newImg = originalIcon.getImage().getScaledInstance(250, 55, Image.SCALE_SMOOTH);
+        Image newImg = originalIcon.getImage().getScaledInstance(220, 50, Image.SCALE_SMOOTH);
         ImageIcon nuevoIcon = new ImageIcon(newImg);
 
-        Image newHoverImg = originalHoverIcon.getImage().getScaledInstance(250, 55, Image.SCALE_SMOOTH);
+        Image newHoverImg = originalHoverIcon.getImage().getScaledInstance(220, 50, Image.SCALE_SMOOTH);
         ImageIcon nuevoHoverIcon = new ImageIcon(newHoverImg); 
 
         bttnNuevoUsuario = new JButton(nuevoIcon);
@@ -43,7 +43,7 @@ public class MenuUser extends JDialog {
         bttnNuevoUsuario.setBorderPainted(false);
         bttnNuevoUsuario.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        Dimension botonSize = new Dimension(250, 55);
+        Dimension botonSize = new Dimension(220, 50);
         bttnNuevoUsuario.setPreferredSize(botonSize);
         bttnNuevoUsuario.setMaximumSize(botonSize);
         bttnNuevoUsuario.setMinimumSize(botonSize);
@@ -52,10 +52,10 @@ public class MenuUser extends JDialog {
         ImageIcon originalcargarIcon = new ImageIcon(getClass().getResource("/assets/img/LoadUserButton.png"));
         ImageIcon originalcargarHoverIcon = new ImageIcon(getClass().getResource("/assets/img/LoadUserButtonHover.png"));
     
-        Image newcargarImg = originalcargarIcon.getImage().getScaledInstance(250, 55, Image.SCALE_SMOOTH);
+        Image newcargarImg = originalcargarIcon.getImage().getScaledInstance(220, 50, Image.SCALE_SMOOTH);
         ImageIcon nuevocargarIcon = new ImageIcon(newcargarImg);
 
-        Image newcargarHoverImg = originalcargarHoverIcon.getImage().getScaledInstance(250, 55, Image.SCALE_SMOOTH);
+        Image newcargarHoverImg = originalcargarHoverIcon.getImage().getScaledInstance(220, 50, Image.SCALE_SMOOTH);
         ImageIcon nuevocargarHoverIcon = new ImageIcon(newcargarHoverImg);
 
         bttnCargarUsuario = new JButton(nuevocargarIcon);

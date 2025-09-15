@@ -55,7 +55,9 @@ public class App {
 
         // Controlador
         GameController controlador = new GameController();
+          controlador.actualizarMovimiento(jugador);
         juego.iniciarGameThread();
+      
     }
     
 }

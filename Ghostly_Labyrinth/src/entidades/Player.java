@@ -5,6 +5,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.swing.ImageIcon;
 import javax.imageio.ImageIO;
+import java.awt.Image;
+import java.awt.Graphics;
+
 
 public class Player extends Entity{
 
@@ -18,6 +21,24 @@ public class Player extends Entity{
     private final int ancho = 20;
     private final int alto = 20;
 
+    //Caracteristicas de la vida
+        int x0 = 10; //inicio del x
+        int y0 = 10;
+        int anchofoto = 45;
+        int altofoto = 45;
+        int distancia = 20;
+
+        //Imagen de vida
+    private Image vidaimg;
+    //Caracteristicas de la vida
+    private static final int vidaTope = 3;
+    private int vida = vidaTope;
+    //Caracteristicas al recibir danio
+    private static final long tiempoInmune = 2000;
+    private long finInmune=0;
+
+
+
     public Player (String nombre) {
         super();
         setNombre(nombre);
@@ -29,6 +50,13 @@ public class Player extends Entity{
         super();
         setValoresDefault();
         getImagen();
+        //Carga la imagen de vida
+        java.net.URL url = Player.class.getResource("/assets/img/vida.png");
+        if (url == null) {
+            System.out.println("No se cargo la imagen");
+        } else {
+            vidaimg = new ImageIcon(url).getImage();
+        }
     }
 
     public void setValoresDefault () {
@@ -76,6 +104,7 @@ public class Player extends Entity{
             e.printStackTrace();
         }
     }
+
 
     public void draw(Graphics2D grafico){
         BufferedImage imagen = null;
@@ -139,7 +168,42 @@ public class Player extends Entity{
         grafico.drawImage(imagen, x, y, lab.anchoBloque, lab.altoBloque, null);
     }
 
-    
+     //Metodos de la vida
+    public void paintvida(Graphics grafico){
+        
+        for (int i = 0; i < vida; i++) {
+            int x = x0 + i * (ancho + distancia);
+            grafico.drawImage(vidaimg, (x + distancia), y0, anchofoto, altofoto, null);
+        }
+    }
+
+     public int getVida() {
+        return vida;
+    }
+
+    public int getVidaTope() {
+        return vidaTope;
+    }
+
+    public boolean estaVivo(){
+        return vida > 0;
+    }
+
+    public boolean esInmune(){
+        return System.currentTimeMillis() < finInmune;
+    }
+
+    public void recibirDanio(int danio){
+        long ahora = System.currentTimeMillis();
+        if(ahora < finInmune) 
+        return;
+    if (vida > 0){
+            vida--;
+            finInmune = ahora + tiempoInmune;
+        }
+        if (vida == 0){
+            System.out.println("GAME OVER");
+        }}
 }
 
 

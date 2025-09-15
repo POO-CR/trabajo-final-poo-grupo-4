@@ -103,6 +103,7 @@ protected void paintComponent(Graphics g) {
 
     laberinto.paintComponent(g2);
     jugador.draw(g2);
+    jugador.paintvida(g);
 
     g2.dispose();
 }

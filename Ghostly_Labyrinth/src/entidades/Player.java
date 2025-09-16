@@ -20,16 +20,16 @@ public class Player extends Entity{
     //variable que indica si el jugador agarro la llave
     private boolean tieneLlave = false;
 
-
-    private final int ancho = 20;
-    private final int alto = 20;
+    private final int anchoPersonaje;
+    private final int altoPersonaje;
+    private float escalaPersonaje = 1.5f;
 
     //Caracteristicas de la vida
         int x0 = 10; //inicio del x
         int y0 = 10;
         int anchofoto = 45;
         int altofoto = 45;
-        int distancia = 20;
+        int distancia = 10;
 
         //Imagen de vida
     private Image vidaimg;
@@ -47,6 +47,8 @@ public class Player extends Entity{
         setNombre(nombre);
         setValoresDefault();
         getImagen();
+        anchoPersonaje = (int)(lab.anchoBloque*escalaPersonaje);
+        altoPersonaje = (int)(lab.altoBloque*escalaPersonaje);
     }
 
     public Player (Labyrinth lab) {
@@ -54,6 +56,8 @@ public class Player extends Entity{
         this.lab = lab;
         setValoresDefault();
         getImagen();
+        anchoPersonaje = (int)(lab.anchoBloque*escalaPersonaje);
+        altoPersonaje = (int)(lab.altoBloque*escalaPersonaje);
         //Carga la imagen de vida
         java.net.URL url = Player.class.getResource("/assets/img/vida.png");
         if (url == null) {
@@ -169,19 +173,19 @@ public class Player extends Entity{
         
         }
 
-        grafico.drawImage(imagen, x, y, (int) (lab.anchoBloque*1.5), (int) (lab.altoBloque*1.5), null);
+        grafico.drawImage(imagen, x, y, anchoPersonaje, altoPersonaje, null);
     }
 
      //Metodos de la vida
     public void paintvida(Graphics grafico){
         
         for (int i = 0; i < vida; i++) {
-            int x = x0 + i * (ancho + distancia);
+            int x = x0 + i * (anchofoto + distancia);
             grafico.drawImage(vidaimg, (x + distancia), y0, anchofoto, altofoto, null);
         }
     }
 
-     public int getVida() {
+    public int getVida() {
         return vida;
     }
 

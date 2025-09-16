@@ -8,7 +8,6 @@ public class GameController {
 
     public GameController(Labyrinth lab) {
         this.lab = lab;
-
     }
 
 
@@ -101,7 +100,7 @@ public class GameController {
                 jugador.setTieneLlave(true);
                 //lab.getItems().remove(i); // quitar llave del laberinto
                 lab.abrirPuerta();        // abrir la puerta
-                System.out.println("PUERTA ABIERTA");
+                //System.out.println("PUERTA ABIERTA");
                 break;
             
         }

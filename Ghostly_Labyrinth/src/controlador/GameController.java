@@ -93,8 +93,9 @@ public class GameController {
     for(int i = 0; i < lab.getItems().size(); i++){
         Item item = lab.getItems().get(i);
         if(item.getFila() == filaJugador && item.getColumna() == colJugador && item.getTipo().equals("llave")){ // TODO: manejar los tipos de item con un enum
+                jugador.recibirDanio(1);
                 jugador.setTieneLlave(true);
-                lab.getItems().remove(i); // quitar llave del laberinto
+                //lab.getItems().remove(i); // quitar llave del laberinto
                 lab.abrirPuerta();        // abrir la puerta
                 System.out.println("PUERTA ABIERTA");
                 break;

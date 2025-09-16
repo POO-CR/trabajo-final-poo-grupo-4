@@ -1,15 +1,19 @@
 package controlador;
 import entidades.*;
+import entidades.laberinto.Labyrinth;
 import juego.PanelJuego;
 
 public class GameController {
+    private Labyrinth lab;
 
-    public GameController() {
+    public GameController(Labyrinth lab) {
+        this.lab = lab;
+
     }
 
 
     KeyHandler keyH = new KeyHandler();
-    Labyrinth lab = new Labyrinth();
+    
 
     public void añadirKeyListener(PanelJuego juego){
         juego.addKeyListener(keyH);
@@ -61,8 +65,8 @@ public class GameController {
         }
 
     // Convertir a fila y columna de la matriz
-    int filNueva = nuevaY / 20;
-    int colNueva = nuevaX / 20;
+    int filNueva = nuevaY / lab.anchoBloque;
+    int colNueva = nuevaX / lab.altoBloque;
 
     // Validar límites y muros
     if(filNueva >= 0 && filNueva < lab.obtenerLaberinto().length &&
@@ -87,8 +91,8 @@ public class GameController {
     *int bottomRow = (nuevaY + h - 1) / tile;
     */
 
-    int filaJugador = jugador.getY() / 20;
-    int colJugador = jugador.getX() / 20;
+    int filaJugador = jugador.getY() / lab.anchoBloque;
+    int colJugador = jugador.getX() / lab.altoBloque;
 
     for(int i = 0; i < lab.getItems().size(); i++){
         Item item = lab.getItems().get(i);

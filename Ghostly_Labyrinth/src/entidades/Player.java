@@ -4,29 +4,31 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.swing.ImageIcon;
+
+import entidades.laberinto.Labyrinth;
+
 import javax.imageio.ImageIO;
 
 public class Player extends Entity{
 
     //este objeto de la clase laberinto permite obtener la matriz laberinto 
-    Labyrinth lab = new Labyrinth();
+    private Labyrinth lab;
 
     //variable que indica si el jugador agarro la llave
     private boolean tieneLlave = false;
 
 
-    private final int ancho = 20;
-    private final int alto = 20;
-
-    public Player (String nombre) {
+    public Player (String nombre, Labyrinth lab) {
         super();
+        this.lab = lab;
         setNombre(nombre);
         setValoresDefault();
         getImagen();
     }
 
-    public Player () {
+    public Player (Labyrinth lab) {
         super();
+        this.lab = lab;
         setValoresDefault();
         getImagen();
     }
@@ -34,7 +36,7 @@ public class Player extends Entity{
     public void setValoresDefault () {
         x = 50;
         y = 50;
-        movimiento = 4;
+        movimiento = 5;
         direccion = "down";
         ultimaDireccion = "down";
     }
@@ -136,7 +138,7 @@ public class Player extends Entity{
         
         }
 
-        grafico.drawImage(imagen, x, y, lab.anchoBloque, lab.altoBloque, null);
+        grafico.drawImage(imagen, x, y, (int) (lab.anchoBloque*1.5), (int) (lab.altoBloque*1.5), null);
     }
 
     

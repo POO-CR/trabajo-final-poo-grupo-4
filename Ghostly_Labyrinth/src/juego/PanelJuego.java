@@ -2,43 +2,44 @@ package juego;
 
 import controlador.GameController;
 import entidades.*;
+import entidades.laberinto.Labyrinth;
+import entidades.tile.*;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
+import java.awt.Toolkit;
 
 
 //Clase Juego debe heredar los atributos y metodos de JPanel
 public class PanelJuego extends JPanel implements Runnable{
 
     //objetos para poder ser dibujados 
-    Labyrinth laberinto = new Labyrinth();
-    Player jugador = new Player();
+    Labyrinth laberinto;
+    Player jugador;
 
     // propiedades del panel
-    final int originalTileSize = 16; // tamaño standard de tiles, dijimos de cambiarlo a 32x32
-    final int escala = 3; // escala para agrandar los tiles
-    final int tileSize = originalTileSize * escala; 
 
-    final int maxColPantalla = 16; // 16 columnas de tiles en pantalla
-    final int maxFilPantalla = 12; // 12 filas de tiles en pantalla
-
-    final int anchoPantalla = tileSize * maxColPantalla; // tamaño en pixeles
-    final int altoPantalla = tileSize * maxFilPantalla;
-
+    int anchoPantalla;
+    public int altoPantalla;
     final int FPS = 60;
+    GameController controlador;
 
     //KeyHandler keyH = new KeyHandler();
     Thread gameThread; //necesita runnable
-    GameController controlador = new GameController();
 
 
 
     //constructor de la clase juego 
-    public PanelJuego(){
-        setPreferredSize(new Dimension(anchoPantalla, altoPantalla));
-        // this.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize()); // para que tome el tamaño de la pantalla nativa!! copado!!
+    public PanelJuego(Labyrinth lab, Player jugador){
+        this.laberinto = lab;
+        this.jugador = jugador;
+        this.anchoPantalla = laberinto.anchoBloque * laberinto.cantidadColumnas; // tamaño en pixeles
+        this.altoPantalla = laberinto.altoBloque * laberinto.cantidadFila;
+        this.controlador= new GameController(laberinto);
+        //setPreferredSize(new Dimension(anchoPantalla, altoPantalla));
+        this.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize()); // para que tome el tamaño de la pantalla nativa!! copado!!
         setBackground(Color.black);
         setDoubleBuffered(true); // guarda 2 buffer en memoria para que no carguen en tiempo real en pantalla
                                             // igual según internet no es necesario(?
@@ -103,6 +104,7 @@ protected void paintComponent(Graphics g) {
 
     laberinto.paintComponent(g2);
     jugador.draw(g2);
+
 
     g2.dispose();
 }

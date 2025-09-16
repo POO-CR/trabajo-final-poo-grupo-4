@@ -3,12 +3,9 @@ package controlador;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import entidades.Player;
-import entidades.Labyrinth;
 
 public class KeyHandler extends KeyAdapter{
 
-    Player jugador = new Player();
-    Labyrinth lab = new Labyrinth();
     public boolean upPressed, downPressed, leftPressed, rightPressed;
 
     @Override

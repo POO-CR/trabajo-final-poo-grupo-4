@@ -30,7 +30,8 @@ public class MenuView extends JFrame {
 
         // titulo y config basica de la ventana
         this.setTitle("Ghostly Mansion");
-        this.setSize(1236, 724);
+        //this.setSize(1236, 724);
+        this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null); // centrada en la pantalla
 

@@ -40,7 +40,7 @@ public class PanelJuego extends JPanel implements Runnable{
         this.jugador = jugador;
         this.aSetter = new AssetSetter(this);
         this.anchoPantalla = laberinto.anchoBloque * laberinto.cantidadColumnas; // tamaño en pixeles
-        this.altoPantalla = laberinto.altoBloque * laberinto.cantidadFila;
+        this.altoPantalla = laberinto.altoBloque * laberinto.cantidadFilas;
         this.controlador= new GameController(laberinto, this);
         //setPreferredSize(new Dimension(anchoPantalla, altoPantalla));
         this.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize()); // para que tome el tamaño de la pantalla nativa!! copado!!

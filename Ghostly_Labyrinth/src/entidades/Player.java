@@ -204,7 +204,7 @@ public class Player extends Entity{
         }
     }
 
-     public int getVida() {
+    public int getVida() {
         return vida;
     }
 

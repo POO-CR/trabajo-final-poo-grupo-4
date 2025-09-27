@@ -38,8 +38,9 @@ public class App {
         PanelJuego juego = new PanelJuego(lab, jugador);
         juego.setFocusable(true);       //puede recibir foco
         juego.requestFocusInWindow();   //pedir foco para teclado
-
         ventana.add(juego);
+        ventana.setVisible(true);
+        ventana.setLocationRelativeTo(null);
         ventana.setVisible(true);
 
             

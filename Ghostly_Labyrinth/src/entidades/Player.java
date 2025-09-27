@@ -1,35 +1,38 @@
 package entidades;
 
+import entidades.laberinto.Labyrinth;
+import entidades.tile.Tile;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import javax.swing.ImageIcon;
-
-import entidades.laberinto.Labyrinth;
-
 import javax.imageio.ImageIO;
-import java.awt.Image;
-import java.awt.Graphics;
+import javax.swing.ImageIcon;
 
 
 public class Player extends Entity{
 
-    //este objeto de la clase laberinto permite obtener la matriz laberinto 
     private Labyrinth lab;
+    private float escalaPersonaje = 1.5f;
+
+    private final int anchoPersonaje;
+    private final int altoPersonaje;
 
     //variable que indica si el jugador agarro la llave
     private boolean tieneLlave = false;
 
 
-    private final int ancho = 20;
-    private final int alto = 20;
+    // private final int ancho = 20;
+    // private final int alto = 20;
 
     //Caracteristicas de la vida
         int x0 = 10; //inicio del x
         int y0 = 10;
         int anchofoto = 45;
         int altofoto = 45;
-        int distancia = 20;
+        int distancia = 10;
 
         //Imagen de vida
     private Image vidaimg;
@@ -41,18 +44,39 @@ public class Player extends Entity{
     private long finInmune=0;
 
 
-    public Player (String nombre, Labyrinth lab) {
-        super();
-        this.lab = lab;
-        setNombre(nombre);
-        setValoresDefault();
-        getImagen();
-    }
+    // public Player (String nombre, Labyrinth lab) {
+    //     super();
+    //     this.lab = lab;
+    //     setNombre(nombre);
+    //     setValoresDefault();
+    //     getImagen();
+
+    //     anchoPersonaje = (int)(lab.anchoBloque*escalaPersonaje);
+    //     altoPersonaje = (int)(lab.altoBloque*escalaPersonaje);
+    //     areaColision = new Rectangle(10, 30 ,28 , 23);
+    //     areaColisionDefaultX = areaColision.x;
+    //     areaColisionDefaultY = areaColision.y;
+    // }
+
+    // las tiles son de 20x2=40 
+    // el personaje está escalado 1.5
+    // x = 4x2x1.5 = 12
+    // y = 10x2x1.5 = 30
+    // ancho = 11x2x1.5 = 33
+    // alto = 7x2x1.5 = 21
 
     public Player (Labyrinth lab) {
         super();
         this.lab = lab;
         setValoresDefault();
+
+        anchoPersonaje = (int)(lab.anchoBloque*escalaPersonaje);
+        altoPersonaje = (int)(lab.altoBloque*escalaPersonaje);
+
+        areaColision = new Rectangle(10, 30 , 28, 23);
+        areaColisionDefaultX = areaColision.x;
+        areaColisionDefaultY = areaColision.y;
+
         getImagen();
         //Carga la imagen de vida
         java.net.URL url = Player.class.getResource("/assets/img/vida.png");
@@ -66,7 +90,7 @@ public class Player extends Entity{
     public void setValoresDefault () {
         x = 50;
         y = 50;
-        movimiento = 5;
+        movimiento = 6;
         direccion = "down";
         ultimaDireccion = "down";
     }
@@ -90,7 +114,6 @@ public class Player extends Entity{
 
     public void getImagen(){
         try {
-            System.out.println(getClass().getResourceAsStream("/assets/img/player/espalda_0.png"));
             up0 = ImageIO.read(getClass().getResourceAsStream("/assets/img/player/espalda_0.png"));
             up1 = ImageIO.read(getClass().getResourceAsStream("/assets/img/player/espalda_1.png"));
             up2 = ImageIO.read(getClass().getResourceAsStream("/assets/img/player/espalda_2.png"));
@@ -169,14 +192,14 @@ public class Player extends Entity{
         
         }
 
-        grafico.drawImage(imagen, x, y, (int) (lab.anchoBloque*1.5), (int) (lab.altoBloque*1.5), null);
+        grafico.drawImage(imagen, x, y, anchoPersonaje, altoPersonaje, null);
     }
 
      //Metodos de la vida
     public void paintvida(Graphics grafico){
         
         for (int i = 0; i < vida; i++) {
-            int x = x0 + i * (ancho + distancia);
+            int x = x0 + i * (anchofoto + distancia);
             grafico.drawImage(vidaimg, (x + distancia), y0, anchofoto, altofoto, null);
         }
     }
@@ -208,6 +231,14 @@ public class Player extends Entity{
         if (vida == 0){
             System.out.println("GAME OVER");
         }}
+
+    @Override
+    public void tieneAcceso (Tile tile) {
+        if (tile instanceof entidades.tile.Puerta && tieneLlave) {
+            entidades.tile.Puerta puerta = (entidades.tile.Puerta) tile;
+            puerta.abrir(); 
+        }
+    }
 }
 
 

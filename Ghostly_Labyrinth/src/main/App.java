@@ -2,13 +2,14 @@ package main;
 import javax.swing.JFrame;
 import entidades.Player;
 import juego.PanelJuego;
+import entidades.laberinto.Labyrinth;
 
 import controlador.GameController;
 
 public class App {
 
 
-    public static void iniciarJuego(String usuario) {
+    public static void iniciarJuego (String usuario) {
     
         // cerrar todas las ventanas abiertas de Swing
         for (java.awt.Window window : java.awt.Window.getWindows()) {
@@ -17,11 +18,11 @@ public class App {
             }
         }
         
-        
+        Labyrinth lab = new Labyrinth(0);
         JFrame ventana = new JFrame();
 
-        int ancho = 800;
-        int alto = 600;
+        int ancho = lab.getPixelWidth();
+        int alto = lab.getPixelHeight();
         String tituloJuego = "Ghostly Labyrinth";
 
         ventana.setTitle(tituloJuego + " - Jugador: " + usuario);
@@ -31,10 +32,10 @@ public class App {
         ventana.setResizable(true);
 
         // Crear jugador
-        Player jugador = new Player();
+        Player jugador = new Player(lab);
         jugador.setNombre(usuario);
 
-        PanelJuego juego = new PanelJuego();
+        PanelJuego juego = new PanelJuego(lab, jugador);
         juego.setFocusable(true);       //puede recibir foco
         juego.requestFocusInWindow();   //pedir foco para teclado
 
@@ -54,10 +55,14 @@ public class App {
         });
 
         // Controlador
-        GameController controlador = new GameController();
-          controlador.actualizarMovimiento(jugador);
+        GameController controlador = new GameController(lab, juego);
+        controlador.actualizarMovimiento(jugador);
+
+
+        // juego
+        juego.setupJuego(); //tiene que ir antes del juego
         juego.iniciarGameThread();
-      
+    
     }
     
 }

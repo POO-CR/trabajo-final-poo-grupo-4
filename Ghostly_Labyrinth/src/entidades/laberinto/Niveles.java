@@ -7,13 +7,14 @@ import java.io.InputStreamReader;
 
 public class Niveles {
     ArrayList <int[][]> mapas = new ArrayList<>();
-    final int cantNiveles = 1;
+    final int cantNiveles = 2;
     public static record Dimension(int alto, int ancho) {}
 
     public static Dimension getDimensionMapa(int nivel) {
         return switch (nivel) {
             case 0 -> new Dimension(20, 30);
             case 1 -> new Dimension(20, 60);
+            case 2 -> new Dimension(20, 30);
             default -> new Dimension(20, 30);
         };
     }
@@ -25,6 +26,8 @@ public class Niveles {
     public int getMapaAncho (int nivel){
         return getDimensionMapa(nivel).ancho;
     }
+
+    
 
 
     public Niveles(){

@@ -2,6 +2,7 @@ package juego;
 
 import controlador.GameController;
 import entidades.*;
+import entidades.objetos.*;
 import entidades.laberinto.Labyrinth;
 import entidades.tile.*;
 import java.awt.Color;
@@ -18,9 +19,11 @@ public class PanelJuego extends JPanel implements Runnable{
     //objetos para poder ser dibujados 
     Labyrinth laberinto;
     Player jugador;
+    public ColisionChecker cChecker = new ColisionChecker(this);
+    public AssetSetter aSetter;
+    public Objeto obj[] = new Objeto[10]; // solo podemos tener 10 objetos en pantalla simultáneamente
 
     // propiedades del panel
-
     int anchoPantalla;
     public int altoPantalla;
     final int FPS = 60;
@@ -35,9 +38,10 @@ public class PanelJuego extends JPanel implements Runnable{
     public PanelJuego(Labyrinth lab, Player jugador){
         this.laberinto = lab;
         this.jugador = jugador;
+        this.aSetter = new AssetSetter(this);
         this.anchoPantalla = laberinto.anchoBloque * laberinto.cantidadColumnas; // tamaño en pixeles
         this.altoPantalla = laberinto.altoBloque * laberinto.cantidadFila;
-        this.controlador= new GameController(laberinto);
+        this.controlador= new GameController(laberinto, this);
         //setPreferredSize(new Dimension(anchoPantalla, altoPantalla));
         this.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize()); // para que tome el tamaño de la pantalla nativa!! copado!!
         setBackground(Color.black);
@@ -46,6 +50,14 @@ public class PanelJuego extends JPanel implements Runnable{
         controlador.añadirKeyListener(this);
         setFocusable(true); // el setfocusable es para que se "concentre" en los eventos del teclado
 
+    }
+
+    public Labyrinth getLaberinto () {
+        return laberinto;
+    }
+
+    public void setupJuego () {
+        aSetter.setearObjetosIniciales();
     }
 
 
@@ -80,6 +92,8 @@ public class PanelJuego extends JPanel implements Runnable{
         }
     }
 
+
+
     public void update(){
         controlador.actualizarMovimiento(jugador);
     }
@@ -103,6 +117,13 @@ protected void paintComponent(Graphics g) {
     g2.translate(offX, offY);
 
     laberinto.paintComponent(g2);
+
+    for (int i=0; i<obj.length; i++) {
+        if (obj[i] != null) {
+            obj[i].draw(g2);
+        }
+    }
+
     jugador.draw(g2);
     jugador.paintvida(g);
 

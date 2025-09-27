@@ -1,7 +1,8 @@
 package entidades;
 
+import entidades.tile.Tile;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import javax.swing.ImageIcon;
 
 public abstract class Entity {
     
@@ -17,6 +18,12 @@ public abstract class Entity {
     
     public int spriteCounter = 0;
     public int spriteNum = 1;
+
+    public Rectangle areaColision;
+    public int areaColisionDefaultX, areaColisionDefaultY;
+    public boolean colisionOn = false;
+
+    public abstract void tieneAcceso(Tile tile);
 
 
     public int getX(){

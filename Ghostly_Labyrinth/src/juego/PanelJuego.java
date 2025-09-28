@@ -5,12 +5,14 @@ import entidades.*;
 import entidades.objetos.*;
 import entidades.laberinto.Labyrinth;
 import entidades.tile.*;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
 import java.awt.Toolkit;
+import view.LightView;
 
 
 //Clase Juego debe heredar los atributos y metodos de JPanel
@@ -19,7 +21,7 @@ public class PanelJuego extends JPanel implements Runnable{
     //objetos para poder ser dibujados 
     Labyrinth laberinto;
     Player jugador;
-    Message mensaje;
+    private LightView light;
 
     public ColisionChecker cChecker = new ColisionChecker(this);
     public AssetSetter aSetter;
@@ -40,11 +42,10 @@ public class PanelJuego extends JPanel implements Runnable{
     public PanelJuego(Labyrinth lab, Player jugador){
         this.laberinto = lab;
         this.jugador = jugador;
-        this.mensaje = new Message();
         this.aSetter = new AssetSetter(this);
         this.anchoPantalla = laberinto.anchoBloque * laberinto.cantidadColumnas; // tamaño en pixeles
-        this.altoPantalla = laberinto.altoBloque * laberinto.cantidadFila;
-        this.controlador= new GameController(laberinto, this, jugador);
+        this.altoPantalla = laberinto.altoBloque * laberinto.cantidadFilas;
+        this.controlador= new GameController(laberinto, this);
         //setPreferredSize(new Dimension(anchoPantalla, altoPantalla));
         this.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize()); // para que tome el tamaño de la pantalla nativa!! copado!!
         setBackground(Color.black);
@@ -52,13 +53,10 @@ public class PanelJuego extends JPanel implements Runnable{
                                             // igual según internet no es necesario(?
         controlador.añadirKeyListener(this);
         setFocusable(true); // el setfocusable es para que se "concentre" en los eventos del teclado
-
-    }
-    public void mostrarMensaje (String texto, int segundos) {
-        mensaje.mostrar(texto, segundos);
+        
+        this.light = new LightView(this.jugador);
     }
 
-    
     public Labyrinth getLaberinto () {
         return laberinto;
     }
@@ -102,15 +100,13 @@ public class PanelJuego extends JPanel implements Runnable{
 
 
     public void update(){
-        controlador.actualizarMovimiento();
-        mensaje.update();
+        controlador.actualizarMovimiento(jugador);
     }
 
     //metodo para poder dibujar en el JPanel, tanto el jugador laberinto fantasmas 
     //el override hace referencia a que es un metodo heredado de JPanel 
     @Override
 protected void paintComponent(Graphics g) {
-    
     super.paintComponent(g);
 
     // tamaño del tablero en píxeles
@@ -125,8 +121,6 @@ protected void paintComponent(Graphics g) {
     Graphics2D g2 = (Graphics2D)g.create();
     g2.translate(offX, offY);
 
-
-
     laberinto.paintComponent(g2);
 
     for (int i=0; i<obj.length; i++) {
@@ -136,10 +130,13 @@ protected void paintComponent(Graphics g) {
     }
 
     jugador.draw(g2);
-    jugador.paintvida(g);
-    mensaje.draw(g2, getWidth(), getHeight());
-
     g2.dispose();
+
+    if (light != null) {
+        light.paint((Graphics2D) g, getWidth(), getHeight(), offX, offY);
+    }
+
+    jugador.paintvida(g);
 }
 
 

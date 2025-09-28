@@ -30,7 +30,6 @@ public class ColisionChecker {
         if (entidadFilaInferior < 0 ) entidadFilaInferior = 0;    
 
         
-        int tileNum1, tileNum2;
         Tile tile1, tile2;
 
         // entidad para poder agregar fantasmas también
@@ -41,12 +40,8 @@ public class ColisionChecker {
 
                 // hay solo 2 en frente del personaje, entonces guardamos esas dos tiles
                 if (entidadFilaSuperior < 0 ) entidadFilaSuperior = 0;
-                tileNum1 = panelJuego.laberinto.laberintoNum[entidadFilaSuperior] [entidadColumnaIzquierda];
-                tileNum2 = panelJuego.laberinto.laberintoNum[entidadFilaSuperior] [entidadColumnaDerecha];
-
-                // chequeamos si alguna de las tiles tiene colisión, y si tiene colisión activamos la entidad colisionOn
-                tile1 = panelJuego.laberinto.tile[tileNum1];
-                tile2 = panelJuego.laberinto.tile[tileNum2];
+                tile1 = panelJuego.laberinto.laberintoMat[entidadFilaSuperior] [entidadColumnaIzquierda];
+                tile2 = panelJuego.laberinto.laberintoMat[entidadFilaSuperior] [entidadColumnaDerecha];
 
                 entidad.tieneAcceso(tile1);
                 entidad.tieneAcceso(tile2);
@@ -59,11 +54,11 @@ public class ColisionChecker {
             case "down":
                 entidadFilaInferior = (entidadBottomY + entidad.getMovimiento()) / panelJuego.laberinto.altoBloque;
                 if (entidadFilaInferior<0 ) entidadFilaInferior = 0;
-                tileNum1 = panelJuego.laberinto.laberintoNum[entidadFilaInferior] [entidadColumnaIzquierda]; //[entidadColumnaIzquierda][entidadFilaInferior];
-                tileNum2 = panelJuego.laberinto.laberintoNum[entidadFilaInferior] [entidadColumnaDerecha]; //[entidadColumnaDerecha][entidadFilaInferior];
+                tile1 = panelJuego.laberinto.laberintoMat[entidadFilaInferior] [entidadColumnaIzquierda]; //[entidadColumnaIzquierda][entidadFilaInferior];
+                tile2 = panelJuego.laberinto.laberintoMat[entidadFilaInferior] [entidadColumnaDerecha]; //[entidadColumnaDerecha][entidadFilaInferior];
 
-                tile1 = panelJuego.laberinto.tile[tileNum1];
-                tile2 = panelJuego.laberinto.tile[tileNum2];
+                // tile1 = panelJuego.laberinto.tile[tileNum1];
+                // tile2 = panelJuego.laberinto.tile[tileNum2];
 
                 entidad.tieneAcceso(tile1);
                 entidad.tieneAcceso(tile2);
@@ -76,10 +71,10 @@ public class ColisionChecker {
             case "left":
                 entidadColumnaIzquierda = (entidadLeftX - entidad.getMovimiento()) / panelJuego.laberinto.anchoBloque;
                 if (entidadColumnaIzquierda < 0 ) entidadColumnaIzquierda = 0;
-                tileNum1 = panelJuego.laberinto.laberintoNum[entidadFilaSuperior][entidadColumnaIzquierda]; //[entidadColumnaIzquierda][entidadFilaSuperior];
-                tileNum2 = panelJuego.laberinto.laberintoNum[entidadFilaInferior][entidadColumnaIzquierda]; //[entidadColumnaIzquierda][entidadFilaInferior];
-                tile1 = panelJuego.laberinto.tile[tileNum1];
-                tile2 = panelJuego.laberinto.tile[tileNum2];
+                tile1 = panelJuego.laberinto.laberintoMat[entidadFilaSuperior][entidadColumnaIzquierda]; //[entidadColumnaIzquierda][entidadFilaSuperior];
+                tile2 = panelJuego.laberinto.laberintoMat[entidadFilaInferior][entidadColumnaIzquierda]; //[entidadColumnaIzquierda][entidadFilaInferior];
+                // tile1 = panelJuego.laberinto.tile[tileNum1];
+                // tile2 = panelJuego.laberinto.tile[tileNum2];
 
                 entidad.tieneAcceso(tile1);
                 entidad.tieneAcceso(tile2);
@@ -91,10 +86,10 @@ public class ColisionChecker {
             case "right":
                 entidadColumnaDerecha = (entidadRightX + entidad.getMovimiento()) / panelJuego.laberinto.anchoBloque;
                 if (entidadColumnaDerecha < 0 ) entidadColumnaDerecha = 0;
-                tileNum1 = panelJuego.laberinto.laberintoNum[entidadFilaSuperior][entidadColumnaDerecha]; //[entidadColumnaDerecha][entidadFilaSuperior];
-                tileNum2 = panelJuego.laberinto.laberintoNum[entidadFilaInferior][entidadColumnaDerecha]; //[entidadColumnaDerecha][entidadFilaInferior];
-                tile1 = panelJuego.laberinto.tile[tileNum1];
-                tile2 = panelJuego.laberinto.tile[tileNum2];
+                tile1 = panelJuego.laberinto.laberintoMat[entidadFilaSuperior][entidadColumnaDerecha]; //[entidadColumnaDerecha][entidadFilaSuperior];
+                tile2 = panelJuego.laberinto.laberintoMat[entidadFilaInferior][entidadColumnaDerecha]; //[entidadColumnaDerecha][entidadFilaInferior];
+                // tile1 = panelJuego.laberinto.tile[tileNum1];
+                // tile2 = panelJuego.laberinto.tile[tileNum2];
 
                 entidad.tieneAcceso(tile1);
                 entidad.tieneAcceso(tile2);

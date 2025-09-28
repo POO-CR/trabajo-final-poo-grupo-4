@@ -5,9 +5,9 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 public abstract class Entity {
-    
-    protected int x;
-    protected int y;
+    protected int mundoX, mundoY; // posicion en el mundo
+    //protected int x;
+    //protected int y;
     protected int movimiento;
     protected String nombre;
 
@@ -25,7 +25,25 @@ public abstract class Entity {
 
     public abstract void tieneAcceso(Tile tile);
 
+    public int getMundoX() {
+        return mundoX;
+    }
+    
+    public void setMundoX(int mundoX) {
+        this.mundoX = mundoX;
+    }
 
+    public int getMundoY() {
+        return mundoY;
+    }
+
+    public void setMundoY(int mundoY) {
+        this.mundoY = mundoY;
+    }
+
+
+
+/* 
     public int getX(){
         return x;
     }
@@ -41,6 +59,7 @@ public abstract class Entity {
     public void setY(int y){
         this.y = y;
     }
+        */
 
     public int getMovimiento(){
         return movimiento;

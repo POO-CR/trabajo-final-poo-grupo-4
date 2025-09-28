@@ -110,19 +110,15 @@ public class PanelJuego extends JPanel implements Runnable{
     //el override hace referencia a que es un metodo heredado de JPanel 
     @Override
 protected void paintComponent(Graphics g) {
+
     super.paintComponent(g);
 
-    // tamaño del tablero en píxeles
-    int boardW = laberinto.getPixelWidth();
-    int boardH = laberinto.getPixelHeight();
+    // calcular offset de la camara (segun la posicion del jugador)
+    int camX = jugador.getMundoX() - jugador.screenX; 
+    int camY = jugador.getMundoY() - jugador.screenY;
 
-    // offset para centrar dentro del JPanel actual
-    int offX = (getWidth()  - boardW) / 2;
-    int offY = (getHeight() - boardH) / 2;
-
-    // dibujar todo trasladado
-    Graphics2D g2 = (Graphics2D)g.create();
-    g2.translate(offX, offY);
+    Graphics2D g2 = (Graphics2D) g.create();
+    g2.translate(-camX, -camY); // mueve todo lo que se dibuje segun la camara
 
     laberinto.paintComponent(g2);
 
@@ -132,13 +128,17 @@ protected void paintComponent(Graphics g) {
         }
     }
 
-    jugador.draw(g2);
+    //jugador.draw(g2); // dibuja el jugador en el mundo, esto hace que funcione mal
     g2.dispose();
+    
+    jugador.draw((Graphics2D) g); // dibuja el jugador en pantalla (no en el mundo)
 
     if (light != null) {
-        light.paint((Graphics2D) g, getWidth(), getHeight(), offX, offY);
+        light.paint((Graphics2D) g, getWidth(), getHeight());
     }
+    
     mensaje.draw((Graphics2D) g, getWidth(), getHeight());
+    
     jugador.paintvida(g);
 }
 

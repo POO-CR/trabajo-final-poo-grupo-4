@@ -13,10 +13,10 @@ public class ColisionChecker {
 
     public void checkearTile(Player entidad) {
         // calcula la posición de las esquinas del rectángulo de colisión
-        int entidadLeftX = entidad.getX() + entidad.areaColisionDefaultX;
-        int entidadRightX = entidad.getX() + entidad.areaColisionDefaultX + entidad.areaColision.width;
-        int entidadTopY = entidad.getY() + entidad.areaColisionDefaultY;
-        int entidadBottomY = entidad.getY() + entidad.areaColisionDefaultY + entidad.areaColision.height;
+        int entidadLeftX = entidad.getMundoX() + entidad.areaColisionDefaultX;
+        int entidadRightX = entidad.getMundoX() + entidad.areaColisionDefaultX + entidad.areaColision.width;
+        int entidadTopY = entidad.getMundoY() + entidad.areaColisionDefaultY;
+        int entidadBottomY = entidad.getMundoY() + entidad.areaColisionDefaultY + entidad.areaColision.height;
 
         // dividimos los valores por el tamaño del tile para obtener las coordenadas en fila y columna
         int entidadColumnaIzquierda = entidadLeftX / panelJuego.laberinto.anchoBloque;
@@ -114,8 +114,8 @@ public class ColisionChecker {
             if (objeto != null) {
 
                 // vemos la posición de la hitbox de la entidad segun la posición de la entidad
-                e.areaColision.x += e.getX();
-                e.areaColision.y += e.getY();
+                e.areaColision.x += e.getMundoX();
+                e.areaColision.y += e.getMundoY();
 
                 // vemos la posición de la hitbox del objeto
                 objeto.getAreaColision().x += objeto.getX();

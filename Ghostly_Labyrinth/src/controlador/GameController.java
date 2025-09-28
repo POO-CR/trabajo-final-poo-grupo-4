@@ -4,6 +4,7 @@ import entidades.laberinto.Labyrinth;
 import javax.swing.JFrame;
 import juego.KeyHandler;
 import juego.PanelJuego;
+import java.awt.Toolkit;
 
 public class GameController {
 
@@ -14,7 +15,12 @@ public class GameController {
 
     public GameController() {
         this.lab = new Labyrinth(0);
-        this.jugador = new Player(lab);
+
+        // obtener tamaño pantalla
+        int screenW = Toolkit.getDefaultToolkit().getScreenSize().width;
+        int screenH = Toolkit.getDefaultToolkit().getScreenSize().height;
+
+        this.jugador = new Player(lab, screenW, screenH);
         this.panelJuego = new PanelJuego(lab, jugador, this);
         this.keyH = new KeyHandler();
     }
@@ -29,12 +35,21 @@ public class GameController {
         }
         JFrame ventana = new JFrame();
 
-        int ancho = lab.getPixelWidth();
-        int alto = lab.getPixelHeight();
+        //int ancho = lab.getPixelWidth();
+        //int alto = lab.getPixelHeight();
+        // YA NO SE USA ESTO, AHORA ES PANTALLA COMPLETA, NO SE TIENE EN CUENTA LAS MEDIDAS DEL LABERINTO
+        
         String tituloJuego = "Ghostly Labyrinth";
 
         ventana.setTitle(tituloJuego + " - Jugador: " + usuario);
-        ventana.setSize(ancho, alto);
+        //ventana.setSize(ancho, alto);
+
+        ventana.setSize(Toolkit.getDefaultToolkit().getScreenSize()); // pantalla completa
+
+        // POR AHORA ESTO NO PORQUE NO TENEMOS MENU PAUSAR, Y NO SE PUEDE SALIR
+        //ventana.setUndecorated(true); // quita la barra de titulo y bordes
+        //ventana.setExtendedState(JFrame.MAXIMIZED_BOTH); // ocupa toda la pantalla
+
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventana.setLocationRelativeTo(null);
         ventana.setResizable(true);
@@ -80,8 +95,8 @@ public class GameController {
 
 
     public void actualizarMovimiento() {
-        int nuevaX = jugador.getX();
-        int nuevaY = jugador.getY();
+        int nuevaX = jugador.getMundoX();
+        int nuevaY = jugador.getMundoY();
         int movimiento = jugador.getMovimiento();
         
         if (keyH.upPressed == true || keyH.downPressed == true ||
@@ -123,8 +138,8 @@ public class GameController {
                 case "left" -> nuevaX -= movimiento;
                 case "right" -> nuevaX += movimiento;
             }
-            jugador.setX(nuevaX);
-            jugador.setY(nuevaY);
+            jugador.setMundoX(nuevaX);
+            jugador.setMundoY(nuevaY);
         }
 
         jugador.spriteCounter++;

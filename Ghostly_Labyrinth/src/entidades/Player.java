@@ -23,6 +23,9 @@ public class Player extends Entity{
     //variable que indica si el jugador agarro la llave
     private boolean tieneLlave = false;
 
+    public final int screenX; // DONDE SE VA A DIBUJAR PLAYER EN PANTALLA
+    public final int screenY;
+
 
     // private final int ancho = 20;
     // private final int alto = 20;
@@ -65,7 +68,7 @@ public class Player extends Entity{
     // ancho = 11x2x1.5 = 33
     // alto = 7x2x1.5 = 21
 
-    public Player (Labyrinth lab) {
+    public Player (Labyrinth lab, int screenAncho, int screenAlto) {
         super();
         this.lab = lab;
         setValoresDefault();
@@ -73,9 +76,23 @@ public class Player extends Entity{
         anchoPersonaje = (int)(lab.anchoBloque*escalaPersonaje);
         altoPersonaje = (int)(lab.altoBloque*escalaPersonaje);
 
-        areaColision = new Rectangle(10, 30 , 28, 23);
-        areaColisionDefaultX = areaColision.x;
-        areaColisionDefaultY = areaColision.y;
+        screenX = screenAncho / 2 - (anchoPersonaje / 2); //centrado en pantalla
+        screenY = screenAlto / 2 - (altoPersonaje / 2); //centrado en pantalla
+
+        int colisionW = (int)(anchoPersonaje * 0.5); // ancho del area de colisión (50% del sprite)
+        int colisionH = (int)(altoPersonaje * 0.3);  // alto del area de colisión
+        int colisionX = (anchoPersonaje - colisionW) / 2; // centrado
+        int colisionY = (altoPersonaje - colisionH) / 2 + (int)(altoPersonaje * 0.29); // un poco mas abajo del centro, para los pies
+
+        areaColision = new Rectangle(colisionX, colisionY, colisionW, colisionH);
+
+        areaColisionDefaultX = colisionX;
+        areaColisionDefaultY = colisionY; // con estos cambios, player genera una hitbox proporcional a su sprite, para el tema de cambio de tamaño de tiles
+
+        // lo anterior, daba problemas con la colision del player con las paredes
+        //areaColision = new Rectangle(10, 30 , 28, 23);
+        //areaColisionDefaultX = areaColision.x;
+        //areaColisionDefaultY = areaColision.y;
 
         getImagen();
         //Carga la imagen de vida
@@ -88,8 +105,11 @@ public class Player extends Entity{
     }
 
     public void setValoresDefault () {
-        x = 50;
-        y = 50;
+        // posicion del player en el mundo (NO POSICION EN PANTALLA)
+        // ES EL PUNTO DE PARTIDA EN LA MATRIZ DEL LABERINTO
+        mundoX = 3 * lab.anchoBloque; // 3 tiles desde la izquierda
+        mundoY = 3 * lab.altoBloque;  // 3 tiles desde arriba
+
         movimiento = 6;
         direccion = "down";
         ultimaDireccion = "down";
@@ -192,7 +212,7 @@ public class Player extends Entity{
         
         }
 
-        grafico.drawImage(imagen, x, y, anchoPersonaje, altoPersonaje, null);
+        grafico.drawImage(imagen, screenX, screenY, anchoPersonaje, altoPersonaje, null); // dibuja el jugador en pantalla
     }
 
      //Metodos de la vida
@@ -242,12 +262,20 @@ public class Player extends Entity{
 
     //para el LightView
     public int getCentroX() {
-        return x + anchoPersonaje / 2;
+        return mundoX + anchoPersonaje / 2;
     }
 
     public int getCentroY() {
-        return y + altoPersonaje / 2;
+        return mundoY + altoPersonaje / 2;
     }
+
+    public int getAnchoPersonaje() {
+    return anchoPersonaje;
+}
+
+public int getAltoPersonaje() {
+    return altoPersonaje;
+}
 }
 
 

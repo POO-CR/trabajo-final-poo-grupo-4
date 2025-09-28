@@ -14,7 +14,7 @@ public class LightView {
     private final Player player;
 
     // parametros fijos
-    private final int radiusPx = 160;  // radio de luz en pixeles
+    private final int radiusPx = 210;  // radio de luz en pixeles
     private final int alphaFondo = 255; // nivel de oscuridad general (0-255)
 
     public LightView(Player player) {
@@ -31,7 +31,7 @@ public class LightView {
      * offX -> offset horizontal de la camara (cuanto esta corrido el mundo)
      * offY -> offset vertical de la camara
      */
-    public void paint(Graphics2D g, int anchoPanel, int altoPanel, int offX, int offY) {
+    public void paint(Graphics2D g, int anchoPanel, int altoPanel) {
         if (g == null || anchoPanel <= 0 || altoPanel <= 0 || player == null) return;
 
         // capa temporal del tamaño del viewport (ARGB con transparencia)
@@ -44,10 +44,10 @@ public class LightView {
         lg.fillRect(0, 0, anchoPanel, altoPanel);
 
         // calculamos el centro de la luz (ajustado un poco hacia arriba/izquierda)
-        int offsetX = -20; // desplaza la luz horizontalmente
-        int offsetY = -30; // desplaza la luz verticalmente
-        int cx = player.getCentroX() + offX + offsetX;
-        int cy = player.getCentroY() + offY + offsetY;
+        int offsetX = -5; // desplaza la luz horizontalmente
+        int offsetY = -5; // desplaza la luz verticalmente
+        int cx = player.screenX + player.getAnchoPersonaje() / 2 + offsetX;
+        int cy = player.screenY + player.getAltoPersonaje() / 2 + offsetY;
 
         // gradiente circular
         float[] dist = {0f, 0.65f, 1f}; // posiciones relativas desde el centro hasta el borde, define en que puntos cambia el color

@@ -10,7 +10,8 @@ public class Labyrinth {
     private int nivel;
     //valores iniciales
     final int originalTileSize = 20; // tamaño standard de tiles, dijimos de cambiarlo a 32x32
-    final int escala = 2; // escala para agrandar los tiles
+    //final int escala = 2; // escala para agrandar los tiles
+    final int escala = 3; // para que se vea mas de cerca todo
     final int tileSize = originalTileSize * escala; 
 
     //para cantidad de fil y col

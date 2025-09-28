@@ -4,15 +4,13 @@ import java.util.*;
 import java.io.InputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import entidades.tile.Tile;
-import entidades.tile.TileManager;
 
 public class Niveles {
-    ArrayList <Tile[][]> mapas = new ArrayList<>();
+    ArrayList <int[][]> mapas = new ArrayList<>();
     final int cantNiveles = 2;
     public static record Dimension(int alto, int ancho) {}
 
-    private static Dimension getDimensionMapa(int nivel) {
+    public static Dimension getDimensionMapa(int nivel) {
         return switch (nivel) {
             case 0 -> new Dimension(20, 30);
             case 1 -> new Dimension(20, 60);
@@ -29,16 +27,18 @@ public class Niveles {
         return getDimensionMapa(nivel).ancho;
     }
 
+    
+
 
     public Niveles(){
+        // TODO: pensar como hacer para que los mapas sean de distintos tamaños. puede ser una clase mapa.
         Dimension Dim;
-        TileManager tm = new TileManager();
 
         for (int i=0; i<=cantNiveles; i++){
             try {
                 Dim = getDimensionMapa(i);
 
-                Tile[][] mapaTemp = new Tile[Dim.alto][Dim.ancho];
+                int[][] mapaTemp = new int[Dim.alto][Dim.ancho];
                 InputStream is = getClass().getResourceAsStream(String.format("/assets/mapas/mapa%d.txt", i));
                 BufferedReader buffer = new BufferedReader(new InputStreamReader(is));
 
@@ -49,13 +49,7 @@ public class Niveles {
                     while (col < Dim.ancho) {
                         String numeros[] = linea.split(" ");
                         int num = Integer.parseInt(numeros[col]);
-                        if (num == 1) {
-                            Tile t = tm.crearNuevaTilePared(num);
-                            mapaTemp[fila][col] = t;
-                        }
-                        else
-                        {mapaTemp[fila][col] = tm.getTileArray()[num];}
-
+                        mapaTemp[fila][col] = num;
                         col++;
                     }
                     if (col == Dim.ancho) {
@@ -71,14 +65,8 @@ public class Niveles {
         }
     }
 
-    public Tile[][] getMapa(int nivel){
+    public int[][] getMapa(int nivel){
         return mapas.get(nivel);
-    }
-
-    public boolean indiceEnRango (int nivel, int x, int y) {
-        if (x >= getMapaAncho(nivel) || x < 0 || y < 0 || y >= getMapaAlto(nivel)) 
-            return false;
-        return true;
     }
 
 

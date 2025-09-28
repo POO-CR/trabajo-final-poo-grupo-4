@@ -1,6 +1,13 @@
 package entidades.laberinto;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import javax.swing.ImageIcon;
+import javax.imageio.ImageIO;
 
 import entidades.tile.*;
 
@@ -9,24 +16,24 @@ public class Labyrinth {
 
     //variables para matriz 
     //para contadores
-    private int nivel;
+    private int fila = 0;
+    private int columna = 0;
     //valores iniciales
     final int originalTileSize = 20; // tamaño standard de tiles, dijimos de cambiarlo a 32x32
     final int escala = 2; // escala para agrandar los tiles
     final int tileSize = originalTileSize * escala; 
 
     //para cantidad de fil y col
-    public int cantidadFilas; // 16 columnas de tiles en pantalla
+    public int cantidadFila; // 16 columnas de tiles en pantalla
     public int cantidadColumnas; // 12 filas de tiles en pantalla
 
     //para ancho y alto de cada bloque 
     public final int anchoBloque = tileSize;
     public final int altoBloque = tileSize;
 
-    TileManager tileManager;
-    TileSpriteSetter tileSS;
-    public Tile[] tile;
-    public Tile [][] laberintoMat;
+    TileManager tileManager = new TileManager();
+    public Tile[] tile = tileManager.getTile();
+    public int [][] laberintoNum;
 
     Niveles niveles;
 
@@ -38,14 +45,9 @@ public class Labyrinth {
         this.niveles = new Niveles();
 
         // crea el mapa de lucas por default
-        this.nivel = 0;
-        this.laberintoMat = niveles.getMapa(0);
+        this.laberintoNum = niveles.getMapa(0);
         cantidadColumnas = niveles.getMapaAncho(0);
-        cantidadFilas = niveles.getMapaAlto(0);
-        tileManager = new TileManager();
-        tile = tileManager.getTileArray();
-        tileSS = new TileSpriteSetter(this);
-        tileSS.setearTile(tileManager.getTile(1));
+        cantidadFila = niveles.getMapaAlto(0);
         //items = new ArrayList<>();
         //generar la llave al inicio
         //generarLlaveRandom();
@@ -56,34 +58,77 @@ public class Labyrinth {
     public Labyrinth(int nivel){
         System.out.println("creando lab con nivel");
         // crea un mapa con el nivel especificado en el panel del juego
-        this.nivel = nivel;
         this.niveles = new Niveles();
-        this.laberintoMat = niveles.getMapa(nivel);
+        this.laberintoNum = niveles.getMapa(nivel);
         cantidadColumnas = niveles.getMapaAncho(nivel);
-        cantidadFilas = niveles.getMapaAlto(nivel);
-        tileManager = new TileManager();
-        tile = tileManager.getTileArray();
-        tileSS = new TileSpriteSetter(this);
-        tileSS.setearTile(tileManager.getTile(1)); // TODO: está medio feo esto. El setear tile pide tiles para poder hacerlo con 
-                                                        // varias tiles distintas, pero acá solo usamos la parte de arriba de las paredes
+        cantidadFila = niveles.getMapaAlto(nivel);
+        //items = new ArrayList<>();
+        //generar la llave al inicio
+        //generarLlaveRandom();
+
+        //items.add(new Item(1, 28, "llave"));
     }
 
     public void setMapaLaberinto(int nivel) {
-        this.laberintoMat = niveles.getMapa(nivel); 
+        this.laberintoNum = niveles.getMapa(nivel); 
     }
 
+    
+    //variable para mostrar el mensaje de la puerta abierta
 
-    public Tile[][] obtenerLaberinto() {
-        return laberintoMat;
+    //variable para el estado de la puerta
+    private boolean puertaAbierta = false;
+
+    //lista de items en el laberinto 
+    //private ArrayList<Item> items;
+
+    //variable imagen
+    private BufferedImage llaveImg;
+
+    // // metodo para devolver la lista de ítems
+    // public ArrayList<Item> getItems() {
+    //     return items;
+    // }
+
+    // metodo para la puerta abierta
+    public void abrirPuerta() {
+        puertaAbierta = true;
+        for (int f = 0; f < cantidadFila; f++) {
+            for (int c = 0; c < cantidadColumnas; c++) {
+                if (laberintoNum[f][c] == 2) { // si es una puerta cerrada
+                    laberintoNum[f][c] = 0; // la convertimos en baldosa libre
+                }
+            }
+        }
     }
+    
+    public boolean isPuertaAbierta() {
+        return puertaAbierta;
+    }
+    
+    //metodo para generar la llave aleatoreamente
+    //public void generarLlaveRandom() {
+    //Random random = new Random();
+    //int[][] laberinto = obtenerLaberinto();
+    //int f, c;
 
-    public boolean indiceEnLaberinto (int x, int y){
-        return niveles.indiceEnRango(this.nivel, x, y);
+    //do {
+    //    f = random.nextInt(cantidadFila);
+    //    c = random.nextInt(cantidadColumnas);
+    //} while (laberinto[f][c] != 0); // buscamos baldosa libre
+
+    //Item llave = new Item(f, c, "llave");
+    //items.add(llave);
+    //}
+
+
+    public int[][] obtenerLaberinto() {
+        return laberintoNum;
     }
 
 
     public int valorTile(int fila, int columna) {
-        return laberintoMat[fila][columna].num;
+        return laberintoNum[fila][columna];
     }
 
 
@@ -93,32 +138,52 @@ public class Labyrinth {
     //Para poder utilizar graficos
     public void paintComponent(Graphics2D grafico){
         //filas
-        for(int fila = 0; fila<cantidadFilas; fila++){
+        for(fila = 0; fila<cantidadFila; fila++){
+            
             //columnas
-            for(int columna = 0; columna<cantidadColumnas; columna++){
-                    //variable para la iteracion
-                    grafico.drawImage(laberintoMat[fila][columna].getSprite(), columna * anchoBloque, fila * altoBloque, anchoBloque, altoBloque, null);
-                }
+            for(columna = 0; columna<cantidadColumnas; columna++){
+
+                // boolean dibujarItem = false;
+                
+                // // buscar si hay un item en esta celda
+                // for(Item item : items){
+                //     if(item.getFila() == fila && item.getColumna() == columna){
+                //         if(item.getTipo().equals("llave")){
+                //             try {
+                //                 llaveImg = ImageIO.read(getClass().getResourceAsStream("/assets/img/llave.jpg"));
+                //             } catch (Exception e) {
+                //                 e.printStackTrace();
+                //             }
+                //             grafico.drawImage(llaveImg, columna * anchoBloque, fila * altoBloque, anchoBloque, altoBloque, null);
+                //             dibujarItem = true;
+                //             break;
+                //         }
+                //     }
+                // }
+
+                //     if(!dibujarItem){
+
+                    //variable para la iteracion 
+                int valor = laberintoNum[fila][columna];
+                    
+                grafico.drawImage(tile[valor].imagen, columna * anchoBloque, fila * altoBloque, anchoBloque, altoBloque, null);
                 
             }
-        }
+        
+    }
 
-        //dibujar el mensaje de la puerta abierta
-        // if (mostrarMensaje) {
-        // grafico.setColor(Color.YELLOW);
-        // grafico.setFont(new Font("Arial", Font.BOLD, 20));
-        // grafico.drawString("PUERTA ABIERTA", 200, 30); // coordenadas en la ventana
 
-    
+
+    }
 
 
 
     public int getCols() { return cantidadColumnas; }
-    public int getRows() { return cantidadFilas; }
+    public int getRows() { return cantidadFila; }
     public int getTileW() { return anchoBloque; }
     public int getTileH() { return altoBloque; }
     public int getPixelWidth()  { return cantidadColumnas * anchoBloque; }
-    public int getPixelHeight() { return cantidadFilas    * altoBloque; }
+    public int getPixelHeight() { return cantidadFila    * altoBloque; }
 
 
 }

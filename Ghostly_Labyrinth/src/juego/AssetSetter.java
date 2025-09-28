@@ -57,7 +57,7 @@ public class AssetSetter {
         }
 
         Point p = opciones.get(rnd.nextInt(opciones.size()));
-        System.out.println("point de llave encontrado en x: " + p.x + " y: " + p.y);
+        System.out.println("point encontrado en x: " + p.x + " y: " + p.y);
         return p;
     }
 

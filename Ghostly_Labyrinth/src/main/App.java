@@ -55,9 +55,9 @@ public class App {
         juego.requestFocusInWindow();
         });
 
-        // Controlador
-        GameController controlador = new GameController(lab, juego);
-        controlador.actualizarMovimiento(jugador);
+        // // Controlador
+        // GameController controlador = new GameController(lab, juego, jugador);
+        // controlador.actualizarMovimiento();
 
 
         // juego

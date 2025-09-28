@@ -7,10 +7,11 @@ public class GameController {
 
     private Labyrinth lab;
     private PanelJuego panelJuego;
-
-    public GameController(Labyrinth lab, PanelJuego juego) {
+    private Player jugador;
+    public GameController(Labyrinth lab, PanelJuego juego, Player jugador) {
         this.lab = lab;
         this.panelJuego = juego;
+        this.jugador = jugador;
     }
 
 
@@ -22,7 +23,7 @@ public class GameController {
     }
 
 
-    public void actualizarMovimiento(Player jugador) {
+    public void actualizarMovimiento() {
         int nuevaX = jugador.getX();
         int nuevaY = jugador.getY();
         int movimiento = jugador.getMovimiento();
@@ -56,7 +57,8 @@ public class GameController {
         panelJuego.cChecker.checkearTile(jugador);
 
         int indiceObj = panelJuego.cChecker.checkearObjeto(jugador, true);
-        agarrarObjeto(indiceObj, jugador);
+        InteraccionDeMensajes(indiceObj);
+        
 
         if (jugador.colisionOn == false) {
             
@@ -88,22 +90,64 @@ public class GameController {
             jugador.spriteCounter = 0;
         }
 
+        // // Convertir a fila y columna de la matriz
+        // int filNueva = nuevaY / lab.anchoBloque;
+        // int colNueva = nuevaX / lab.altoBloque;
+
+        // // Validar límites y muros
+        // if(filNueva >= 0 && filNueva < lab.obtenerLaberinto().length &&
+        // colNueva >= 0 && colNueva < lab.obtenerLaberinto()[0].length) {
+
+        //     int valor = lab.obtenerLaberinto()[filNueva][colNueva];
+
+        //     // Bloqueamos puerta cerrada si no tenemos llave
+        //     if(valor != 1 && !(valor == 2 && !jugador.getTieneLlave())){
+        //         jugador.setX(nuevaX);
+        //         jugador.setY(nuevaY);
+        //     }
+        // }
+
+        //Verificar si el jugador pisa la llave
+        /**el círculo se superpone con las paredes a la derecha y abajo, porque solo chequeamos la esquina superior izquierda
+        *hay que calcular la colisión con todo el tamaño del circulo
+        *int leftCol   =  nuevaX          / tile;
+        *int rightCol  = (nuevaX + w - 1) / tile;
+        *int topRow    =  nuevaY          / tile;
+        *int bottomRow = (nuevaY + h - 1) / tile;
+        */
+
+        int filaJugador = jugador.getY() / lab.anchoBloque;
+        int colJugador = jugador.getX() / lab.altoBloque;
+
+        // for(int i = 0; i < lab.getItems().size(); i++){
+        //     Item item = lab.getItems().get(i);
+        //     if(item.getFila() == filaJugador && item.getColumna() == colJugador && item.getTipo().equals("llave")){ // TODO: manejar los tipos de item con un enum
+        //             jugador.recibirDanio(1);
+        //             jugador.setTieneLlave(true);
+        //             //TODO: DESCOMENTAR LO DE ABAJO
+        //             //lab.getItems().remove(i); // quitar llave del laberinto
+        //             lab.abrirPuerta();        // abrir la puerta
+        //             System.out.println("PUERTA ABIERTA");
+        //             break;
+                
+        //     }
         }
 
-        public void agarrarObjeto (int i, Player jugador){
+        public void InteraccionDeMensajes (int i){
             if (i != 999) {
                 String nombreObj = panelJuego.obj[i].nombre;
                 switch (nombreObj) {
                     case "Llave":
                         jugador.setTieneLlave(true);
-                        System.out.println("AGARRO LLAVE EN POSICION" + panelJuego.obj[i].getX() + " ; " + panelJuego.obj[i].getY());
                         panelJuego.obj[i] = null;
+                        panelJuego.mostrarMensaje("Tenes la llave", 2000);
                         break;
-                    default:
-                        break;
+                    
+
                 }
             }
         }
 
     }
+    
     

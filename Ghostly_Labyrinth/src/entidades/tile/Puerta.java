@@ -10,7 +10,7 @@ public class Puerta extends Tile {
 
     public void cerrar() {
         try{
-            setSprite(ImageIO.read(getClass().getResourceAsStream("/assets/img/puerta_cerrada.png")));
+            this.imagen = ImageIO.read(getClass().getResourceAsStream("/assets/img/puerta_cerrada.png"));
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -19,7 +19,7 @@ public class Puerta extends Tile {
 
     public void abrir() {
         try {
-            setSprite(ImageIO.read(getClass().getResourceAsStream("/assets/img/puerta_abierta.png")));
+            this.imagen = ImageIO.read(getClass().getResourceAsStream("/assets/img/puerta_abierta.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -56,8 +56,8 @@ public class App {
         });
 
         // Controlador
-        GameController controlador = new GameController(lab, juego);
-        controlador.actualizarMovimiento(jugador);
+        GameController controlador = new GameController(lab, juego,jugador);
+        controlador.actualizarMovimiento();
 
 
         // juego

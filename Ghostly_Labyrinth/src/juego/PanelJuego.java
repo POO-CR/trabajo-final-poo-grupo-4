@@ -22,6 +22,7 @@ public class PanelJuego extends JPanel implements Runnable{
     Labyrinth laberinto;
     Player jugador;
     private LightView light;
+    Message mensaje;
 
     public ColisionChecker cChecker = new ColisionChecker(this);
     public AssetSetter aSetter;
@@ -42,10 +43,11 @@ public class PanelJuego extends JPanel implements Runnable{
     public PanelJuego(Labyrinth lab, Player jugador){
         this.laberinto = lab;
         this.jugador = jugador;
+        this.mensaje = new Message();
         this.aSetter = new AssetSetter(this);
         this.anchoPantalla = laberinto.anchoBloque * laberinto.cantidadColumnas; // tamaño en pixeles
         this.altoPantalla = laberinto.altoBloque * laberinto.cantidadFilas;
-        this.controlador= new GameController(laberinto, this);
+        this.controlador= new GameController(laberinto, this,jugador);
         //setPreferredSize(new Dimension(anchoPantalla, altoPantalla));
         this.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize()); // para que tome el tamaño de la pantalla nativa!! copado!!
         setBackground(Color.black);
@@ -56,7 +58,9 @@ public class PanelJuego extends JPanel implements Runnable{
         
         this.light = new LightView(this.jugador);
     }
-
+    public void mostrarMensaje (String texto, int milisegundos){
+        mensaje.mostrar(texto,milisegundos);
+    }
     public Labyrinth getLaberinto () {
         return laberinto;
     }
@@ -100,7 +104,8 @@ public class PanelJuego extends JPanel implements Runnable{
 
 
     public void update(){
-        controlador.actualizarMovimiento(jugador);
+        controlador.actualizarMovimiento();
+        mensaje.update();
     }
 
     //metodo para poder dibujar en el JPanel, tanto el jugador laberinto fantasmas 
@@ -135,7 +140,7 @@ protected void paintComponent(Graphics g) {
     if (light != null) {
         light.paint((Graphics2D) g, getWidth(), getHeight(), offX, offY);
     }
-
+    mensaje.draw((Graphics2D) g, getWidth(), getHeight());
     jugador.paintvida(g);
 }
 

@@ -46,8 +46,8 @@ public class LightView {
         // calculamos el centro de la luz (ajustado un poco hacia arriba/izquierda)
         int offsetX = -20; // desplaza la luz horizontalmente
         int offsetY = -30; // desplaza la luz verticalmente
-        int cx = player.getCentroX() - offX + offsetX;
-        int cy = player.getCentroY() - offY + offsetY;
+        int cx = player.getCentroX() + offX + offsetX;
+        int cy = player.getCentroY() + offY + offsetY;
 
         // gradiente circular
         float[] dist = {0f, 0.65f, 1f}; // posiciones relativas desde el centro hasta el borde, define en que puntos cambia el color

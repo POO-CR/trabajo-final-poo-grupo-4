@@ -7,10 +7,12 @@ public class GameController {
 
     private Labyrinth lab;
     private PanelJuego panelJuego;
+    private Player jugador;
 
-    public GameController(Labyrinth lab, PanelJuego juego) {
+    public GameController(Labyrinth lab, PanelJuego juego, Player jugador) {
         this.lab = lab;
         this.panelJuego = juego;
+        this.jugador =jugador;
     }
 
 
@@ -22,7 +24,7 @@ public class GameController {
     }
 
 
-    public void actualizarMovimiento(Player jugador) {
+    public void actualizarMovimiento() {
         int nuevaX = jugador.getX();
         int nuevaY = jugador.getY();
         int movimiento = jugador.getMovimiento();
@@ -56,7 +58,7 @@ public class GameController {
         panelJuego.cChecker.checkearTile(jugador);
 
         int indiceObj = panelJuego.cChecker.checkearObjeto(jugador, true);
-        agarrarObjeto(indiceObj, jugador);
+        InteraccionDeMensajes(indiceObj);
 
         if (jugador.colisionOn == false) {
             
@@ -90,7 +92,7 @@ public class GameController {
 
         }
 
-        public void agarrarObjeto (int i, Player jugador){
+        public void InteraccionDeMensajes (int i){
             if (i != 999) {
                 String nombreObj = panelJuego.obj[i].nombre;
                 switch (nombreObj) {
@@ -98,6 +100,7 @@ public class GameController {
                         jugador.setTieneLlave(true);
                         System.out.println("AGARRO LLAVE EN POSICION" + panelJuego.obj[i].getX() + " ; " + panelJuego.obj[i].getY());
                         panelJuego.obj[i] = null;
+                        panelJuego.mostrarMensaje("Obtuviste la llave",2000);
                         break;
                     default:
                         break;

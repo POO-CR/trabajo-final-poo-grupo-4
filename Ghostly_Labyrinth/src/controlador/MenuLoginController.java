@@ -1,4 +1,4 @@
-package controller;
+package controlador;
 
 
 import java.util.function.Consumer;

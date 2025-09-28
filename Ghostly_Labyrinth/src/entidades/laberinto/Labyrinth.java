@@ -1,8 +1,6 @@
 package entidades.laberinto;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-
 import entidades.tile.*;
+import java.awt.Graphics2D;
 
 
 public class Labyrinth {

@@ -1,11 +1,11 @@
 package entidades.laberinto;
 
-import java.util.*;
-import java.io.InputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import entidades.tile.Tile;
 import entidades.tile.TileManager;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.*;
 
 public class Niveles {
     ArrayList <Tile[][]> mapas = new ArrayList<>();
@@ -49,12 +49,7 @@ public class Niveles {
                     while (col < Dim.ancho) {
                         String numeros[] = linea.split(" ");
                         int num = Integer.parseInt(numeros[col]);
-                        if (num == 1) {
-                            Tile t = tm.crearNuevaTilePared(num);
-                            mapaTemp[fila][col] = t;
-                        }
-                        else
-                        {mapaTemp[fila][col] = tm.getTileArray()[num];}
+                        mapaTemp[fila][col] = tm.crearNuevoObjetoTile(num);
 
                         col++;
                     }

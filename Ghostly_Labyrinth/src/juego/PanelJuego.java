@@ -2,16 +2,13 @@ package juego;
 
 import controlador.GameController;
 import entidades.*;
-import entidades.objetos.*;
 import entidades.laberinto.Labyrinth;
-import entidades.tile.*;
-
+import entidades.objetos.*;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import javax.swing.JPanel;
 import java.awt.Toolkit;
+import javax.swing.JPanel;
 import view.LightView;
 
 
@@ -37,23 +34,24 @@ public class PanelJuego extends JPanel implements Runnable{
     //KeyHandler keyH = new KeyHandler();
     Thread gameThread; //necesita runnable
 
+    // panel juego es la vista
+
 
 
     //constructor de la clase juego 
-    public PanelJuego(Labyrinth lab, Player jugador){
+    public PanelJuego(Labyrinth lab, Player jugador, GameController controlador){
         this.laberinto = lab;
         this.jugador = jugador;
         this.mensaje = new Message();
         this.aSetter = new AssetSetter(this);
         this.anchoPantalla = laberinto.anchoBloque * laberinto.cantidadColumnas; // tamaño en pixeles
         this.altoPantalla = laberinto.altoBloque * laberinto.cantidadFilas;
-        this.controlador= new GameController(laberinto, this,jugador);
+        this.controlador = controlador;
         //setPreferredSize(new Dimension(anchoPantalla, altoPantalla));
         this.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize()); // para que tome el tamaño de la pantalla nativa!! copado!!
         setBackground(Color.black);
         setDoubleBuffered(true); // guarda 2 buffer en memoria para que no carguen en tiempo real en pantalla
                                             // igual según internet no es necesario(?
-        controlador.añadirKeyListener(this);
         setFocusable(true); // el setfocusable es para que se "concentre" en los eventos del teclado
         
         this.light = new LightView(this.jugador);

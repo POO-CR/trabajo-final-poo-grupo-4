@@ -1,6 +1,8 @@
 package controlador;
 import entidades.*;
 import entidades.laberinto.Labyrinth;
+import javax.swing.JFrame;
+import juego.KeyHandler;
 import juego.PanelJuego;
 
 public class GameController {
@@ -8,19 +10,72 @@ public class GameController {
     private Labyrinth lab;
     private PanelJuego panelJuego;
     private Player jugador;
+    KeyHandler keyH;
 
-    public GameController(Labyrinth lab, PanelJuego juego, Player jugador) {
-        this.lab = lab;
-        this.panelJuego = juego;
-        this.jugador =jugador;
+    public GameController() {
+        this.lab = new Labyrinth(0);
+        this.jugador = new Player(lab);
+        this.panelJuego = new PanelJuego(lab, jugador, this);
+        this.keyH = new KeyHandler();
     }
 
+    public void iniciarJuego (String usuario) {
+    
+        // cerrar todas las ventanas abiertas de Swing
+        for (java.awt.Window window : java.awt.Window.getWindows()) {
+            if (window.isShowing()) {
+                window.dispose();
+            }
+        }
+        JFrame ventana = new JFrame();
 
-    KeyHandler keyH = new KeyHandler();
+        int ancho = lab.getPixelWidth();
+        int alto = lab.getPixelHeight();
+        String tituloJuego = "Ghostly Labyrinth";
+
+        ventana.setTitle(tituloJuego + " - Jugador: " + usuario);
+        ventana.setSize(ancho, alto);
+        ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        ventana.setLocationRelativeTo(null);
+        ventana.setResizable(true);
+
+        // Crear jugador
+        jugador.setNombre(usuario);
+
+        panelJuego.setFocusable(true);       //puede recibir foco
+        panelJuego.requestFocusInWindow();   //pedir foco para teclado
+        ventana.add(panelJuego);
+        ventana.setVisible(true);
+        ventana.setLocationRelativeTo(null);
+        ventana.setVisible(true);
+
+            
+        // se fuerza que este al frente y tenga foco
+        ventana.toFront();
+        ventana.requestFocus();
+        ventana.setAlwaysOnTop(true);   // para que quede al frente
+        ventana.setAlwaysOnTop(false);  // lo volvemos a normal
+
+        // despues de hacer visible la ventana, asegurar foco en el panel
+        javax.swing.SwingUtilities.invokeLater(() -> {
+        panelJuego.requestFocusInWindow();
+        });
+
+        // Controlador
+        actualizarMovimiento();
+        añadirKeyListener(panelJuego);
+
+
+        // juego
+        panelJuego.setupJuego(); //tiene que ir antes del juego
+        panelJuego.iniciarGameThread();
+    
+    }
+
     
 
     public void añadirKeyListener(PanelJuego juego){
-        juego.addKeyListener(keyH);
+        panelJuego.addKeyListener(keyH);
     }
 
 
@@ -63,18 +118,10 @@ public class GameController {
         if (jugador.colisionOn == false) {
             
             switch(jugador.getDireccion()) {
-                case "up":
-                    nuevaY -= movimiento;
-                    break;
-                case "down":
-                    nuevaY += movimiento;
-                    break;
-                case "left":
-                    nuevaX -= movimiento;
-                    break;
-                case "right":
-                    nuevaX += movimiento;
-                    break;
+                case "up" -> nuevaY -= movimiento;
+                case "down" -> nuevaY += movimiento;
+                case "left" -> nuevaX -= movimiento;
+                case "right" -> nuevaX += movimiento;
             }
             jugador.setX(nuevaX);
             jugador.setY(nuevaY);
@@ -96,14 +143,12 @@ public class GameController {
             if (i != 999) {
                 String nombreObj = panelJuego.obj[i].nombre;
                 switch (nombreObj) {
-                    case "Llave":
+                    case "Llave" -> {
                         jugador.setTieneLlave(true);
                         System.out.println("AGARRO LLAVE EN POSICION" + panelJuego.obj[i].getX() + " ; " + panelJuego.obj[i].getY());
                         panelJuego.obj[i] = null;
                         panelJuego.mostrarMensaje("Obtuviste la llave",2000);
-                        break;
-                    default:
-                        break;
+                    }
                 }
             }
         }

@@ -2,10 +2,10 @@ package controlador;
 
 import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
-import model.MenuLoginModel;
+//import model.MenuLoginModel;
 import model.Music;
-import view.MenuRegisterStart;
-import view.MenuUser;
+//import view.MenuRegisterStart;
+//import view.MenuUser;
 import view.MenuView;
 
 public class MenuController {
@@ -32,34 +32,12 @@ public class MenuController {
 
         // boton Jugar
         this.view.getBttnJugar().addActionListener((ActionEvent e) -> {
-            // Abre el menú de usuario
-            MenuUser seleccionarUsuario = new MenuUser(view);
-
-            // accion para abrir la ventana de registro al apretar nuevo usuario
-            seleccionarUsuario.getBttnNuevoUsuario().addActionListener((ActionEvent e1) -> {
-                MenuRegisterStart ventanaRegistro = new MenuRegisterStart(view); // la vista
-                MenuLoginModel modeloRegistro = new MenuLoginModel();           // el modelo
-                MenuLoginController controladorRegistro = new MenuLoginController(modeloRegistro, ventanaRegistro, usuario -> {
-                    // Se inicia el juego con el usuario recien creado
+            
                     this.gc = new GameController();
-                    gc.iniciarJuego(usuario);
+                    gc.iniciarJuego("usuario");
                 }); // el controlador
-                ventanaRegistro.setVisible(true);
-            });
+               
             
-            // para la opcion de cargar usuario
-            seleccionarUsuario.getBttnCargarUsuario().addActionListener(ev -> {
-                String nombre = JOptionPane.showInputDialog(seleccionarUsuario, "Ingrese nombre del usuario a cargar:");
-                if (nombre != null && !nombre.trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(seleccionarUsuario, "Usuario cargado: " + nombre);
-                    seleccionarUsuario.dispose();
-                    // aca tambien se puede iniciar el juego
-                }
-            });
-            
-            seleccionarUsuario.setVisible(true);
-        });
-
        
         // boton Tutorial
         this.view.getBttnTutorial().addActionListener((ActionEvent e) -> {

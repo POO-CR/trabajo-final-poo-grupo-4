@@ -239,6 +239,15 @@ public class Player extends Entity{
             puerta.abrir(); 
         }
     }
+
+    //para el LightView
+    public int getCentroX() {
+        return x + anchoPersonaje / 2;
+    }
+
+    public int getCentroY() {
+        return y + altoPersonaje / 2;
+    }
 }
 
 

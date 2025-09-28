@@ -5,12 +5,14 @@ import entidades.*;
 import entidades.objetos.*;
 import entidades.laberinto.Labyrinth;
 import entidades.tile.*;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
 import java.awt.Toolkit;
+import view.LightView;
 
 
 //Clase Juego debe heredar los atributos y metodos de JPanel
@@ -19,6 +21,8 @@ public class PanelJuego extends JPanel implements Runnable{
     //objetos para poder ser dibujados 
     Labyrinth laberinto;
     Player jugador;
+    private LightView light;
+
     public ColisionChecker cChecker = new ColisionChecker(this);
     public AssetSetter aSetter;
     public Objeto obj[] = new Objeto[10]; // solo podemos tener 10 objetos en pantalla simultáneamente
@@ -49,7 +53,8 @@ public class PanelJuego extends JPanel implements Runnable{
                                             // igual según internet no es necesario(?
         controlador.añadirKeyListener(this);
         setFocusable(true); // el setfocusable es para que se "concentre" en los eventos del teclado
-
+        
+        this.light = new LightView(this.jugador);
     }
 
     public Labyrinth getLaberinto () {
@@ -125,10 +130,13 @@ protected void paintComponent(Graphics g) {
     }
 
     jugador.draw(g2);
-    jugador.paintvida(g);
-
-
     g2.dispose();
+
+    if (light != null) {
+        light.paint((Graphics2D) g, getWidth(), getHeight(), offX, offY);
+    }
+
+    jugador.paintvida(g);
 }
 
 

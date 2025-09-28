@@ -44,7 +44,10 @@ public class MenuController {
             JOptionPane.showMessageDialog(view,"Mostrar tutorial");        
         });
             
-        
+         // boton Score
+        this.view.getBttnScore().addActionListener((ActionEvent e) -> {
+            JOptionPane.showMessageDialog(view,"Mostrar puntajes");        
+        });
     
 
         // boton Opciones

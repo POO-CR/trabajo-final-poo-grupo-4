@@ -11,6 +11,7 @@ public class MenuView extends JFrame {
     // botones principales del menu
     private JButton bttnJugar;
     private JButton bttnTutorial;
+    private JButton bttnScore;
     private JButton bttnOpciones;
     private JButton bttnSalir;
     private JButton bttnSonido;
@@ -30,10 +31,19 @@ public class MenuView extends JFrame {
 
         // titulo y config basica de la ventana
         this.setTitle("Ghostly Mansion");
+
+        // PARA VENTANA NORMAL
         //this.setSize(1236, 724);
-        this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        //this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        //this.setLocationRelativeTo(null); // centrada en la pantalla
+
+        // PARA PANTALLA COMPLETAAA
+        this.setUndecorated(true); // quita la barra de titulo y bordes
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH); // ocupa toda la pantalla
+        
+
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLocationRelativeTo(null); // centrada en la pantalla
+        
 
         // icono de la ventana
         try {
@@ -68,6 +78,14 @@ public class MenuView extends JFrame {
         Image scaledTutorialIconHover = tutorialIconHover.getImage().getScaledInstance(210, 70, Image.SCALE_SMOOTH);
         bttnTutorial = new JButton(new ImageIcon(scaledTutorialIcon));
         styleMenuButton(bttnTutorial, botonSize, new ImageIcon(scaledTutorialIconHover));
+
+        // score
+        ImageIcon scoreIcon = new ImageIcon(getClass().getResource("/assets/img/ScoreButton.png"));
+        ImageIcon scoreIconHover = new ImageIcon(getClass().getResource("/assets/img/ScoreButtonHover.png"));
+        Image scaledScoreIcon = scoreIcon.getImage().getScaledInstance(210, 70, Image.SCALE_SMOOTH);
+        Image scaledScoreIconHover = scoreIconHover.getImage().getScaledInstance(210, 70, Image.SCALE_SMOOTH);
+        bttnScore = new JButton(new ImageIcon(scaledScoreIcon));
+        styleMenuButton(bttnScore, botonSize, new ImageIcon(scaledScoreIconHover));
 
         // opciones
         ImageIcon optionsIcon = new ImageIcon(getClass().getResource("/assets/img/OptionsButton.png"));
@@ -113,7 +131,7 @@ public class MenuView extends JFrame {
         bttnSonido.setRolloverIcon(musicOnHover);
 
         // version del juego
-        JLabel version = new JLabel("Version: 0.0.3");
+        JLabel version = new JLabel("Version: 0.0.4");
         version.setForeground(Color.white);
         version.setFont(new Font("Calibri", Font.BOLD, 18));
 
@@ -145,9 +163,12 @@ public class MenuView extends JFrame {
         centerCol.add(bttnTutorial, gbc);
 
         gbc.gridy = 2;
-        centerCol.add(bttnOpciones, gbc);
+        centerCol.add(bttnScore, gbc);
 
         gbc.gridy = 3;
+        centerCol.add(bttnOpciones, gbc);
+
+        gbc.gridy = 4;
         centerCol.add(bttnSalir, gbc);
 
         // columna derecha (boton sonido + version)
@@ -200,6 +221,10 @@ public class MenuView extends JFrame {
 
     public JButton getBttnTutorial() { 
         return this.bttnTutorial; 
+    }
+
+    public JButton getBttnScore() { 
+        return this.bttnScore; 
     }
 
     public JButton getBttnOpciones() { 

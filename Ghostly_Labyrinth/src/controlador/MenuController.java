@@ -23,7 +23,6 @@ public class MenuController {
         this.view = new MenuView();
         this.actions();
         this.view.setVisible(true);
-        this.gc = new GameController();
         this.music = new Music("/assets/music/FireboyAndWatergirlSoundtrack.wav");
         this.music.reproducirLoop(); // Se inicializa la musica como encendida
 
@@ -42,6 +41,7 @@ public class MenuController {
                 MenuLoginModel modeloRegistro = new MenuLoginModel();           // el modelo
                 MenuLoginController controladorRegistro = new MenuLoginController(modeloRegistro, ventanaRegistro, usuario -> {
                     // Se inicia el juego con el usuario recien creado
+                    this.gc = new GameController();
                     gc.iniciarJuego(usuario);
                 }); // el controlador
                 ventanaRegistro.setVisible(true);

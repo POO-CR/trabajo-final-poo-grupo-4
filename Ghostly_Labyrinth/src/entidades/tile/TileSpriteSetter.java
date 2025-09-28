@@ -1,6 +1,7 @@
 package entidades.tile;
 
 import entidades.laberinto.Labyrinth;
+import java.util.Random;
 
 public class TileSpriteSetter {
     
@@ -12,19 +13,20 @@ public class TileSpriteSetter {
 
 
 
-    public void setearTile (Tile tile) {
+    public void setearTileSegunVecinos (Tile tile) {
         int cantidadFilas = lab.cantidadFilas;
         int cantidadColumnas = lab.cantidadColumnas;
+        int valor, posY, posX, index;
         for(int fila = 0; fila<cantidadFilas; fila++){
             
             //columnas
             for(int columna = 0; columna<cantidadColumnas; columna++){
                     //variable para la iteracion 
-                int valor = lab.laberintoMat[fila][columna].num;      
-                if (valor == 1) {
-                    int posX = fila;
-                    int posY = columna;
-                    int index = switch (getTilesVecinas(posX, posY)) { //chequeo los vecinos de esa baldosa
+                valor = lab.laberintoMat[fila][columna].num;      
+                if (valor == tile.num) {
+                    posX = fila;
+                    posY = columna;
+                    index = switch (getTilesVecinas(valor, posX, posY)) { //chequeo los vecinos de esa baldosa
                         case "0010" -> 0;
                         case "0110" -> 1;
                         case "0100" -> 2;
@@ -53,9 +55,8 @@ public class TileSpriteSetter {
     }
 
     
-    private String getTilesVecinas (int posX, int posY) {
+    private String getTilesVecinas (int valorActual, int posX, int posY) {
         StringBuilder stringBuilder = new StringBuilder();
-        int valorActual = lab.laberintoMat[posX][posY].num;
         for (int x = posY -1 ; x < posY + 2; x++){
             for (int y = posX -1 ; y < posX + 2; y++){
                 if (!lab.indiceEnLaberinto(x, y)) {
@@ -80,5 +81,21 @@ public class TileSpriteSetter {
         return sb2.toString();
     }
 
+    public void setearTileRandom (Tile tile) {
+        int cantidadFilas = lab.cantidadFilas;
+        int cantidadColumnas = lab.cantidadColumnas;
+        Tile tileTemp;
+        Random rnd = new Random();
+        for(int fila = 0; fila<cantidadFilas; fila++){
+            //columnas
+            for(int columna = 0; columna<cantidadColumnas; columna++){
+                    //variable para la iteracion 
+                tileTemp = lab.laberintoMat[fila][columna];
+                if (tileTemp.num == tile.num) {
+                    tileTemp.setTileIndex(rnd.nextInt(tileTemp.getMaxIndex())); //seteo un indice random entre los indices del tileSet de la baldosa
+                }
+            }  
 
+        }
+    }
 }

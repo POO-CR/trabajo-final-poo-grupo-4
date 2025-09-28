@@ -27,19 +27,19 @@ public class TileManager {
         try{
             Tile t;
             switch (i) {
-                case 0 : {t = new Tile(); 
-                    t.setSprite(ImageIO.read(getClass().getResourceAsStream("/assets/img/baldosa.jpg")));
+                case 0 : {t = new Tile(ImageIO.read(getClass().getResourceAsStream("/assets/img/laberinto/pisoRandom2.png"))); 
                     break;}
-                case 1 :  {t = new Tile(ImageIO.read(getClass().getResourceAsStream("/assets/img/laberinto/paredTop.png")), 8);
+                case 1 :  {t = new Tile(ImageIO.read(getClass().getResourceAsStream("/assets/img/laberinto/paredTop.png")));
                     t.colision = true;
                     break;}
                 case 2 : {t = new Puerta();
                     break;}
                 case 3 : {t = new Tile();
-                    t.setSprite(ImageIO.read(getClass().getResourceAsStream("/assets/img/baldosa.jpg")));
+                    t.setSprite(ImageIO.read(getClass().getResourceAsStream("/assets/img/laberinto/pisoSolo.png")));
                     break;}
                 case 4: {t = new Tile();
                     t.setSprite(ImageIO.read(getClass().getResourceAsStream("/assets/img/laberinto/paredFrente.png")));
+                    t.colision = true;
                     break;}
                 default: t = new Tile();
             }

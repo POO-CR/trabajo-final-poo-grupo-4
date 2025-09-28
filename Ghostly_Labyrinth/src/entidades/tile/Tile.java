@@ -8,11 +8,13 @@ public class Tile {
     private BufferedImage sprite;
     private Image tileSet;
     private int tileIndex;
+    private int maxIndex;
     public boolean colision = false;
 
-    public Tile(BufferedImage tileSet, int tileIndex) {
+    public Tile(BufferedImage tileSet) {
         this.tileSet = tileSet;
-        this.tileIndex = tileIndex;
+        this.tileIndex = 0;
+        maxIndex = (tileSet.getWidth(null) / 20) * (tileSet.getWidth(null)/20);
         generarSprite();
     }
 
@@ -45,6 +47,10 @@ public class Tile {
     public void setTileIndex(int tileIndex) {
         this.tileIndex = tileIndex;
         generarSprite();
+    }
+
+    public int getMaxIndex () {
+        return this.maxIndex;
     }
 
 }

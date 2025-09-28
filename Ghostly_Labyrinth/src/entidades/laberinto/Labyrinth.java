@@ -43,7 +43,7 @@ public class Labyrinth {
         tileManager = new TileManager();
         tile = tileManager.getTileArray();
         tileSS = new TileSpriteSetter(this);
-        tileSS.setearTile(tileManager.getTile(1));
+        tileSS.setearTileSegunVecinos(tileManager.getTile(1));
         //items = new ArrayList<>();
         //generar la llave al inicio
         //generarLlaveRandom();
@@ -62,8 +62,9 @@ public class Labyrinth {
         tileManager = new TileManager();
         tile = tileManager.getTileArray();
         tileSS = new TileSpriteSetter(this);
-        tileSS.setearTile(tileManager.getTile(1)); // TODO: está medio feo esto. El setear tile pide tiles para poder hacerlo con 
+        tileSS.setearTileSegunVecinos(tileManager.getTile(1)); // TODO: está medio feo esto. El setear tile pide tiles para poder hacerlo con 
                                                         // varias tiles distintas, pero acá solo usamos la parte de arriba de las paredes
+        tileSS.setearTileRandom(tileManager.getTile(0));
     }
 
     public void setMapaLaberinto(int nivel) {

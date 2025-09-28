@@ -15,7 +15,7 @@ public class Niveles {
     private static Dimension getDimensionMapa(int nivel) {
         return switch (nivel) {
             case 0 -> new Dimension(20, 30);
-            case 1 -> new Dimension(20, 60);
+            case 1 -> new Dimension(4, 6);
             case 2 -> new Dimension(20, 30);
             default -> new Dimension(20, 30);
         };

@@ -10,6 +10,9 @@ import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import javax.swing.JPanel;
 import view.LightView;
+import juego.Stopwatch;
+import java.awt.Font;
+import java.awt.FontMetrics;
 
 
 //Clase Juego debe heredar los atributos y metodos de JPanel
@@ -20,6 +23,8 @@ public class PanelJuego extends JPanel implements Runnable{
     Player jugador;
     private LightView light;
     Message mensaje;
+    private Stopwatch stopwatch; //atributo para el Stopwatch
+    private Font fuenteJuego; //atributo para la fuente
 
     public ColisionChecker cChecker = new ColisionChecker(this);
     public AssetSetter aSetter;
@@ -55,10 +60,25 @@ public class PanelJuego extends JPanel implements Runnable{
         setFocusable(true); // el setfocusable es para que se "concentre" en los eventos del teclado
         
         this.light = new LightView(this.jugador);
+
+        stopwatch = new Stopwatch(() -> repaint()); // cada tick redibuja
+        stopwatch.iniciar();
+
+        //para la fuente de todos los textos del juego
+        try {
+            fuenteJuego = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/assets/font/shloprg.otf"));
+            fuenteJuego = fuenteJuego.deriveFont(Font.PLAIN, 28f); // estilo y tamaño
+        } catch (Exception e) {
+            e.printStackTrace();
+            // en el caso de que falle se pone arial es para que no tire exception y se rompa 
+            fuenteJuego = new Font("Arial", Font.PLAIN, 28);
+}
+
     }
     public void mostrarMensaje (String texto, int milisegundos){
         mensaje.mostrar(texto,milisegundos);
     }
+
     public Labyrinth getLaberinto () {
         return laberinto;
     }
@@ -109,7 +129,7 @@ public class PanelJuego extends JPanel implements Runnable{
     //metodo para poder dibujar en el JPanel, tanto el jugador laberinto fantasmas 
     //el override hace referencia a que es un metodo heredado de JPanel 
     @Override
-protected void paintComponent(Graphics g) {
+    protected void paintComponent(Graphics g) {
 
     super.paintComponent(g);
 
@@ -140,6 +160,20 @@ protected void paintComponent(Graphics g) {
     mensaje.draw((Graphics2D) g, getWidth(), getHeight());
     
     jugador.paintvida(g);
+
+    //para dibujar el cronometro tanto el estilo como la posicion
+
+    g.setFont(fuenteJuego); //usa la fuente cargada en el constructor de panel juego
+    String textoTiempo = "Time: " + stopwatch.formatoTiempo(stopwatch.getSegundos()); //texto que se mostrara en pantalla
+
+    FontMetrics metrics = g.getFontMetrics(fuenteJuego); //FontMetrics da informacion sobre la fuente y g.getFontMetrics le pide al objeto graphics que devuelva las metricas(ancho,alto,espaciado) de la fuente fuenteJuego 
+    int anchoTexto = metrics.stringWidth(textoTiempo); //calcula el ancho de pixeles de la cadena textoTiempo, anchoTexto va a contener un entero con la cantidad de pixeles que ocupa en x textoTiempo
+
+    int x = getWidth() - anchoTexto - 20; //se calcula y coloca la posicion x en el paneljuego (getWidth() da el ancho total del panel juego y se le resta el ancho de pixeles del texto y el -20 es un margen de separacion desde el borde derecho de la ventana para que no quede pegado al borde)
+    int y = 40; //se coloca en la posicion y en el paneljuego
+
+    g.setColor(Color.WHITE); //se setea el color del texto en blanco
+    g.drawString(textoTiempo, x, y); //se dibuja el string textoTiempo en las posiciones x e y calculadas 
 }
 
 

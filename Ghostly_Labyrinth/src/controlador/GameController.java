@@ -4,7 +4,10 @@ import entidades.laberinto.Labyrinth;
 import javax.swing.JFrame;
 import juego.KeyHandler;
 import juego.PanelJuego;
+import juego.Stopwatch;
+
 import java.awt.Toolkit;
+
 
 public class GameController {
 
@@ -12,6 +15,7 @@ public class GameController {
     private PanelJuego panelJuego;
     private Player jugador;
     KeyHandler keyH;
+    private Stopwatch stopwatch;
 
     public GameController() {
         this.lab = new Labyrinth(0);
@@ -84,6 +88,9 @@ public class GameController {
         // juego
         panelJuego.setupJuego(); //tiene que ir antes del juego
         panelJuego.iniciarGameThread();
+
+        stopwatch = new Stopwatch(() -> panelJuego.repaint()); //cada vez que el stopwatch incrementa el tiempo en 1 segundo se redibuja el panelJuego 
+        stopwatch.iniciar(); //inicia el cronometro
     
     }
 
@@ -102,7 +109,7 @@ public class GameController {
         if (keyH.upPressed == true || keyH.downPressed == true ||
             keyH.leftPressed == true || keyH.rightPressed == true){
         
-                if (keyH.upPressed == true){
+            if (keyH.upPressed == true){
             jugador.setDireccion("up");
             jugador.setUltimaDireccion("up");
             }

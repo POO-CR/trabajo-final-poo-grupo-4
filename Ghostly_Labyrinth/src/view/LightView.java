@@ -14,7 +14,7 @@ public class LightView {
     private final Player player;
 
     // parametros fijos
-    private final int radiusPx = 210;  // radio de luz en pixeles
+    private final int radiusPx = 280;  // radio de luz en pixeles
     private final int alphaFondo = 255; // nivel de oscuridad general (0-255)
 
     public LightView(Player player) {

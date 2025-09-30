@@ -2,13 +2,16 @@ package juego;
 import entidades.*;
 import entidades.objetos.*;
 import entidades.tile.*;
+import entidades.laberinto.*;
 
 public class ColisionChecker {
     
-    PanelJuego panelJuego;
+    Labyrinth lab;
+    Objeto[] obj;
 
-    public ColisionChecker(PanelJuego panelJuego) {
-        this.panelJuego = panelJuego;
+    public ColisionChecker(Labyrinth lab, Objeto[] obj) {
+        this.lab = lab;
+        this.obj = obj;
     }
 
     public void checkearTile(Player entidad) {
@@ -19,10 +22,10 @@ public class ColisionChecker {
         int entidadBottomY = entidad.getMundoY() + entidad.areaColisionDefaultY + entidad.areaColision.height;
 
         // dividimos los valores por el tamaño del tile para obtener las coordenadas en fila y columna
-        int entidadColumnaIzquierda = entidadLeftX / panelJuego.laberinto.anchoBloque;
-        int entidadColumnaDerecha = entidadRightX / panelJuego.laberinto.anchoBloque;
-        int entidadFilaSuperior = entidadTopY / panelJuego.laberinto.altoBloque;
-        int entidadFilaInferior = entidadBottomY / panelJuego.laberinto.altoBloque;
+        int entidadColumnaIzquierda = entidadLeftX / lab.anchoBloque;
+        int entidadColumnaDerecha = entidadRightX / lab.anchoBloque;
+        int entidadFilaSuperior = entidadTopY / lab.altoBloque;
+        int entidadFilaInferior = entidadBottomY / lab.altoBloque;
 
         if (entidadColumnaDerecha < 0 ) entidadColumnaDerecha = 0;
         if (entidadColumnaIzquierda < 0 ) entidadColumnaIzquierda = 0;
@@ -36,12 +39,12 @@ public class ColisionChecker {
         switch(entidad.direccion) {
             case "up":
                 // predice la siguiente posición (en tiles) según la dirección y velocidad
-                entidadFilaSuperior = (entidadTopY - entidad.getMovimiento()) / panelJuego.laberinto.altoBloque;
+                entidadFilaSuperior = (entidadTopY - entidad.getMovimiento()) / lab.altoBloque;
 
                 // hay solo 2 en frente del personaje, entonces guardamos esas dos tiles
                 if (entidadFilaSuperior < 0 ) entidadFilaSuperior = 0;
-                tile1 = panelJuego.laberinto.laberintoMat[entidadFilaSuperior] [entidadColumnaIzquierda];
-                tile2 = panelJuego.laberinto.laberintoMat[entidadFilaSuperior] [entidadColumnaDerecha];
+                tile1 = lab.laberintoMat[entidadFilaSuperior] [entidadColumnaIzquierda];
+                tile2 = lab.laberintoMat[entidadFilaSuperior] [entidadColumnaDerecha];
 
                 entidad.tieneAcceso(tile1);
                 entidad.tieneAcceso(tile2);
@@ -52,13 +55,13 @@ public class ColisionChecker {
                 break;
 
             case "down":
-                entidadFilaInferior = (entidadBottomY + entidad.getMovimiento()) / panelJuego.laberinto.altoBloque;
+                entidadFilaInferior = (entidadBottomY + entidad.getMovimiento()) / lab.altoBloque;
                 if (entidadFilaInferior<0 ) entidadFilaInferior = 0;
-                tile1 = panelJuego.laberinto.laberintoMat[entidadFilaInferior] [entidadColumnaIzquierda]; //[entidadColumnaIzquierda][entidadFilaInferior];
-                tile2 = panelJuego.laberinto.laberintoMat[entidadFilaInferior] [entidadColumnaDerecha]; //[entidadColumnaDerecha][entidadFilaInferior];
+                tile1 = lab.laberintoMat[entidadFilaInferior] [entidadColumnaIzquierda]; //[entidadColumnaIzquierda][entidadFilaInferior];
+                tile2 = lab.laberintoMat[entidadFilaInferior] [entidadColumnaDerecha]; //[entidadColumnaDerecha][entidadFilaInferior];
 
-                // tile1 = panelJuego.laberinto.tile[tileNum1];
-                // tile2 = panelJuego.laberinto.tile[tileNum2];
+                // tile1 = lab.tile[tileNum1];
+                // tile2 = lab.tile[tileNum2];
 
                 entidad.tieneAcceso(tile1);
                 entidad.tieneAcceso(tile2);
@@ -69,12 +72,12 @@ public class ColisionChecker {
                 break;
 
             case "left":
-                entidadColumnaIzquierda = (entidadLeftX - entidad.getMovimiento()) / panelJuego.laberinto.anchoBloque;
+                entidadColumnaIzquierda = (entidadLeftX - entidad.getMovimiento()) / lab.anchoBloque;
                 if (entidadColumnaIzquierda < 0 ) entidadColumnaIzquierda = 0;
-                tile1 = panelJuego.laberinto.laberintoMat[entidadFilaSuperior][entidadColumnaIzquierda]; //[entidadColumnaIzquierda][entidadFilaSuperior];
-                tile2 = panelJuego.laberinto.laberintoMat[entidadFilaInferior][entidadColumnaIzquierda]; //[entidadColumnaIzquierda][entidadFilaInferior];
-                // tile1 = panelJuego.laberinto.tile[tileNum1];
-                // tile2 = panelJuego.laberinto.tile[tileNum2];
+                tile1 = lab.laberintoMat[entidadFilaSuperior][entidadColumnaIzquierda]; //[entidadColumnaIzquierda][entidadFilaSuperior];
+                tile2 = lab.laberintoMat[entidadFilaInferior][entidadColumnaIzquierda]; //[entidadColumnaIzquierda][entidadFilaInferior];
+                // tile1 = lab.tile[tileNum1];
+                // tile2 = lab.tile[tileNum2];
 
                 entidad.tieneAcceso(tile1);
                 entidad.tieneAcceso(tile2);
@@ -84,12 +87,12 @@ public class ColisionChecker {
                 }
                 break;
             case "right":
-                entidadColumnaDerecha = (entidadRightX + entidad.getMovimiento()) / panelJuego.laberinto.anchoBloque;
+                entidadColumnaDerecha = (entidadRightX + entidad.getMovimiento()) / lab.anchoBloque;
                 if (entidadColumnaDerecha < 0 ) entidadColumnaDerecha = 0;
-                tile1 = panelJuego.laberinto.laberintoMat[entidadFilaSuperior][entidadColumnaDerecha]; //[entidadColumnaDerecha][entidadFilaSuperior];
-                tile2 = panelJuego.laberinto.laberintoMat[entidadFilaInferior][entidadColumnaDerecha]; //[entidadColumnaDerecha][entidadFilaInferior];
-                // tile1 = panelJuego.laberinto.tile[tileNum1];
-                // tile2 = panelJuego.laberinto.tile[tileNum2];
+                tile1 = lab.laberintoMat[entidadFilaSuperior][entidadColumnaDerecha]; //[entidadColumnaDerecha][entidadFilaSuperior];
+                tile2 = lab.laberintoMat[entidadFilaInferior][entidadColumnaDerecha]; //[entidadColumnaDerecha][entidadFilaInferior];
+                // tile1 = lab.tile[tileNum1];
+                // tile2 = lab.tile[tileNum2];
 
                 entidad.tieneAcceso(tile1);
                 entidad.tieneAcceso(tile2);
@@ -109,8 +112,8 @@ public class ColisionChecker {
 
         int index = 999;
 
-        for (int i= 0; i < panelJuego.obj.length; i++){
-            Objeto objeto = panelJuego.obj[i];
+        for (int i= 0; i < obj.length; i++){
+            Objeto objeto = obj[i];
             if (objeto != null) {
 
                 // vemos la posición de la hitbox de la entidad segun la posición de la entidad
@@ -167,7 +170,7 @@ public class ColisionChecker {
                     }
                     break;
                 }
-                panelJuego.obj[i].volverDefaultAreaColision();
+                obj[i].volverDefaultAreaColision();
             }
             e.areaColision.x = e.areaColisionDefaultX;
             e.areaColision.y = e.areaColisionDefaultY;

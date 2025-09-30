@@ -5,13 +5,10 @@ import java.awt.Graphics2D;
 
 public class Labyrinth {
 
-    //variables para matriz 
-    //para contadores
-    private int nivel;
     //valores iniciales
     final int originalTileSize = 20; // tamaño standard de tiles, dijimos de cambiarlo a 32x32
     //final int escala = 2; // escala para agrandar los tiles
-    final int escala = 3; // para que se vea mas de cerca todo
+    final int escala = 4; // para que se vea mas de cerca todo
     final int tileSize = originalTileSize * escala; 
 
     //para cantidad de fil y col
@@ -22,29 +19,26 @@ public class Labyrinth {
     public final int anchoBloque = tileSize;
     public final int altoBloque = tileSize;
 
+    private Nivel nivel;
+
     TileManager tileManager;
     TileSpriteSetter tileSS;
     public Tile[] tile;
     public Tile [][] laberintoMat;
 
-    Niveles niveles;
 
+    // public Labyrinth(){
+    //     System.out.println("creando lab sin nivel");
 
-
-
-    public Labyrinth(){
-        System.out.println("creando lab sin nivel");
-        this.niveles = new Niveles();
-
-        // crea el mapa de lucas por default
-        this.nivel = 0;
-        this.laberintoMat = niveles.getMapa(0);
-        cantidadColumnas = niveles.getMapaAncho(0);
-        cantidadFilas = niveles.getMapaAlto(0);
-        tileManager = new TileManager();
-        tile = tileManager.getTileArray();
-        tileSS = new TileSpriteSetter(this);
-        tileSS.setearTileSegunVecinos(tileManager.getTile(1));
+    //     // crea el mapa de lucas por default
+    //     this.nivel = 0;
+    //     this.laberintoMat = niveles.getMapa(0);
+    //     cantidadColumnas = niveles.getMapaAncho(0);
+    //     cantidadFilas = niveles.getMapaAlto(0);
+    //     tileManager = new TileManager();
+    //     tile = tileManager.getTileArray();
+    //     tileSS = new TileSpriteSetter(this);
+    //     tileSS.setearTileSegunVecinos(tileManager.getTile(1));
         //items = new ArrayList<>();
         //generar la llave al inicio
         //generarLlaveRandom();
@@ -52,14 +46,12 @@ public class Labyrinth {
         //items.add(new Item(1, 28, "llave"));
     }
 
-    public Labyrinth(int nivel){
+    public Labyrinth(Nivel nivel){
         System.out.println("creando lab con nivel");
         // crea un mapa con el nivel especificado en el panel del juego
         this.nivel = nivel;
-        this.niveles = new Niveles();
-        this.laberintoMat = niveles.getMapa(nivel);
-        cantidadColumnas = niveles.getMapaAncho(nivel);
-        cantidadFilas = niveles.getMapaAlto(nivel);
+        cantidadColumnas = nivel.getAncho();
+        cantidadFilas = nivel.getAlto();
         tileManager = new TileManager();
         tile = tileManager.getTileArray();
         tileSS = new TileSpriteSetter(this);
@@ -68,18 +60,11 @@ public class Labyrinth {
         tileSS.setearTileRandom(tileManager.getTile(0));
     }
 
-    public void setMapaLaberinto(int nivel) {
-        this.laberintoMat = niveles.getMapa(nivel); 
-    }
-
 
     public Tile[][] obtenerLaberinto() {
         return laberintoMat;
     }
 
-    public boolean indiceEnLaberinto (int x, int y){
-        return niveles.indiceEnRango(this.nivel, x, y);
-    }
 
 
     public int valorTile(int fila, int columna) {
@@ -97,7 +82,7 @@ public class Labyrinth {
             //columnas
             for(int columna = 0; columna<cantidadColumnas; columna++){
                     //variable para la iteracion
-                    grafico.drawImage(laberintoMat[fila][columna].getSprite(), columna * anchoBloque, fila * altoBloque, anchoBloque, altoBloque, null);
+                    grafico.drawImage(nivel.matBaldosas[fila][columna].getSprite(), columna * anchoBloque, fila * altoBloque, anchoBloque, altoBloque, null);
                 }
                 
             }

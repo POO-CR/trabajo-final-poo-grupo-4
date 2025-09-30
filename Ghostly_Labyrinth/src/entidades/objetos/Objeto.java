@@ -4,7 +4,6 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import entidades.laberinto.Labyrinth;
-import juego.PanelJuego;
 
 import java.awt.Rectangle;
 
@@ -14,7 +13,6 @@ public class Objeto {
     public BufferedImage imagen;
     public String nombre;
     public boolean colision = false;
-    private PanelJuego pj;
     private Labyrinth lab;
     protected int tilePermitida;
     protected int x, y;
@@ -22,9 +20,8 @@ public class Objeto {
     protected int areaColisionDefaultX = 0;
     protected int areaColisionDefaultY = 0;
 
-    public Objeto (PanelJuego pj) {
-        this.pj = pj;
-        lab = this.pj.getLaberinto();
+    public Objeto (Labyrinth lab) {
+        this.lab = lab;
         //el area de colisión se puede customizar en cada objeto 
         this.areaColision = new Rectangle(0, 0, lab.anchoBloque, lab.altoBloque);
     }

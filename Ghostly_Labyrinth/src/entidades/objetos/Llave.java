@@ -1,12 +1,12 @@
 package entidades.objetos;
 
 import java.io.IOException;
-import juego.PanelJuego;
+import entidades.laberinto.*;
 
 public class Llave extends Objeto {
 
-    public Llave(PanelJuego pj) {
-        super(pj);
+    public Llave(Labyrinth lab) {
+        super(lab);
         nombre = "Llave";
         colision = false;
         tilePermitida = 3;

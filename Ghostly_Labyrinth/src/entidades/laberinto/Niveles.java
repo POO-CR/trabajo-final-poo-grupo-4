@@ -7,10 +7,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
 
-public class Niveles {
+public class NivelManager {
     ArrayList <Tile[][]> mapas = new ArrayList<>();
-    final int cantNiveles = 2;
-    public static record Dimension(int alto, int ancho) {}
+    private final int cantNiveles;
+    private static record Dimension(int alto, int ancho) {}
+    private Dimension dim;
+    private TileManager tm;
+    Nivel nivel;
 
     private static Dimension getDimensionMapa(int nivel) {
         return switch (nivel) {
@@ -31,50 +34,42 @@ public class Niveles {
 
 
     public Niveles(){
-        Dimension Dim;
-        TileManager tm = new TileManager();
+        tm = new TileManager();
+        cantNiveles = 2;
+    }
 
-        for (int i=0; i<=cantNiveles; i++){
-            try {
-                Dim = getDimensionMapa(i);
-
-                Tile[][] mapaTemp = new Tile[Dim.alto][Dim.ancho];
-                InputStream is = getClass().getResourceAsStream(String.format("/assets/mapas/mapa%d.txt", i));
+    public Nivel getNivel(int nivelNumero){
+        try {
+                this.dim = getDimensionMapa(nivelNumero);
+                this.nivel = new Nivel(dim.ancho, dim.alto);
+                InputStream is = getClass().getResourceAsStream(String.format("/assets/mapas/mapa%d.txt", nivelNumero));
                 BufferedReader buffer = new BufferedReader(new InputStreamReader(is));
 
                 int col = 0;
                 int fila = 0;
-                while (col < Dim.ancho && fila < Dim.alto) {
+                while (col < dim.ancho && fila < dim.alto) {
                     String linea = buffer.readLine();
-                    while (col < Dim.ancho) {
+                    while (col < dim.ancho) {
                         String numeros[] = linea.split(" ");
                         int num = Integer.parseInt(numeros[col]);
-                        mapaTemp[fila][col] = tm.crearNuevoObjetoTile(num);
+                        nivel.matBaldosas[fila][col] = tm.crearNuevoObjetoTile(num);
 
                         col++;
                     }
-                    if (col == Dim.ancho) {
+                    if (col == dim.ancho) {
                         col = 0;
                         fila++;
                     }
                 }
-                mapas.add(mapaTemp);
                 buffer.close();
+                return nivel;
             }catch (Exception e) {
                 e.printStackTrace();
+                return null;
             }
-        }
+        
     }
 
-    public Tile[][] getMapa(int nivel){
-        return mapas.get(nivel);
-    }
-
-    public boolean indiceEnRango (int nivel, int x, int y) {
-        if (x >= getMapaAncho(nivel) || x < 0 || y < 0 || y >= getMapaAlto(nivel)) 
-            return false;
-        return true;
-    }
 
 
 }

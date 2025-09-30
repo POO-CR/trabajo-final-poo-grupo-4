@@ -5,26 +5,29 @@ import entidades.objetos.*;
 import java.util.List;
 import java.awt.Point;
 
+import controlador.GameController;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class AssetSetter {
     
-    PanelJuego pj;
+    GameController gc;
     Labyrinth lab;
 
-    public AssetSetter (PanelJuego pj) {
-        this.pj = pj;
-        this.lab = pj.laberinto;
+    public AssetSetter (GameController gc, Labyrinth lab) {
+        this.gc = gc;
+        this.lab = lab;
     }
 
     public void setearObjetosIniciales () {
         Point p;
-        pj.obj[0] = new Llave(this.pj);
         try {
-            p = encontrarCoordsObjeto(pj.obj[0]);
-            pj.obj[0].setX(p.x * lab.anchoBloque);
-            pj.obj[0].setY(p.y * lab.altoBloque);}
+            Llave l = new Llave(lab);
+            p = encontrarCoordsObjeto(l);
+            l.setX(p.x * lab.anchoBloque);
+            l.setY(p.y * lab.altoBloque);
+            gc.setObjeto(0, l); //TODO: ojo con esto q está medio hardcoded
+        }
         catch (Exception e){
             e.printStackTrace();
         }
@@ -41,7 +44,6 @@ public class AssetSetter {
     private Point encontrarCoordsObjeto (Objeto obj) throws Exception {
 
         List<Point> opciones = new ArrayList<>();
-        Labyrinth lab = pj.laberinto;
         int cols = lab.getCols();
         int rows = lab.getRows();
         Random rnd = new Random();

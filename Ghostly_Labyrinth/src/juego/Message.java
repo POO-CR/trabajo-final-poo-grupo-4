@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import entidades.objetos.Objeto;
+import entidades.Player;
+import juego.JuegoView;
 
 public class Message {
     // Atributos para el mensaje
@@ -11,6 +14,9 @@ public class Message {
     private boolean visible = false;
     private long tiempoInicio;
     private long duracionMillis;
+    private Objeto obj[];
+        private JuegoView juegoView;
+    private Player jugador;
 
     //Metodos para el mensaje
     public void mostrar(String texto, int milisegundos) {
@@ -37,13 +43,23 @@ public class Message {
             int x = (panelAncho - metrics.stringWidth(texto)) / 2;
             int y = panelAlto / 2;
 
-            // Fondo para nuestro texto
-            g2.setColor(new Color(255, 255, 255, 170));
-            g2.fillRoundRect(x - 20, y - metrics.getAscent(), metrics.stringWidth(texto) + 40, metrics.getHeight() + 10, 15, 15);
-
             // Texto
             g2.setColor(Color.WHITE);
             g2.drawString(texto, x, y);
+        }
+    }
+
+        public void InteraccionDeMensajes (int i){
+        if (i != 999) {
+            String nombreObj = obj[i].nombre;
+            switch (nombreObj) {
+                case "Llave" -> {
+                    jugador.setTieneLlave(true);
+                    System.out.println("AGARRO LLAVE EN POSICION" + obj[i].getX() + " ; " + juegoView.obj[i].getY());
+                    obj[i] = null;
+                    juegoView.mostrarMensaje("Obtuviste la llave",2000);
+                }
+            }
         }
     }
 }

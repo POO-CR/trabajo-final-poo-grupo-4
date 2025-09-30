@@ -64,7 +64,7 @@ public class TileSpriteSetter {
                     continue;
                 }
 
-                if (lab.laberintoMat[y][x].num == valorActual) {
+                if (lab.nivel.matBaldosas[y][x].num == valorActual) {
                     stringBuilder.append(1);
                 }
                 else 

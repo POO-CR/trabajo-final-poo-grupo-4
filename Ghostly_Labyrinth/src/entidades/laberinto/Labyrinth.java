@@ -45,16 +45,6 @@ public class Labyrinth {
         // grafico.setFont(new Font("Arial", Font.BOLD, 20));
         // grafico.drawString("PUERTA ABIERTA", 200, 30); // coordenadas en la ventana
 
-    
-
-
-    // TODO: pasar esto a nivel o a otro lado
-    // public int getCols() { return cantidadColumnas; }
-    // public int getRows() { return cantidadFilas; }
-    // public int getTileW() { return anchoBloque; }
-    // public int getTileH() { return altoBloque; }
-    // public int getPixelWidth()  { return cantidadColumnas * anchoBloque; }
-    // public int getPixelHeight() { return cantidadFilas    * altoBloque; }
 
 
 }

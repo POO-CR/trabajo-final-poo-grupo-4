@@ -42,7 +42,7 @@ public class ColisionChecker {
         switch(entidad.direccion) {
             case "up":
                 // predice la siguiente posición (en tiles) según la dirección y velocidad
-                entidadFilaSuperior = (entidadTopY - entidad.getMovimiento()) / lab.altoBloque;
+                entidadFilaSuperior = (entidadTopY - entidad.getMovimiento()) / gc.getAltoBloque();
 
                 // hay solo 2 en frente del personaje, entonces guardamos esas dos tiles
                 if (entidadFilaSuperior < 0 ) entidadFilaSuperior = 0;
@@ -58,7 +58,7 @@ public class ColisionChecker {
                 break;
 
             case "down":
-                entidadFilaInferior = (entidadBottomY + entidad.getMovimiento()) / lab.altoBloque;
+                entidadFilaInferior = (entidadBottomY + entidad.getMovimiento()) / gc.getAltoBloque();
                 if (entidadFilaInferior<0 ) entidadFilaInferior = 0;
                 tile1 = nivel.getTile(entidadFilaInferior, entidadColumnaIzquierda); 
                 tile2 = nivel.getTile(entidadFilaInferior, entidadColumnaDerecha); 
@@ -90,7 +90,7 @@ public class ColisionChecker {
                 }
                 break;
             case "right":
-                entidadColumnaDerecha = (entidadRightX + entidad.getMovimiento()) / lab.anchoBloque;
+                entidadColumnaDerecha = (entidadRightX + entidad.getMovimiento()) / gc.getAnchoBloque();
                 if (entidadColumnaDerecha < 0 ) entidadColumnaDerecha = 0;
                 tile1 = nivel.getTile(entidadFilaSuperior, entidadColumnaDerecha); //[entidadColumnaDerecha][entidadFilaSuperior];
                 tile2 = nivel.getTile(entidadFilaInferior, entidadColumnaDerecha); //[entidadColumnaDerecha][entidadFilaInferior];

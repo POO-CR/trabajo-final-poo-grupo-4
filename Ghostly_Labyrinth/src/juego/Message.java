@@ -18,6 +18,10 @@ public class Message {
         private JuegoView juegoView;
     private Player jugador;
 
+    public Message (Objeto[] obj) {
+        this.obj = obj;
+    }
+
     //Metodos para el mensaje
     public void mostrar(String texto, int milisegundos) {
         this.texto = texto;
@@ -55,7 +59,7 @@ public class Message {
             switch (nombreObj) {
                 case "Llave" -> {
                     jugador.setTieneLlave(true);
-                    System.out.println("AGARRO LLAVE EN POSICION" + obj[i].getX() + " ; " + juegoView.obj[i].getY());
+                    System.out.println("AGARRO LLAVE EN POSICION" + obj[i].getX() + " ; " + obj[i].getY());
                     obj[i] = null;
                     juegoView.mostrarMensaje("Obtuviste la llave",2000);
                 }

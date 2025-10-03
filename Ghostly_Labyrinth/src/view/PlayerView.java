@@ -20,20 +20,35 @@ public class PlayerView {
     private BufferedImage left0, left1, left2, right0, right1, right2;
     private Image vidaimg;
     private Image img; */
+
+    private GameController controlador;
     
     public PlayerView (GameController controlador) {
         this.controlador = controlador;
     }
 
+    public void draw(Graphics2D grafico) { 
+        grafico.drawImage(controlador.getImagenJugador(), controlador.getScreenXJugador(), controlador.getScreenYJugador(), controlador.getAnchoJugador(), controlador.getAltoJugador(), null); // dibuja el jugador en pantalla
+    }
+
     
 
 
+
+
+
+
+
+    
+
+    // PANELLLL
+    /*
     public void paintVida(Graphics g) {
         for (int i = 0; i < player.getVida(); i++) {
             int x = 10 + i * (45 + 10);
             g.drawImage(vidaimg, x + 10, 10, 45, 45, null);
         }
-    }
+    } */
 
 
 }

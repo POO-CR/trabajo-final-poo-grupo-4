@@ -11,7 +11,6 @@ import java.awt.image.BufferedImage;
 public class GameController implements Runnable{
 
     private Labyrinth lab;
-    private JuegoView juegoView;
     private Player jugador;
 
     final private int FPS = 60;
@@ -39,6 +38,8 @@ public class GameController implements Runnable{
     private final int anchoBloque = tileSize;
     private final int altoBloque = tileSize;
 
+    private JuegoView juegoView;
+
 
     public GameController() {
 
@@ -52,15 +53,19 @@ public class GameController implements Runnable{
         int screenW = Toolkit.getDefaultToolkit().getScreenSize().width;
         int screenH = Toolkit.getDefaultToolkit().getScreenSize().height;
 
-
-        this.mensaje = new Message();
         this.jugador = new Player(this, screenW, screenH);
+        
+        this.mensaje = new Message(obj);
+        
         this.obj = new Objeto[10];
         this.aSetter = new AssetSetter(this, nivel);
-        this.cChecker = new ColisionChecker(lab, obj);
+        this.cChecker = new ColisionChecker(this, obj, nivel);
 
         this.keyH = new KeyHandler();
+
+        this.juegoView = new JuegoView(this);
     }
+
 
     public int getAnchoNivel () {
         return nivel.getAncho();
@@ -83,6 +88,68 @@ public class GameController implements Runnable{
     }
 
 
+    public void actualizarMovimiento() {
+
+        int nuevaX = jugador.getMundoX();
+        int nuevaY = jugador.getMundoY();
+        int movimiento = jugador.getMovimiento();
+        
+        if (keyH.upPressed == true || keyH.downPressed == true ||
+            keyH.leftPressed == true || keyH.rightPressed == true){
+        
+            if (keyH.upPressed == true){
+            jugador.setDireccion("up");
+            jugador.setUltimaDireccion("up");
+            }
+            else if (keyH.downPressed == true){
+            jugador.setDireccion("down");
+            jugador.setUltimaDireccion("down");
+            }
+            else if (keyH.leftPressed == true){
+            jugador.setDireccion("left");
+            jugador.setUltimaDireccion("left");
+            }
+            else if (keyH.rightPressed == true){
+            jugador.setDireccion("right");
+            jugador.setUltimaDireccion("right");
+            }
+        }
+        
+        else {
+            jugador.setDireccion("quieto");
+        }
+
+        jugador.colisionOn = false;
+        cChecker.checkearTile(jugador);
+
+        int indiceObj = cChecker.checkearObjeto(jugador, true);
+        mensaje.InteraccionDeMensajes(indiceObj);
+
+        if (jugador.colisionOn == false) {
+            
+            switch(jugador.getDireccion()) {
+                case "up" -> nuevaY -= movimiento;
+                case "down" -> nuevaY += movimiento;
+                case "left" -> nuevaX -= movimiento;
+                case "right" -> nuevaX += movimiento;
+            }
+            jugador.setMundoX(nuevaX);
+            jugador.setMundoY(nuevaY);
+        }
+
+        jugador.spriteCounter++;
+        if (jugador.spriteCounter > 10) {
+            if (jugador.spriteNum == 1) {
+                jugador.spriteNum = 2;
+            } else if (jugador.spriteNum == 2) {
+                jugador.spriteNum = 1;
+            }
+            jugador.spriteCounter = 0;
+        }
+
+    }
+
+
     public void iniciarJuego (String usuario) {
         // cerrar todas las ventanas abiertas de Swing
         for (java.awt.Window window : java.awt.Window.getWindows()) {
@@ -91,13 +158,11 @@ public class GameController implements Runnable{
             }
         }
         
-        this.juegoView = new JuegoView(tituloJuego, usuario, lab, jugador, this, mensaje, obj);
+        //this.juegoView = new JuegoView();
 
         //int ancho = lab.getPixelWidth();
         //int alto = lab.getPixelHeight();
         // YA NO SE USA ESTO, AHORA ES PANTALLA COMPLETA, NO SE TIENE EN CUENTA LAS MEDIDAS DEL LABERINTO
-        
-        
 
         // Controlador
         actualizarMovimiento();
@@ -116,6 +181,10 @@ public class GameController implements Runnable{
         this.obj[indice] = objeto;
     }
 
+    public Objeto[] getObjArray () {
+        return this.obj;
+    }
+
     public void setupJuego () {
         aSetter.setearObjetosIniciales();
     }
@@ -123,6 +192,30 @@ public class GameController implements Runnable{
 
     public BufferedImage getImagenJugador () {
         return jugador.getImagen();
+    }
+
+    public int getScreenXJugador () {
+        return jugador.getScreenX();
+    }
+
+    public int getScreenYJugador () {
+        return jugador.getScreenY();
+    }
+
+    public int getMundoXJugador () {
+        return jugador.getMundoX();
+    }
+
+    public int getMundoYJugador () {
+        return jugador.getMundoY();
+    }
+
+    public int getAnchoJugador () {
+        return jugador.getAnchoPersonaje();
+    }
+
+    public int getAltoJugador () {
+        return jugador.getAltoPersonaje();
     }
 
     

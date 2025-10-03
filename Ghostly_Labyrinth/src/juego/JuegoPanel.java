@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import controlador.GameController;
 import entidades.laberinto.Labyrinth;
+import view.LightView;
 
 import java.awt.Toolkit;
 import java.awt.Color;
@@ -12,16 +13,18 @@ import java.awt.Graphics;
 import java.awt.FontMetrics;
 import entidades.objetos.*;
 
+
 public class JuegoPanel extends JPanel{
 
     private GameController controlador;
-    private Labyrinth laberinto;
-    private Objeto[] obj;
+    private Labyrinth laberinto; 
+    private LightView light;
+    // private Objeto[] obj; TAMBIEN ES MODELO
     
-    public JuegoPanel (GameController controlador, Labyrinth laberinto) {
+    public JuegoPanel (GameController controlador, Labyrinth laberinto, LightView light) {
         this.controlador = controlador;
-        this.laberinto = laberinto;
-        this.obj = controlador.getObjArray();
+        this.laberinto = laberinto; // ESTO ES VIEW, HAY QUE CAMBIAR NOMBRE 
+        //this.obj = controlador.getObjArray();
         setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize()); // para que tome el tamaño de la pantalla nativa!! copado!!
         setBackground(Color.black);
         setDoubleBuffered(true); // guarda 2 buffer en memoria para que no carguen en tiempo real en pan                         // igual según internet no es necesario(?
@@ -43,7 +46,6 @@ public class JuegoPanel extends JPanel{
     Graphics2D g2 = (Graphics2D) g.create();
     g2.translate(-camX, -camY); // mueve todo lo que se dibuje segun la camara
 
-
     laberinto.paintComponent(g2);
 
 
@@ -58,8 +60,8 @@ public class JuegoPanel extends JPanel{
     
     g.drawImage(controlador.getImagenJugador(), controlador.getScreenXJugador(), controlador.getScreenYJugador(), controlador.getAnchoJugador(), controlador.getAltoJugador(), null); // dibuja el jugador en pantalla
 
-    if (jv.light != null) {
-        jv.light.paint((Graphics2D) g, getWidth(), getHeight());
+    if (light != null) {
+        light.paint((Graphics2D) g, getWidth(), getHeight());
     }
     
     jv.mensaje.draw((Graphics2D) g, getWidth(), getHeight());

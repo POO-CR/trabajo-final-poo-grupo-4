@@ -11,7 +11,7 @@ import java.awt.Rectangle;
 // esta es la superclase para todos los objetos
 public class Objeto {
 
-    public BufferedImage imagen;
+    private BufferedImage imagen;
     public String nombre;
     public boolean colision = false;
     private GameController gc;
@@ -27,6 +27,8 @@ public class Objeto {
         this.areaColision = new Rectangle(0, 0, gc.getAnchoBloque(), gc.getAltoBloque());
     }
 
+
+// esto va en la view
     public void draw(Graphics2D g2) {
         g2.drawImage(imagen, this.x, this.y, gc.getAnchoBloque(), gc.getAltoBloque(), null);
     }
@@ -59,6 +61,10 @@ public class Objeto {
 
     public void setY (int y) {
         this.y = y;
+    }
+
+    public BufferedImage getImage () {
+        return imagen;
     }
     
 }

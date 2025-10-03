@@ -5,20 +5,25 @@ import entidades.Player;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+import controlador.GameController;
+
 /*
  * LightView dibuja un overlay oscuro en la pantalla,
  * dejando un circulo iluminado alrededor del jugador (efecto "linterna").
  */
 public class LightView {
 
-    private final Player player;
+    //private final Player player;
 
     // parametros fijos
     private final int radiusPx = 280;  // radio de luz en pixeles
     private final int alphaFondo = 255; // nivel de oscuridad general (0-255)
 
-    public LightView(Player player) {
-        this.player = player;
+    private GameController controlador;
+
+    public LightView(GameController controlador) {
+        //this.player = player;
+        this.controlador = controlador;
     }
 
     /*
@@ -32,7 +37,7 @@ public class LightView {
      * offY -> offset vertical de la camara
      */
     public void paint(Graphics2D g, int anchoPanel, int altoPanel) {
-        if (g == null || anchoPanel <= 0 || altoPanel <= 0 || player == null) return;
+        if (g == null || anchoPanel <= 0 || altoPanel <= 0 || controlador == null) return;
 
         // capa temporal del tamaño del viewport (ARGB con transparencia)
         BufferedImage layer = new BufferedImage(anchoPanel, altoPanel, BufferedImage.TYPE_INT_ARGB);
@@ -46,8 +51,8 @@ public class LightView {
         // calculamos el centro de la luz (ajustado un poco hacia arriba/izquierda)
         int offsetX = -5; // desplaza la luz horizontalmente
         int offsetY = -5; // desplaza la luz verticalmente
-        int cx = player.screenX + player.getAnchoPersonaje() / 2 + offsetX;
-        int cy = player.screenY + player.getAltoPersonaje() / 2 + offsetY;
+        int cx = controlador.getScreenXJugador() + controlador.getAnchoJugador() / 2 + offsetX;
+        int cy = controlador.getScreenYJugador() + controlador.getAltoJugador() / 2 + offsetY;
 
         // gradiente circular
         float[] dist = {0f, 0.65f, 1f}; // posiciones relativas desde el centro hasta el borde, define en que puntos cambia el color

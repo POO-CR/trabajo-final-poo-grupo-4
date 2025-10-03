@@ -7,6 +7,8 @@ import java.awt.Image;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
+import juego.Stopwatch;
+
 public class VistaCapaSuperior {
     private Image imagenVida;
     private Font fuenteJuego;
@@ -47,15 +49,19 @@ public class VistaCapaSuperior {
     }
 
     private void dibujarcronometro(Graphics2D g, Stopwatch stopwatch, int panelAncho){       
-     String textoTiempo = "Time: " + jv.stopwatch.formatoTiempo(jv.stopwatch.getSegundos()); //texto que se mostrara en pantalla
-     FontMetrics metrics = g.getFontMetrics(jv.fuenteJuego); //FontMetrics da informacion sobre la fuente y g.getFontMetrics le pide al objeto graphics que devuelva las metricas(ancho,alto,espaciado) de la fuente fuenteJuego 
-    int anchoTexto = metrics.stringWidth(textoTiempo); //calcula el ancho de pixeles de la cadena textoTiempo, anchoTexto va a contener un entero con la cantidad de pixeles que ocupa en x textoTiempo
+if (stopwatch == null) return;
 
-    int x = getWidth() - anchoTexto - 20; //se calcula y coloca la posicion x en el paneljuego (getWidth() da el ancho total del panel juego y se le resta el ancho de pixeles del texto y el -20 es un margen de separacion desde el borde derecho de la ventana para que no quede pegado al borde)
-    int y = 40; //se coloca en la posicion y en el paneljuego
+        g.setFont(fuenteJuego);
+        String textoTiempo = "Time: " + stopwatch.formatoTiempo(stopwatch.getSegundos());
 
-    g.setColor(Color.WHITE); //se setea el color del texto en blanco
-    g.drawString(textoTiempo, x, y); //se dibuja el string textoTiempo en las posiciones x e y calculadas 
+        FontMetrics metrics = g.getFontMetrics(fuenteJuego);
+        int anchoTexto = metrics.stringWidth(textoTiempo);
+
+        int x = panelAncho - anchoTexto - 20; // Alineado a la derecha
+        int y = 40;
+
+        g.setColor(Color.WHITE);
+        g.drawString(textoTiempo, x, y);
     }
     
 }

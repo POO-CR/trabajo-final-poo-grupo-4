@@ -10,11 +10,13 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+
+import controlador.GameController;
  
 public class Player extends Entity {
     
 
-    private Labyrinth lab;
+    private GameController gc;
     private float escalaPersonaje = 1.5f;
 
     private final int anchoPersonaje;
@@ -38,14 +40,14 @@ public class Player extends Entity {
     // ancho = 11x2x1.5 = 33
     // alto = 7x2x1.5 = 21
 
-    public Player (Labyrinth lab, int screenAncho, int screenAlto) {
+    public Player (GameController gc, int screenAncho, int screenAlto) {
 
         super();
-        this.lab = lab;
+        this.gc = gc;
         setValoresDefault();
 
-        anchoPersonaje = (int)(lab.anchoBloque*escalaPersonaje);
-        altoPersonaje = (int)(lab.altoBloque*escalaPersonaje);
+        anchoPersonaje = (int)(gc.getAnchoBloque()*escalaPersonaje);
+        altoPersonaje = (int)(gc.getAltoBloque()*escalaPersonaje);
 
         screenX = screenAncho / 2 - (anchoPersonaje / 2); //centrado en pantalla
         screenY = screenAlto / 2 - (altoPersonaje / 2); //centrado en pantalla
@@ -67,18 +69,40 @@ public class Player extends Entity {
 
     }
 
+
     public void setValoresDefault () {
         // posicion del player en el mundo (NO POSICION EN PANTALLA)
         // ES EL PUNTO DE PARTIDA EN LA MATRIZ DEL LABERINTO
-        mundoX = 3 * lab.anchoBloque; // 3 tiles desde la izquierda
-        mundoY = 3 * lab.altoBloque;  // 3 tiles desde arriba
+        mundoX = 3 * gc.getAnchoBloque(); // 3 tiles desde la izquierda
+        mundoY = 3 *gc.getAltoBloque();  // 3 tiles desde arriba
 
         movimiento = 6;
         direccion = "down";
         ultimaDireccion = "down";
     }
 
-    
+
+    public void cargarSprites(){
+        try {
+            up0 = ImageIO.read(getClass().getResourceAsStream("/assets/img/player/espalda_0.png"));
+            up1 = ImageIO.read(getClass().getResourceAsStream("/assets/img/player/espalda_1.png"));
+            up2 = ImageIO.read(getClass().getResourceAsStream("/assets/img/player/espalda_2.png"));
+            down0 = ImageIO.read(getClass().getResourceAsStream("/assets/img/player/frente_0.png"));
+            down1 = ImageIO.read(getClass().getResourceAsStream("/assets/img/player/frente_1.png"));
+            down2 = ImageIO.read(getClass().getResourceAsStream("/assets/img/player/frente_2.png"));
+            left0 = ImageIO.read(getClass().getResourceAsStream("/assets/img/player/izq_0.png"));
+            left1 = ImageIO.read(getClass().getResourceAsStream("/assets/img/player/izq_1.png"));
+            left2 = ImageIO.read(getClass().getResourceAsStream("/assets/img/player/izq_2.png"));
+            right0 = ImageIO.read(getClass().getResourceAsStream("/assets/img/player/der_0.png"));
+            right1 = ImageIO.read(getClass().getResourceAsStream("/assets/img/player/der_1.png"));
+            right2 = ImageIO.read(getClass().getResourceAsStream("/assets/img/player/der_2.png"));
+            
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public BufferedImage getImagen() {
         BufferedImage imagen = null;
         try {switch(direccion) {
@@ -135,17 +159,13 @@ public class Player extends Entity {
         default:
             imagen = down1;
             break;
-        } return imagen;
-        } catch (Exception e) {
+            } return imagen;
+            } catch (Exception e) {
             e.printStackTrace();
             return imagen;
-        
+            }
     }
 
-    
-
-        
-    }
 
     public boolean getTieneLlave(){
         return tieneLlave;
@@ -163,7 +183,7 @@ public class Player extends Entity {
         return direccion;
     }
 
-        public int getVida() {
+    public int getVida() {
         return vida;
     }
 

@@ -8,24 +8,25 @@ import java.awt.Point;
 import controlador.GameController;
 import java.util.ArrayList;
 import java.util.Random;
+import entidades.laberinto.Nivel;
 
 public class AssetSetter {
     
     GameController gc;
-    Labyrinth lab;
+    Nivel nivel;
 
-    public AssetSetter (GameController gc, Labyrinth lab) {
+    public AssetSetter (GameController gc, Nivel nivel) {
         this.gc = gc;
-        this.lab = lab;
+        this.nivel = nivel;
     }
 
     public void setearObjetosIniciales () {
         Point p;
         try {
-            Llave l = new Llave(lab);
+            Llave l = new Llave(gc);
             p = encontrarCoordsObjeto(l);
-            l.setX(p.x * lab.anchoBloque);
-            l.setY(p.y * lab.altoBloque);
+            l.setX(p.x * gc.getAnchoBloque());
+            l.setY(p.y * gc.getAltoBloque());
             gc.setObjeto(0, l); //TODO: ojo con esto q está medio hardcoded
         }
         catch (Exception e){
@@ -44,12 +45,12 @@ public class AssetSetter {
     private Point encontrarCoordsObjeto (Objeto obj) throws Exception {
 
         List<Point> opciones = new ArrayList<>();
-        int cols = lab.getCols();
-        int rows = lab.getRows();
+        int cols = gc.getAnchoNivel();
+        int rows = gc.getAltoNivel();
         Random rnd = new Random();
         for (int i=0; i<rows ; i++) {
             for (int j=0; j<cols; j++){
-                if (lab.valorTile(i, j) == obj.getTilePermitida()) {
+                if (nivel.getTile(i, j).getNum() == obj.getTilePermitida()) {
                     opciones.add(new Point(j, i));
                 }
             }

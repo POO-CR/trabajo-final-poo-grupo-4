@@ -1,4 +1,5 @@
 package juego;
+import controlador.GameController;
 import entidades.*;
 import entidades.objetos.*;
 import entidades.tile.*;
@@ -6,12 +7,14 @@ import entidades.laberinto.*;
 
 public class ColisionChecker {
     
-    Labyrinth lab;
+    GameController gc;
     Objeto[] obj;
+    Nivel nivel;
 
-    public ColisionChecker(Labyrinth lab, Objeto[] obj) {
-        this.lab = lab;
+    public ColisionChecker(GameController gc, Objeto[] obj, Nivel nivel) {
+        this.gc = gc;
         this.obj = obj;
+        this.nivel = nivel;
     }
 
     public void checkearTile(Player entidad) {
@@ -22,10 +25,10 @@ public class ColisionChecker {
         int entidadBottomY = entidad.getMundoY() + entidad.areaColisionDefaultY + entidad.areaColision.height;
 
         // dividimos los valores por el tamaño del tile para obtener las coordenadas en fila y columna
-        int entidadColumnaIzquierda = entidadLeftX / lab.anchoBloque;
-        int entidadColumnaDerecha = entidadRightX / lab.anchoBloque;
-        int entidadFilaSuperior = entidadTopY / lab.altoBloque;
-        int entidadFilaInferior = entidadBottomY / lab.altoBloque;
+        int entidadColumnaIzquierda = entidadLeftX / gc.getAnchoBloque();
+        int entidadColumnaDerecha = entidadRightX / gc.getAnchoBloque();
+        int entidadFilaSuperior = entidadTopY / gc.getAltoBloque();
+        int entidadFilaInferior = entidadBottomY / gc.getAltoBloque();
 
         if (entidadColumnaDerecha < 0 ) entidadColumnaDerecha = 0;
         if (entidadColumnaIzquierda < 0 ) entidadColumnaIzquierda = 0;
@@ -43,8 +46,8 @@ public class ColisionChecker {
 
                 // hay solo 2 en frente del personaje, entonces guardamos esas dos tiles
                 if (entidadFilaSuperior < 0 ) entidadFilaSuperior = 0;
-                tile1 = lab.laberintoMat[entidadFilaSuperior] [entidadColumnaIzquierda];
-                tile2 = lab.laberintoMat[entidadFilaSuperior] [entidadColumnaDerecha];
+                tile1 = nivel.getTile(entidadFilaSuperior, entidadColumnaIzquierda);
+                tile2 = nivel.getTile(entidadFilaSuperior, entidadColumnaDerecha);
 
                 entidad.tieneAcceso(tile1);
                 entidad.tieneAcceso(tile2);
@@ -57,8 +60,8 @@ public class ColisionChecker {
             case "down":
                 entidadFilaInferior = (entidadBottomY + entidad.getMovimiento()) / lab.altoBloque;
                 if (entidadFilaInferior<0 ) entidadFilaInferior = 0;
-                tile1 = lab.laberintoMat[entidadFilaInferior] [entidadColumnaIzquierda]; //[entidadColumnaIzquierda][entidadFilaInferior];
-                tile2 = lab.laberintoMat[entidadFilaInferior] [entidadColumnaDerecha]; //[entidadColumnaDerecha][entidadFilaInferior];
+                tile1 = nivel.getTile(entidadFilaInferior, entidadColumnaIzquierda); 
+                tile2 = nivel.getTile(entidadFilaInferior, entidadColumnaDerecha); 
 
                 // tile1 = lab.tile[tileNum1];
                 // tile2 = lab.tile[tileNum2];
@@ -72,10 +75,10 @@ public class ColisionChecker {
                 break;
 
             case "left":
-                entidadColumnaIzquierda = (entidadLeftX - entidad.getMovimiento()) / lab.anchoBloque;
+                entidadColumnaIzquierda = (entidadLeftX - entidad.getMovimiento()) / gc.getAnchoBloque();
                 if (entidadColumnaIzquierda < 0 ) entidadColumnaIzquierda = 0;
-                tile1 = lab.laberintoMat[entidadFilaSuperior][entidadColumnaIzquierda]; //[entidadColumnaIzquierda][entidadFilaSuperior];
-                tile2 = lab.laberintoMat[entidadFilaInferior][entidadColumnaIzquierda]; //[entidadColumnaIzquierda][entidadFilaInferior];
+                tile1 = nivel.getTile(entidadFilaSuperior, entidadColumnaIzquierda); 
+                tile2 = nivel.getTile(entidadFilaInferior, entidadColumnaIzquierda); 
                 // tile1 = lab.tile[tileNum1];
                 // tile2 = lab.tile[tileNum2];
 
@@ -89,8 +92,8 @@ public class ColisionChecker {
             case "right":
                 entidadColumnaDerecha = (entidadRightX + entidad.getMovimiento()) / lab.anchoBloque;
                 if (entidadColumnaDerecha < 0 ) entidadColumnaDerecha = 0;
-                tile1 = lab.laberintoMat[entidadFilaSuperior][entidadColumnaDerecha]; //[entidadColumnaDerecha][entidadFilaSuperior];
-                tile2 = lab.laberintoMat[entidadFilaInferior][entidadColumnaDerecha]; //[entidadColumnaDerecha][entidadFilaInferior];
+                tile1 = nivel.getTile(entidadFilaSuperior, entidadColumnaDerecha); //[entidadColumnaDerecha][entidadFilaSuperior];
+                tile2 = nivel.getTile(entidadFilaInferior, entidadColumnaDerecha); //[entidadColumnaDerecha][entidadFilaInferior];
                 // tile1 = lab.tile[tileNum1];
                 // tile2 = lab.tile[tileNum2];
 

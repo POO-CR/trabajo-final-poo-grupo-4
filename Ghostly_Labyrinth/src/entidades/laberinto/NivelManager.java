@@ -2,6 +2,8 @@ package entidades.laberinto;
 
 import entidades.tile.Tile;
 import entidades.tile.TileManager;
+import entidades.tile.TileSpriteSetter;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -13,6 +15,7 @@ public class NivelManager {
     private static record Dimension(int alto, int ancho) {}
     private Dimension dim;
     private TileManager tm;
+    private TileSpriteSetter tileSS;
     Nivel nivel;
 
     private static Dimension getDimensionMapa(int nivel) {
@@ -62,6 +65,9 @@ public class NivelManager {
                     }
                 }
                 buffer.close();
+                this.tileSS = new TileSpriteSetter(nivel);
+                tileSS.setearTileRandom(tm.getTile(0));
+                tileSS.setearTileSegunVecinos(tm.getTile(1));
                 return nivel;
             }catch (Exception e) {
                 e.printStackTrace();

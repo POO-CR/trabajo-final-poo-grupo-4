@@ -24,8 +24,10 @@ public class Nivel {
         if (x >= getAncho() || x < 0 || y < 0 || y >= getAlto()) 
             return false;
         return true;
-    
+    }
 
-
+    public Tile getTile (int x, int y) {
+        return matBaldosas[x][y];
+    }
 
 }

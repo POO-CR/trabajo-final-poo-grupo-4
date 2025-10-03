@@ -1,27 +1,26 @@
 package juego;
 
 import javax.swing.*;
+
+import controlador.GameController;
+
 import java.awt.Toolkit;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Graphics;
 import java.awt.FontMetrics;
 
-public class JuegoPanel extends JPanel {
+public class JuegoPanel extends JPanel{
 
-    private JuegoView jv;
-
-    public JuegoPanel (JuegoView jv) {
-        this.jv = jv;
+    private GameController controlador;
+    
+    public JuegoPanel (GameController controlador) {
+        this.controlador = controlador;
         setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize()); // para que tome el tamaño de la pantalla nativa!! copado!!
         setBackground(Color.black);
         setDoubleBuffered(true); // guarda 2 buffer en memoria para que no carguen en tiempo real en pan                         // igual según internet no es necesario(?
         setFocusable(true); // el setfocusable es para que se "concentre" en los eventos del teclado
-        
     }
-
-
-
 
     //metodo para poder dibujar en el JPanel, tanto el jugador laberinto fantasmas 
     //el override hace referencia a que es un metodo heredado de JPanel 
@@ -30,12 +29,14 @@ public class JuegoPanel extends JPanel {
 
     super.paintComponent(g);
 
-    // calcular offset de la camara (segun la posicion del jugador)
-    int camX = jv.jugador.getMundoX() - jv.jugador.screenX;
+    // calcular offset de la camara (segun la posicion del jugador) 
+    // PASARLO AL CONTROLADORRRR
+    int camX = controlador.getMundoXJugador() - controlador.getScreenXJugador();
     int camY = jv.jugador.getMundoY() - jv.jugador.screenY;
 
     Graphics2D g2 = (Graphics2D) g.create();
     g2.translate(-camX, -camY); // mueve todo lo que se dibuje segun la camara
+
 
     jv.laberinto.paintComponent(g2);
 
@@ -48,7 +49,7 @@ public class JuegoPanel extends JPanel {
     //jugador.draw(g2); // dibuja el jugador en el mundo, esto hace que funcione mal
     g2.dispose();
     
-    jv.jugador.draw((Graphics2D) g); // dibuja el jugador en pantalla (no en el mundo)
+    g.drawImage(jv.getImagenJugador(), jv.jugador.getScreenX(), jv.jugador.getScreenX(), jv.jugador.getAnchoPersonaje(), jv.jugador.getAltoPersonaje(), null); // dibuja el jugador en pantalla
 
     if (jv.light != null) {
         jv.light.paint((Graphics2D) g, getWidth(), getHeight());

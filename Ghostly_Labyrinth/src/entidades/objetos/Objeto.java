@@ -3,6 +3,7 @@ package entidades.objetos;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import controlador.GameController;
 import entidades.laberinto.Labyrinth;
 
 import java.awt.Rectangle;
@@ -13,21 +14,21 @@ public class Objeto {
     public BufferedImage imagen;
     public String nombre;
     public boolean colision = false;
-    private Labyrinth lab;
+    private GameController gc;
     protected int tilePermitida;
     protected int x, y;
     protected Rectangle areaColision;
     protected int areaColisionDefaultX = 0;
     protected int areaColisionDefaultY = 0;
 
-    public Objeto (Labyrinth lab) {
-        this.lab = lab;
+    public Objeto (GameController gc) {
+        this.gc = gc;
         //el area de colisión se puede customizar en cada objeto 
-        this.areaColision = new Rectangle(0, 0, lab.anchoBloque, lab.altoBloque);
+        this.areaColision = new Rectangle(0, 0, gc.getAnchoBloque(), gc.getAltoBloque());
     }
 
     public void draw(Graphics2D g2) {
-        g2.drawImage(imagen, this.x, this.y, lab.anchoBloque, lab.altoBloque, null);
+        g2.drawImage(imagen, this.x, this.y, gc.getAnchoBloque(), gc.getAltoBloque(), null);
     }
 
     public int getTilePermitida() {

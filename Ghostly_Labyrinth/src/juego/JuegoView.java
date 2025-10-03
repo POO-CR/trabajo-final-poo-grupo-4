@@ -20,7 +20,7 @@ import javax.swing.*;
 public class JuegoView extends JFrame {
 
     //objetos para poder ser dibujados 
-    Labyrinth laberinto;
+    /*Labyrinth laberinto;
     Player jugador;
     protected LightView light;
     protected Stopwatch stopwatch; //atributo para el Stopwatch
@@ -31,15 +31,21 @@ public class JuegoView extends JFrame {
 
     // propiedades del panel
     int anchoPantalla;
-    public int altoPantalla;
-    GameController controlador;
+    public int altoPantalla;*/
+
+    private JPanel jp;
 
     // panel juego es la vista
 
-    public JuegoView (String tituloJuego, String usuario, Labyrinth lab, Player jugador, 
-                        GameController controlador, Message mensaje, Objeto[] obj){
+    // juegoview => JFrame
+    // juegoview llama a JuegoPanel => JPanel
+    // JuegoPanel tiene @override paintComponent
 
-        setTitle(tituloJuego + " - Jugador: " + usuario);
+    //public JuegoView (String tituloJuego, String usuario, Labyrinth lab, Player jugador, 
+       //                 GameController controlador, Message mensaje, Objeto[] obj){
+       public JuegoView (GameController controlador) {
+
+        setTitle("Ghostly Labyrinth");
         //setSize(ancho, alto);
 
         setSize(Toolkit.getDefaultToolkit().getScreenSize()); // pantalla completa
@@ -51,9 +57,15 @@ public class JuegoView extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(true);
+        jp = new JuegoPanel(controlador);
+        //this.addKeyListener(controlador); // esto lo ponia el profe, vamos a ver que hace
+        setContentPane(jp);
+       }
+
+        
 
         // Crear jugador
-        jugador.setNombre(usuario);
+        /*jugador.setNombre(usuario);
 
         this.laberinto = lab;
         this.jugador = jugador;
@@ -95,13 +107,13 @@ public class JuegoView extends JFrame {
         panelJuego.requestFocusInWindow();
         });}
 
-    }
+    } */
 
     public void pintarPanel () {
-        panelJuego.repaint();
+        jp.repaint();
     }
 
-
+    /*
     public void mostrarMensaje (String texto, int milisegundos){
         mensaje.mostrar(texto,milisegundos);
     }
@@ -109,7 +121,7 @@ public class JuegoView extends JFrame {
     public void añadirKeyListener (KeyHandler kh){
         panelJuego.addKeyListener(kh);
     }
-
+        */
 
 
 }

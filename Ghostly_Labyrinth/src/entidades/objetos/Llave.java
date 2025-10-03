@@ -1,12 +1,15 @@
 package entidades.objetos;
 
 import java.io.IOException;
-import entidades.laberinto.*;
+
+import controlador.GameController;
 
 public class Llave extends Objeto {
 
-    public Llave(Labyrinth lab) {
-        super(lab);
+    GameController gc;
+
+    public Llave(GameController gc) {
+        super(gc);
         nombre = "Llave";
         colision = false;
         tilePermitida = 3;

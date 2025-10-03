@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 
 public class Tile {
     
-    public int num;
+    protected int num;
     private BufferedImage sprite;
     private Image tileSet;
     private int tileIndex;
@@ -20,7 +20,6 @@ public class Tile {
 
     public Tile () {
     }
-
 
 
     private void generarSprite () {
@@ -42,6 +41,10 @@ public class Tile {
 
     public int getTileIndex () {
         return this.tileIndex;
+    }
+
+    public int getNum () {
+        return this.num;
     }
 
     public void setTileIndex(int tileIndex) {

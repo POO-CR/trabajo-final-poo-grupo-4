@@ -2,28 +2,29 @@ package entidades.tile;
 
 import entidades.laberinto.Labyrinth;
 import java.util.Random;
+import entidades.laberinto.Nivel;
 
 public class TileSpriteSetter {
-    
-    private Labyrinth lab;
 
-    public TileSpriteSetter (Labyrinth lab) {
-        this.lab = lab;
+    private Nivel nivel;
+
+    public TileSpriteSetter (Nivel nivel) {
+        this.nivel = nivel;
     }
 
 
 
     public void setearTileSegunVecinos (Tile tile) {
-        int cantidadFilas = lab.cantidadFilas;
-        int cantidadColumnas = lab.cantidadColumnas;
+        int cantidadFilas = nivel.getAlto();
+        int cantidadColumnas = nivel.getAncho();
         int valor, posY, posX, index;
         for(int fila = 0; fila<cantidadFilas; fila++){
             
             //columnas
             for(int columna = 0; columna<cantidadColumnas; columna++){
                     //variable para la iteracion 
-                valor = lab.laberintoMat[fila][columna].num;      
-                if (valor == tile.num) {
+                valor = nivel.getTile(fila, columna).getNum();      
+                if (valor == tile.getNum()) {
                     posX = fila;
                     posY = columna;
                     index = switch (getTilesVecinas(valor, posX, posY)) { //chequeo los vecinos de esa baldosa
@@ -46,12 +47,11 @@ public class TileSpriteSetter {
 
                         default -> 8;
                         };
-                    lab.laberintoMat[posX][posY].setTileIndex(index);
+                    nivel.getTile(posX, posY).setTileIndex(index);
                     }
                 }
                 
             }
-
     }
 
     
@@ -59,12 +59,12 @@ public class TileSpriteSetter {
         StringBuilder stringBuilder = new StringBuilder();
         for (int x = posY -1 ; x < posY + 2; x++){
             for (int y = posX -1 ; y < posX + 2; y++){
-                if (!lab.indiceEnLaberinto(x, y)) {
+                if (!nivel.indiceEnRango(x, y)) {
                     stringBuilder.append(0);
                     continue;
                 }
 
-                if (lab.nivel.matBaldosas[y][x].num == valorActual) {
+                if (nivel.getTile(y,x).getNum() == valorActual) {
                     stringBuilder.append(1);
                 }
                 else 
@@ -82,16 +82,16 @@ public class TileSpriteSetter {
     }
 
     public void setearTileRandom (Tile tile) {
-        int cantidadFilas = lab.cantidadFilas;
-        int cantidadColumnas = lab.cantidadColumnas;
+        int cantidadFilas = nivel.getAncho();
+        int cantidadColumnas = nivel.getAlto();
         Tile tileTemp;
         Random rnd = new Random();
         for(int fila = 0; fila<cantidadFilas; fila++){
             //columnas
             for(int columna = 0; columna<cantidadColumnas; columna++){
                     //variable para la iteracion 
-                tileTemp = lab.laberintoMat[fila][columna];
-                if (tileTemp.num == tile.num) {
+                tileTemp = nivel.getTile(fila, columna);
+                if (tileTemp.getNum() == tile.getNum()) {
                     tileTemp.setTileIndex(rnd.nextInt(tileTemp.getMaxIndex())); //seteo un indice random entre los indices del tileSet de la baldosa
                 }
             }  

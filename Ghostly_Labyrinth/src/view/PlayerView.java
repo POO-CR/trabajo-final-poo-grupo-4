@@ -27,9 +27,9 @@ public class PlayerView {
         this.controlador = controlador;
     }
 
-    public void draw(Graphics2D grafico) { 
-        grafico.drawImage(controlador.getImagenJugador(), controlador.getScreenXJugador(), controlador.getScreenYJugador(), controlador.getAnchoJugador(), controlador.getAltoJugador(), null); // dibuja el jugador en pantalla
-    }
+    // public void draw(Graphics2D grafico) { 
+    //     grafico.drawImage(controlador.getImagenJugador(), controlador.getScreenXJugador(), controlador.getScreenYJugador(), controlador.getAnchoJugador(), controlador.getAltoJugador(), null); // dibuja el jugador en pantalla
+    // }
 
     
 

@@ -113,15 +113,12 @@ public class JuegoView extends JFrame {
         jp.repaint();
     }
 
-    /*
-    public void mostrarMensaje (String texto, int milisegundos){
-        mensaje.mostrar(texto,milisegundos);
-    }
+
 
     public void añadirKeyListener (KeyHandler kh){
-        panelJuego.addKeyListener(kh);
+        jp.addKeyListener(kh);
     }
-        */
+        
 
 
 }

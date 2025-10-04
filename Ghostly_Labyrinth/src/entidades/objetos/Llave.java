@@ -15,7 +15,7 @@ public class Llave extends Objeto {
         tilePermitida = 3;
         try{
             this.imagen = javax.imageio.ImageIO.read(getClass().getResourceAsStream("/assets/img/objetos/llave.png"));
-        }catch(IOException e){
+        }catch(IOException e){ // TODO: aca esto ponerlo en panelll porque carga la imagen!!!!!!! 
             e.printStackTrace();
         }
     }

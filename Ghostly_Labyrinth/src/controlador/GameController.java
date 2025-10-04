@@ -2,11 +2,16 @@ package controlador;
 import entidades.*;
 import javax.swing.JFrame;
 import juego.*;
+import view.LightView; //SE MODIFICO 01:25
 import entidades.objetos.*;
 import entidades.tile.TileSpriteSetter;
 import entidades.laberinto.*;
+
+
+
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+
 
 public class GameController implements Runnable{
 
@@ -22,6 +27,7 @@ public class GameController implements Runnable{
     private String tituloJuego;
     private NivelManager nm;
     private Nivel nivel;
+    private LightView light; ////SE MODIFICO 01:25
 
     private Objeto obj[];
 
@@ -64,6 +70,8 @@ public class GameController implements Runnable{
         this.keyH = new KeyHandler();
 
         this.juegoView = new JuegoView(this);
+
+        this.light = new LightView(this); ////SE MODIFICO 01:25
     }
 
 
@@ -71,6 +79,7 @@ public class GameController implements Runnable{
         return nivel.getAncho();
     }
 
+    
     public int getAltoNivel () {
         return nivel.getAlto();
     }
@@ -87,6 +96,13 @@ public class GameController implements Runnable{
         return this.altoBloque;
     }
 
+    public Boolean getIsVisible() {
+        return mensaje.getIsVisibleMsj();
+    }
+
+    public String getTexto() {
+        return mensaje.getTextoMsj();
+    }
 
     public void actualizarMovimiento() {
 
@@ -189,9 +205,16 @@ public class GameController implements Runnable{
         aSetter.setearObjetosIniciales();
     }
 
+    public String getDireccionJugador () {
+        return jugador.direccion;
+    }
 
-    public BufferedImage getImagenJugador () {
-        return jugador.getImagen();
+    public String getUltimaDireccionJugador () {
+        return jugador.ultimaDireccion;
+    }
+
+    public int getSpriteNumJugador () {
+        return jugador.spriteNum;
     }
 
     public int getScreenXJugador () {
@@ -218,8 +241,35 @@ public class GameController implements Runnable{
         return jugador.getAltoPersonaje();
     }
 
+    public LightView getLight() {
+        return light;
+    } //SE MODIFICO 01:25
     
+    public void mostrarMensaje(String texto, int milisegundos){ //SE MODIFICO 01:25
+        mensaje.mostrar(texto, milisegundos);
+    } //SE MODIFICO 01:25
 
+    //public Message getMensaje(){
+      //  return this.mensaje; //SE MODIFICO 01:25
+    //} porque no lo  aaa si
+
+    public Labyrinth  getLaberinto(){
+        return this.lab;
+    } //SE MODIFICO 01:25
+
+    public Player getJugador(){
+    return this.jugador;
+    } //SE MODIFICO 01:25
+
+    public Stopwatch getStopwatch(){
+        return this.stopwatch;
+    } //SE MODIFICO 01:25
+
+    public int vidaActual(){
+        return jugador.getVida();
+    }
+
+    
 
 
     public void iniciarGameThread(){
@@ -256,8 +306,10 @@ public class GameController implements Runnable{
 
     public void update(){
         actualizarMovimiento();
-        mensaje.update();
-    }
+        mensaje.updateMsj();
+    } 
+
+// ecah ol atohc ednod es on ward le
 
 }
     

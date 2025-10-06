@@ -1,21 +1,15 @@
 package controlador;
 import entidades.*;
-import javax.swing.JFrame;
-import juego.*;
-import view.LightView; //SE MODIFICO 01:25
-import entidades.objetos.*;
-import entidades.tile.TileSpriteSetter;
 import entidades.laberinto.*;
-
-
-
-import java.awt.Toolkit;
+import entidades.objetos.*;
+import java.awt.Toolkit; //SE MODIFICO 01:25
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import juego.*;
+import view.LightView;
 
 
 public class GameController implements Runnable{
-
-    private Labyrinth lab;
     private Player jugador;
 
     final private int FPS = 60;
@@ -29,7 +23,7 @@ public class GameController implements Runnable{
     private Nivel nivel;
     private LightView light; ////SE MODIFICO 01:25
 
-    private Objeto obj[];
+    private ArrayList<Objeto> obj;
 
     Thread gameThread;
     private Stopwatch stopwatch;
@@ -52,7 +46,6 @@ public class GameController implements Runnable{
         this.nm = new NivelManager();
         this.nivel = nm.getNivel(0);
 
-        this.lab = new Labyrinth(this);
         this.tituloJuego = "Ghostly Labyrinth";
 
         // obtener tamaño pantalla
@@ -61,17 +54,22 @@ public class GameController implements Runnable{
 
         this.jugador = new Player(this, screenW, screenH);
         
+        // seteamos objetos en el mapa
+        this.obj = new ArrayList<>();
+        this.aSetter = new AssetSetter(this, nivel);
+
         this.mensaje = new Message(obj);
         
-        this.obj = new Objeto[10];
-        this.aSetter = new AssetSetter(this, nivel);
         this.cChecker = new ColisionChecker(this, obj, nivel);
 
         this.keyH = new KeyHandler();
 
         this.juegoView = new JuegoView(this);
+        juegoView.setVisible(true);
 
         this.light = new LightView(this); ////SE MODIFICO 01:25
+
+        this.stopwatch = new Stopwatch(this);
     }
 
 
@@ -138,8 +136,11 @@ public class GameController implements Runnable{
         jugador.colisionOn = false;
         cChecker.checkearTile(jugador);
 
-        int indiceObj = cChecker.checkearObjeto(jugador, true);
-        mensaje.InteraccionDeMensajes(indiceObj);
+        Objeto objetoColisionado = cChecker.checkearObjeto(jugador);
+        if (objetoColisionado != null){
+            rtaColisionObjeto(objetoColisionado);
+            mensaje.InteraccionDeMensajes(objetoColisionado);
+        }
 
         if (jugador.colisionOn == false) {
             
@@ -162,6 +163,12 @@ public class GameController implements Runnable{
             }
             jugador.spriteCounter = 0;
         }
+
+    }
+
+    public void rtaColisionObjeto (Objeto objeto) {
+        objeto.interaccionJugador();
+        obj.remove(objeto);
 
     }
 
@@ -188,16 +195,17 @@ public class GameController implements Runnable{
         // juego
         setupJuego(); //tiene que ir antes del juego
 
+        iniciarGameThread(); 
         stopwatch.iniciar(); //inicia el cronometro
     
     }
 
     
-    public void setObjeto (int indice, Objeto objeto) {
-        this.obj[indice] = objeto;
+    public void setObjeto (Objeto objeto) {
+        this.obj.add(objeto);
     }
 
-    public Objeto[] getObjArray () {
+    public ArrayList<Objeto> getObjArray () {
         return this.obj;
     }
 
@@ -253,9 +261,6 @@ public class GameController implements Runnable{
       //  return this.mensaje; //SE MODIFICO 01:25
     //} porque no lo  aaa si
 
-    public Labyrinth  getLaberinto(){
-        return this.lab;
-    } //SE MODIFICO 01:25
 
     public Player getJugador(){
     return this.jugador;
@@ -269,7 +274,13 @@ public class GameController implements Runnable{
         return jugador.getVida();
     }
 
-    
+    public int getCamX () {
+        return getMundoXJugador() - getScreenXJugador();
+    }
+
+    public int getCamY () {
+        return getMundoYJugador() - getScreenYJugador();
+    }
 
 
     public void iniciarGameThread(){

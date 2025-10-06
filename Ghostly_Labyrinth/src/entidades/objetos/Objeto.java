@@ -1,37 +1,27 @@
 package entidades.objetos;
 
-import java.awt.Graphics2D;
+import controlador.GameController;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
-import controlador.GameController;
-import entidades.laberinto.Labyrinth;
-
-import java.awt.Rectangle;
-
 // esta es la superclase para todos los objetos
-public class Objeto {
+public abstract class Objeto {
 
     private BufferedImage imagen;
-    public String nombre;
-    public boolean colision = false;
-    private GameController gc;
+    private String nombre;
+    private boolean colision = false;
     protected int tilePermitida;
-    protected int x, y;
+    private int x, y;
     protected Rectangle areaColision;
     protected int areaColisionDefaultX = 0;
     protected int areaColisionDefaultY = 0;
 
     public Objeto (GameController gc) {
-        this.gc = gc;
         //el area de colisión se puede customizar en cada objeto 
         this.areaColision = new Rectangle(0, 0, gc.getAnchoBloque(), gc.getAltoBloque());
     }
 
-
-// esto va en la view
-    public void draw(Graphics2D g2) {
-        g2.drawImage(imagen, this.x, this.y, gc.getAnchoBloque(), gc.getAltoBloque(), null);
-    }
+    public abstract void interaccionJugador();
 
     public int getTilePermitida() {
         return this.tilePermitida;
@@ -65,6 +55,22 @@ public class Objeto {
 
     public BufferedImage getImage () {
         return imagen;
+    }
+
+    public String getNombre (){
+        return this.nombre;
+    }
+
+    protected void setNombre(String nombre) {
+        this.nombre = nombre; 
+    }
+
+    public void setColision(Boolean colision) {
+        this.colision = colision;
+    }
+
+    public Boolean getColision (){
+        return this.colision;
     }
     
 }

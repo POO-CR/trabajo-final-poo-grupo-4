@@ -2,9 +2,9 @@ package juego;
 
 
 
-import entidades.objetos.Objeto;
 import entidades.Player;
-import juego.JuegoView;
+import entidades.objetos.Objeto;
+import java.util.ArrayList;
 
 public class Message {
     // Atributos para el mensaje
@@ -12,10 +12,10 @@ public class Message {
     private boolean visible = false;
     private long tiempoInicio;
     private long duracionMillis;
-    private Objeto obj[];
+    private ArrayList<Objeto> obj;
     private Player jugador;
 
-    public Message (Objeto[] obj) {
+    public Message (ArrayList<Objeto> obj) {
         this.obj = obj;
     }
 
@@ -42,17 +42,7 @@ public class Message {
         return visible;
     }
 
-    public void InteraccionDeMensajes (int i){
-        if (i != 999) {
-            String nombreObj = obj[i].nombre;
-            switch (nombreObj) {
-                case "Llave" -> {
-                    jugador.setTieneLlave(true);
-                    System.out.println("AGARRO LLAVE EN POSICION" + obj[i].getX() + " ; " + obj[i].getY());
-                    obj[i] = null;
-                    mostrar("Obtuviste la llave",2000);
-                }
-            } 
-        }
+    public void InteraccionDeMensajes (Objeto objeto){
+        mostrar("Obtuviste " + objeto.getNombre(),2000);
     } 
 }

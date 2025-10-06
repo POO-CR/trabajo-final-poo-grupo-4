@@ -1,14 +1,12 @@
 package juego;
 
-import entidades.laberinto.Labyrinth;
-import entidades.objetos.*;
-import java.util.List;
-import java.awt.Point;
-
 import controlador.GameController;
-import java.util.ArrayList;
-import java.util.Random;
 import entidades.laberinto.Nivel;
+import entidades.objetos.*;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class AssetSetter {
     
@@ -27,7 +25,7 @@ public class AssetSetter {
             p = encontrarCoordsObjeto(l);
             l.setX(p.x * gc.getAnchoBloque());
             l.setY(p.y * gc.getAltoBloque());
-            gc.setObjeto(0, l); //TODO: ojo con esto q está medio hardcoded
+            gc.setObjeto(l); //TODO: ojo con esto q está medio hardcoded
         }
         catch (Exception e){
             e.printStackTrace();

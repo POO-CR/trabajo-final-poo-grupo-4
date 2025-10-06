@@ -1,18 +1,7 @@
 package juego;
 
 import controlador.GameController;
-import entidades.*;
-import entidades.laberinto.Labyrinth;
-import entidades.objetos.*;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Toolkit;
-import javax.swing.JPanel;
-import view.LightView;
-import juego.Stopwatch;
-import java.awt.Font;
-import java.awt.FontMetrics;
 import javax.swing.*;
 
 
@@ -33,7 +22,7 @@ public class JuegoView extends JFrame {
     int anchoPantalla;
     public int altoPantalla;*/
 
-    private JPanel jp;
+    private final JPanel jp;
 
     // panel juego es la vista
 

@@ -1,12 +1,11 @@
 package entidades.tile;
 
-import entidades.laberinto.Labyrinth;
-import java.util.Random;
 import entidades.laberinto.Nivel;
+import java.util.Random;
 
 public class TileSpriteSetter {
 
-    private Nivel nivel;
+    private final Nivel nivel;
 
     public TileSpriteSetter (Nivel nivel) {
         this.nivel = nivel;
@@ -82,8 +81,8 @@ public class TileSpriteSetter {
     }
 
     public void setearTileRandom (Tile tile) {
-        int cantidadFilas = nivel.getAncho();
-        int cantidadColumnas = nivel.getAlto();
+        int cantidadFilas = nivel.getAlto();
+        int cantidadColumnas = nivel.getAncho();
         Tile tileTemp;
         Random rnd = new Random();
         for(int fila = 0; fila<cantidadFilas; fila++){

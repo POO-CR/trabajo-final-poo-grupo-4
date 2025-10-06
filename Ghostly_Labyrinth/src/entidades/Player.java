@@ -1,20 +1,14 @@
 package entidades;
 
-import entidades.laberinto.Labyrinth;
-import entidades.tile.Tile;
-
-import java.awt.Rectangle; // VER ESTOOOOO
-
-import java.io.IOException;
-
-
 import controlador.GameController;
+import entidades.tile.Tile; // VER ESTOOOOO
+import java.awt.Rectangle;
  
 public class Player extends Entity {
     
 
-    private GameController gc;
-    private float escalaPersonaje = 1.5f;
+    private final GameController gc;
+    private final float escalaPersonaje = 1.5f;
 
     private final int anchoPersonaje;
     private final int altoPersonaje;
@@ -26,10 +20,11 @@ public class Player extends Entity {
     public final int screenY;
 
      //Caracteristicas de la vida
-    private static final int vidaTope = 3;
+    private final int vidaTope = 3;
     private int vida = vidaTope;
     //Caracteristicas al recibir danio
-    private static final long tiempoInmune = 2000;
+    //TODO: esto y vidaTope probablemente debería estar en otro lado
+    private final long tiempoInmune = 2000;
     private long finInmune=0;
 
 

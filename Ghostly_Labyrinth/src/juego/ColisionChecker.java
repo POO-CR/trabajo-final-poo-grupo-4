@@ -1,23 +1,24 @@
 package juego;
 import controlador.GameController;
 import entidades.*;
+import entidades.laberinto.*;
 import entidades.objetos.*;
 import entidades.tile.*;
-import entidades.laberinto.*;
+import java.util.ArrayList;
 
 public class ColisionChecker {
     
     GameController gc;
-    Objeto[] obj;
+    ArrayList<Objeto> obj;
     Nivel nivel;
 
-    public ColisionChecker(GameController gc, Objeto[] obj, Nivel nivel) {
+    public ColisionChecker(GameController gc, ArrayList<Objeto> obj, Nivel nivel) {
         this.gc = gc;
         this.obj = obj;
         this.nivel = nivel;
     }
 
-    public void checkearTile(Player entidad) {
+    public void checkearTile(Entity entidad) {
         // calcula la posición de las esquinas del rectángulo de colisión
         int entidadLeftX = entidad.getMundoX() + entidad.areaColisionDefaultX;
         int entidadRightX = entidad.getMundoX() + entidad.areaColisionDefaultX + entidad.areaColision.width;
@@ -40,7 +41,7 @@ public class ColisionChecker {
 
         // entidad para poder agregar fantasmas también
         switch(entidad.direccion) {
-            case "up":
+            case "up" -> {
                 // predice la siguiente posición (en tiles) según la dirección y velocidad
                 entidadFilaSuperior = (entidadTopY - entidad.getMovimiento()) / gc.getAltoBloque();
 
@@ -55,14 +56,14 @@ public class ColisionChecker {
                 if (tile1.colision || tile2.colision){ // && !(tileNum1 == 2 || tileNum2 == 2) && entidad.getTieneLlave() == true
                     entidad.colisionOn = true;
                 }
-                break;
+            }
 
-            case "down":
+            case "down" -> {
                 entidadFilaInferior = (entidadBottomY + entidad.getMovimiento()) / gc.getAltoBloque();
                 if (entidadFilaInferior<0 ) entidadFilaInferior = 0;
-                tile1 = nivel.getTile(entidadFilaInferior, entidadColumnaIzquierda); 
-                tile2 = nivel.getTile(entidadFilaInferior, entidadColumnaDerecha); 
-
+                tile1 = nivel.getTile(entidadFilaInferior, entidadColumnaIzquierda);
+                tile2 = nivel.getTile(entidadFilaInferior, entidadColumnaDerecha);
+                
                 // tile1 = lab.tile[tileNum1];
                 // tile2 = lab.tile[tileNum2];
 
@@ -72,12 +73,12 @@ public class ColisionChecker {
                 if (tile1.colision || tile2.colision){ // && !(tileNum1 == 2 || tileNum2 == 2) && entidad.getTieneLlave() == true
                     entidad.colisionOn = true;
                 }
-                break;
+            }
 
-            case "left":
+            case "left" -> {
                 entidadColumnaIzquierda = (entidadLeftX - entidad.getMovimiento()) / gc.getAnchoBloque();
                 if (entidadColumnaIzquierda < 0 ) entidadColumnaIzquierda = 0;
-                tile1 = nivel.getTile(entidadFilaSuperior, entidadColumnaIzquierda); 
+                tile1 = nivel.getTile(entidadFilaSuperior, entidadColumnaIzquierda);
                 tile2 = nivel.getTile(entidadFilaInferior, entidadColumnaIzquierda); 
                 // tile1 = lab.tile[tileNum1];
                 // tile2 = lab.tile[tileNum2];
@@ -88,8 +89,8 @@ public class ColisionChecker {
                 if (tile1.colision || tile2.colision){ // && !(tileNum1 == 2 || tileNum2 == 2) && entidad.getTieneLlave() == true
                     entidad.colisionOn = true;
                 }
-                break;
-            case "right":
+            }
+            case "right" -> {
                 entidadColumnaDerecha = (entidadRightX + entidad.getMovimiento()) / gc.getAnchoBloque();
                 if (entidadColumnaDerecha < 0 ) entidadColumnaDerecha = 0;
                 tile1 = nivel.getTile(entidadFilaSuperior, entidadColumnaDerecha); //[entidadColumnaDerecha][entidadFilaSuperior];
@@ -103,7 +104,7 @@ public class ColisionChecker {
                 if (tile1.colision || tile2.colision){ // && !(tileNum1 == 2 || tileNum2 == 2) && entidad.getTieneLlave() == true
                     entidad.colisionOn = true;
                 }
-                break;
+            }
 
         }
 
@@ -111,12 +112,9 @@ public class ColisionChecker {
 
 
     // TODO: pensar esto para no estar preguntando si es el player
-    public int checkearObjeto (Entity e, boolean jugador) {
+    public Objeto checkearObjeto (Entity e) {
 
-        int index = 999;
-
-        for (int i= 0; i < obj.length; i++){
-            Objeto objeto = obj[i];
+        for (Objeto objeto: obj) {
             if (objeto != null) {
 
                 // vemos la posición de la hitbox de la entidad segun la posición de la entidad
@@ -127,60 +125,36 @@ public class ColisionChecker {
                 objeto.getAreaColision().x += objeto.getX();
                 objeto.getAreaColision().y += objeto.getY();
 
+                // TODO: esto lo cambié, chequear si funciona bien
                 switch (e.direccion) {
                 case "up":
                     e.areaColision.y -= e.getMovimiento();
-                    if (e.areaColision.intersects(objeto.getAreaColision())){
-                        if (objeto.colision == true) {
-                            e.colisionOn = true;
-                        }
-                        if (jugador) {
-                            return i;
-                        }
-                    }
                     break;
                 case "down":
                     e.areaColision.y += e.getMovimiento();
-                    if (e.areaColision.intersects(objeto.getAreaColision())){
-                        if (objeto.colision == true) {
-                            e.colisionOn = true;
-                        }
-                        if (jugador) {
-                            return i;
-                        }
-                    }
                     break;
                 case "left":
                     e.areaColision.x -= e.getMovimiento();
-                    if (e.areaColision.intersects(objeto.getAreaColision())){
-                        if (objeto.colision == true) {
-                            e.colisionOn = true;
-                        }
-                        if (jugador) {
-                            return i;
-                        }    
-                    }
                     break;
                 case "right":
                     e.areaColision.x += e.getMovimiento();
-                    if (e.areaColision.intersects(objeto.getAreaColision())){
-                        if (objeto.colision == true) {
-                            e.colisionOn = true;
-                        }
-                        if (jugador) {
-                            return i;
-                        }
-                    }
                     break;
                 }
-                obj[i].volverDefaultAreaColision();
+                if (e.areaColision.intersects(objeto.getAreaColision())){
+                    if (objeto.getColision() == true) {
+                        e.colisionOn = true;
+                        return objeto;
+                    }
+                }
+
+                objeto.volverDefaultAreaColision();
             }
             e.areaColision.x = e.areaColisionDefaultX;
             e.areaColision.y = e.areaColisionDefaultY;
 
         }
 
-        return index;
+        return null;
 
     }
 

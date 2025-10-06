@@ -1,20 +1,18 @@
 // view/LightView.java
 package view;
 
-import entidades.Player;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import controlador.GameController;
+import controller.juego.GameController;
+import model.juego.entidades.Player;
 
 /*
  * LightView dibuja un overlay oscuro en la pantalla,
  * dejando un circulo iluminado alrededor del jugador (efecto "linterna").
  */
 public class LightView {
-
     //private final Player player;
-
     // parametros fijos
     private final int radiusPx = 280;  // radio de luz en pixeles
     private final int alphaFondo = 255; // nivel de oscuridad general (0-255)

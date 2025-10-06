@@ -3,6 +3,7 @@ package view.juego;
 import model.juego.Stopwatch;
 import model.juego.objetos.*;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -10,6 +11,8 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
+import java.awt.RadialGradientPaint;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -18,7 +21,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import controller.juego.GameController;
-import view.LightView;
 
 
 public class JuegoPanel extends JPanel{
@@ -48,6 +50,7 @@ public class JuegoPanel extends JPanel{
     private final int anchoBloque;
     private final int altoBloque;
 
+
     //, Labyrinth laberinto, LightView light SE MODIFICO 01:25 se sacaron los dos parametros
     public JuegoPanel (GameController controlador) {
         this.controlador = controlador;
@@ -73,15 +76,16 @@ public class JuegoPanel extends JPanel{
     }
 
     public Font cargarFuente(){
-    //try{
+    try{
         //Carga la fuente del texto
-        //fuenteJuego = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/assets/font/gaspi.otf"));
-        //fuenteJuego = fuenteJuego.deriveFont(Font.PLAIN,28f);
-        //} catch (FontFormatException | IOException e) {
-        //}
-        fuenteJuego = new Font("Arial", Font.PLAIN, 24);
-        return fuenteJuego;
-        
+        fuenteJuego = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/assets/font/gaspi.otf"));
+        fuenteJuego = fuenteJuego.deriveFont(Font.PLAIN,28f);
+        System.out.println("Fuente cargada");
+        } catch (FontFormatException | IOException e) {
+            fuenteJuego = new Font("Arial", Font.PLAIN, 24);
+            System.out.println("Fuente no pudo ser cargada");
+    }
+        return fuenteJuego;   
     }
     
     public Image cargarImagenVida(){ 
@@ -172,10 +176,57 @@ public class JuegoPanel extends JPanel{
                 }     
             }
         }
-    
 
-    //metodo para poder dibujar en el JPanel, tanto el jugador laberinto fantasmas 
-    //el override hace referencia a que es un metodo heredado de JPanel 
+
+
+
+    public void paintLuz(Graphics2D g) {
+        if (g == null || controlador == null) return;
+
+        int anchoPanel = getWidth();
+        int altoPanel = getHeight();
+
+        // Capa temporal del tamaño del panel con transparencia
+        BufferedImage layer = new BufferedImage(anchoPanel, altoPanel, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D lg = layer.createGraphics();
+
+        // Pinta toda la pantalla con negro (oscuridad)
+        lg.setComposite(AlphaComposite.Src);
+        lg.setColor(new Color(0, 0, 0, 255)); // 255 = completamente oscuro
+        lg.fillRect(0, 0, anchoPanel, altoPanel);
+
+    // Centro del círculo de luz (en coordenadas de pantalla)
+        int offsetX = -5;
+        int offsetY = -5;
+        int cx = controlador.getScreenXJugador() + controlador.getAnchoJugador() / 2 + offsetX;
+        int cy = controlador.getScreenYJugador() + controlador.getAltoJugador() / 2 + offsetY;
+
+        int radiusPx = 280;
+
+        // Gradiente de la linterna
+        float[] dist = {0f, 0.65f, 1f};
+        Color[] cols = {
+            new Color(0, 0, 0, 250),  // centro casi opaco
+            new Color(0, 0, 0, 100),  // intermedio
+            new Color(0, 0, 0, 0)     // borde transparente
+        };
+
+        RadialGradientPaint grad = new RadialGradientPaint(new Point(cx, cy), radiusPx, dist, cols);
+
+        // Corta el agujero circular en la oscuridad
+        lg.setComposite(AlphaComposite.DstOut);
+        lg.setPaint(grad);
+        lg.fillOval(cx - radiusPx, cy - radiusPx, radiusPx * 2, radiusPx * 2);
+
+        lg.dispose();
+
+        // Dibuja la capa sobre la pantalla
+        g.drawImage(layer, 0, 0, null);
+    }
+
+
+    //metodo para poder dibujar en el JPanel, tanto el jugador laberinto fantasmas
+    //el override hace referencia a que es un metodo heredado de JPanel
     @Override
     public void paintComponent(Graphics g) {
         //System.out.println("LLAMADO PAINTCOMPONENT");
@@ -211,10 +262,7 @@ public class JuegoPanel extends JPanel{
         g.drawImage(getImagenJugador(), controlador.getScreenXJugador(), controlador.getScreenYJugador(), controlador.getAnchoJugador(), controlador.getAltoJugador(), null); // dibuja el jugador en pantalla
 
         //Se dibuja la luz en el panel 
-        LightView light = controlador.getLight();//SE MODIFICO 01:25
-        if (light != null) {
-            light.paint((Graphics2D) g, getWidth(), getHeight());
-        }
+        paintLuz((Graphics2D) g);
         
         //Se dibuja el mensaje en el panel ////////////////////////
 
@@ -246,9 +294,6 @@ public class JuegoPanel extends JPanel{
     }
         
         
-        
-       
-
 
 }
 

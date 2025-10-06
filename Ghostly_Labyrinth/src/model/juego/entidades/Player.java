@@ -73,7 +73,7 @@ public class Player extends Entity {
         mundoX = 3 * gc.getAnchoBloque(); // 3 tiles desde la izquierda
         mundoY = 3 *gc.getAltoBloque();  // 3 tiles desde arriba
 
-        movimiento = 6;
+        movimiento = 10; // pixeles por movimiento
         direccion = "down";
         ultimaDireccion = "down";
     }

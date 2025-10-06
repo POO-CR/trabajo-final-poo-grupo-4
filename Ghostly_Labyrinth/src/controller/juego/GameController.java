@@ -13,7 +13,7 @@ import model.juego.Stopwatch;
 import model.juego.entidades.*;
 import model.juego.laberinto.*;
 import model.juego.objetos.*;
-import view.LightView;
+
 import view.juego.JuegoView;
 
 //public class GameController implements Runnable{ (VIEJO)
@@ -29,7 +29,7 @@ public class GameController {
     private String tituloJuego;
     private NivelManager nm;
     private Nivel nivel;
-    private LightView light; ////SE MODIFICO 01:25
+
 
     private Timer gameTimer; // NUEVO
 
@@ -73,8 +73,6 @@ public class GameController {
         this.cChecker = new ColisionChecker(this, obj, nivel);
 
         this.keyH = new KeyHandler();
-
-        this.light = new LightView(this); ////SE MODIFICO 01:25
 
         this.stopwatch = new Stopwatch(() -> {
         // Esto se ejecuta cada segundo sin frenar el juego
@@ -122,7 +120,7 @@ public class GameController {
             keyH.leftPressed == true || keyH.rightPressed == true){
         
             if (keyH.upPressed == true){
-            System.out.println("SETEANDO DIR ARRIBAs");
+            
             jugador.setDireccion("up");
             jugador.setUltimaDireccion("up");
             }
@@ -265,9 +263,6 @@ public class GameController {
         return jugador.getAltoPersonaje();
     }
 
-    public LightView getLight() {
-        return light;
-    } //SE MODIFICO 01:25
     
     public void mostrarMensaje(String texto, int milisegundos){ //SE MODIFICO 01:25
         mensaje.mostrar(texto, milisegundos);
@@ -320,7 +315,7 @@ public class GameController {
         gameTimer.start();
     }
 
-        public void detenerGameLoop() {
+    public void detenerGameLoop() {
         if (gameTimer != null) {
             gameTimer.stop();
         }

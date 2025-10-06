@@ -5,11 +5,13 @@ import entidades.objetos.*;
 import java.awt.Toolkit; //SE MODIFICO 01:25
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import javax.swing.Timer;
+
 import juego.*;
 import view.LightView;
 
-
-public class GameController implements Runnable{
+//public class GameController implements Runnable{ (VIEJO)
+public class GameController {
     private Player jugador;
 
     final private int FPS = 60;
@@ -23,9 +25,11 @@ public class GameController implements Runnable{
     private Nivel nivel;
     private LightView light; ////SE MODIFICO 01:25
 
+    private Timer gameTimer; // NUEVO
+
     private ArrayList<Objeto> obj;
 
-    Thread gameThread;
+    //Thread gameThread; (VIEJO)
     private Stopwatch stopwatch;
 
     //valores iniciales
@@ -170,8 +174,8 @@ public class GameController implements Runnable{
 
     }
 
-
-    public void iniciarJuego (String usuario) {
+    // (VIEJO)
+    /*public void iniciarJuego (String usuario) {
         // cerrar todas las ventanas abiertas de Swing
         for (java.awt.Window window : java.awt.Window.getWindows()) {
             if (window.isShowing()) {
@@ -201,7 +205,7 @@ public class GameController implements Runnable{
         iniciarGameThread(); 
         //stopwatch.iniciar(); //inicia el cronometro
     
-    }
+    }*/
 
     
     public void setObjeto (Objeto objeto) {
@@ -285,14 +289,46 @@ public class GameController implements Runnable{
         return getMundoYJugador() - getScreenYJugador();
     }
 
-
-    public void iniciarGameThread(){
+    // (VIEJO)
+    /*public void iniciarGameThread(){ 
         gameThread = new Thread(this);
         gameThread.start();
+    }*/
+
+    // NUEVO
+    public void iniciarGameLoop() {
+        int delay = 1000 / FPS; // 16 ms aprox
+
+        gameTimer = new Timer(delay, e -> {
+            update();
+            juegoView.pintarPanel();
+        });
+
+        gameTimer.start();
     }
 
-    // método necesario para runnable, el gameloop
-    @Override
+        public void detenerGameLoop() {
+        if (gameTimer != null) {
+            gameTimer.stop();
+        }
+    }
+
+    // NUEVO
+    public void iniciarJuego(String usuario) {
+        for (java.awt.Window window : java.awt.Window.getWindows()) {
+            if (window.isShowing()) window.dispose();
+        }
+
+        this.juegoView = new JuegoView(this);
+        juegoView.setVisible(true);
+        juegoView.añadirKeyListener(keyH);
+
+        setupJuego();
+        iniciarGameLoop();
+    }
+
+    // método necesario para runnable, el gameloop (VIEJO)
+    /*@Override
     public void run() {
 
         double intervaloRefresco = 1000000000/FPS; // nos da los nanosegundos que tiene que tener cada frame
@@ -316,7 +352,7 @@ public class GameController implements Runnable{
                 e.printStackTrace();
             }
         }
-    }
+    } */
 
 
 

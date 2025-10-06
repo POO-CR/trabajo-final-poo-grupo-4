@@ -1,6 +1,7 @@
 package entidades.tile;
 
 import javax.imageio.ImageIO;
+import entidades.tile.Puerta;
 
 
 public class TileManager {

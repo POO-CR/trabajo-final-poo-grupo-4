@@ -70,12 +70,13 @@ public class JuegoPanel extends JPanel{
     }
 
     public Font cargarFuente(){
-    try{
+    //try{
         //Carga la fuente del texto
-        fuenteJuego = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/assets/font/gaspi.otf"));
-        fuenteJuego = fuenteJuego.deriveFont(Font.PLAIN,28f);
-        } catch (FontFormatException | IOException e) {
-        }
+        //fuenteJuego = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/assets/font/gaspi.otf"));
+        //fuenteJuego = fuenteJuego.deriveFont(Font.PLAIN,28f);
+        //} catch (FontFormatException | IOException e) {
+        //}
+        fuenteJuego = new Font("Arial", Font.PLAIN, 24);
         return fuenteJuego;
         
     }

@@ -64,12 +64,9 @@ public class GameController implements Runnable{
 
         this.keyH = new KeyHandler();
 
-        this.juegoView = new JuegoView(this);
-        juegoView.setVisible(true);
-
         this.light = new LightView(this); ////SE MODIFICO 01:25
 
-        this.stopwatch = new Stopwatch(this);
+        //this.stopwatch = new Stopwatch(this);
     }
 
 
@@ -112,6 +109,7 @@ public class GameController implements Runnable{
             keyH.leftPressed == true || keyH.rightPressed == true){
         
             if (keyH.upPressed == true){
+            System.out.println("SETEANDO DIR ARRIBAs");
             jugador.setDireccion("up");
             jugador.setUltimaDireccion("up");
             }
@@ -181,6 +179,8 @@ public class GameController implements Runnable{
             }
         }
         
+        this.juegoView = new JuegoView(this);
+        juegoView.setVisible(true);
         //this.juegoView = new JuegoView();
 
         //int ancho = lab.getPixelWidth();
@@ -188,15 +188,18 @@ public class GameController implements Runnable{
         // YA NO SE USA ESTO, AHORA ES PANTALLA COMPLETA, NO SE TIENE EN CUENTA LAS MEDIDAS DEL LABERINTO
 
         // Controlador
-        actualizarMovimiento();
         juegoView.añadirKeyListener(keyH);
+        actualizarMovimiento();
+
+        juegoView.setVisible(true);
+
 
 
         // juego
         setupJuego(); //tiene que ir antes del juego
 
         iniciarGameThread(); 
-        stopwatch.iniciar(); //inicia el cronometro
+        //stopwatch.iniciar(); //inicia el cronometro
     
     }
 
@@ -266,9 +269,9 @@ public class GameController implements Runnable{
     return this.jugador;
     } //SE MODIFICO 01:25
 
-    public Stopwatch getStopwatch(){
-        return this.stopwatch;
-    } //SE MODIFICO 01:25
+   // public Stopwatch getStopwatch(){
+    //    return this.stopwatch;
+    //} //SE MODIFICO 01:25
 
     public int vidaActual(){
         return jugador.getVida();
@@ -296,7 +299,9 @@ public class GameController implements Runnable{
         double siguienteRefresco = System.nanoTime() + intervaloRefresco; // refrescamos cada esa cantidad de nanosegundos
 
         while (gameThread != null) {
+            //System.out.println("actualizando: ");
             update();
+            //System.out.println("pintando: ");
             juegoView.pintarPanel();
             try {
                 double tiempoFaltante = siguienteRefresco - System.nanoTime(); // cuanto falta para el sig refresco

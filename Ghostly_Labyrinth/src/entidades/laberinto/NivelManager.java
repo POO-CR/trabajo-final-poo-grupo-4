@@ -49,12 +49,9 @@ public class NivelManager {
 
                 int col = 0;
                 int fila = 0;
-                System.out.println("ancho = " + dim.ancho + "\nalto = " + dim.alto);
                 while (col < dim.ancho && fila < dim.alto) {
-                    System.out.println("fila: " + fila);
                     String linea = buffer.readLine();
                     while (col < dim.ancho) {
-                        System.out.println("col: " + col);
                         String numeros[] = linea.split(" ");
                         int num = Integer.parseInt(numeros[col]);
                         nivel.matBaldosas[fila][col] = tm.crearNuevoObjetoTile(num);

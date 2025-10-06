@@ -174,6 +174,7 @@ public class JuegoPanel extends JPanel{
     //el override hace referencia a que es un metodo heredado de JPanel 
     @Override
     public void paintComponent(Graphics g) {
+        //System.out.println("LLAMADO PAINTCOMPONENT");
 
         super.paintComponent(g);
 
@@ -186,9 +187,11 @@ public class JuegoPanel extends JPanel{
 
         
         //Se dibuja el laberinto en el panel  //SE MODIFICO 01:25
+        //System.out.println("pintando laberinto");
         paintLaberinto(g2);
 
         //Se dibujan los objetos en el panel
+        //System.out.println("pintando objetos");
         Objeto obj;
         for (int i=0; i < objetos.size(); i++) {
                 if (objetos.get(i) != null) {
@@ -198,9 +201,9 @@ public class JuegoPanel extends JPanel{
         }
 
         //jugador.draw(g2); // dibuja el jugador en el mundo, esto hace que funcione mal
-        g2.dispose();
         
         // SE DIBUJA JUGADOR EN EL PANEL 
+        //System.out.println("pintando jugador");
         g.drawImage(getImagenJugador(), controlador.getScreenXJugador(), controlador.getScreenYJugador(), controlador.getAnchoJugador(), controlador.getAltoJugador(), null); // dibuja el jugador en pantalla
 
         //Se dibuja la luz en el panel 
@@ -220,20 +223,22 @@ public class JuegoPanel extends JPanel{
 
 
         //para dibujar el cronometro tanto el estilo como la posicion
-        Stopwatch stopwatch = controlador.getStopwatch(); //SE MODIFICO 01:25
+        //Stopwatch stopwatch = controlador.getStopwatch(); //SE MODIFICO 01:25
         fuenteJuego = cargarFuente(); //SE MODIFICO 01:25
         
         g.setFont(fuenteJuego); //usa la fuente cargada en el constructor de panel juego
-        String textoTiempo = "Time: " + stopwatch.formatoTiempo(stopwatch.getSegundos()); //texto que se mostrara en pantalla
+        //String textoTiempo = "Time: " + stopwatch.formatoTiempo(stopwatch.getSegundos()); //texto que se mostrara en pantalla
 
         FontMetrics metrics = g.getFontMetrics(fuenteJuego); //FontMetrics da informacion sobre la fuente y g.getFontMetrics le pide al objeto graphics que devuelva las metricas(ancho,alto,espaciado) de la fuente fuenteJuego 
-        int anchoTexto = metrics.stringWidth(textoTiempo); //calcula el ancho de pixeles de la cadena textoTiempo, anchoTexto va a contener un entero con la cantidad de pixeles que ocupa en x textoTiempo
+        //int anchoTexto = metrics.stringWidth(textoTiempo); //calcula el ancho de pixeles de la cadena textoTiempo, anchoTexto va a contener un entero con la cantidad de pixeles que ocupa en x textoTiempo
 
-        int x = getWidth() - anchoTexto - 20; //se calcula y coloca la posicion x en el paneljuego (getWidth() da el ancho total del panel juego y se le resta el ancho de pixeles del texto y el -20 es un margen de separacion desde el borde derecho de la ventana para que no quede pegado al borde)
+        //int x = getWidth() - anchoTexto - 20; //se calcula y coloca la posicion x en el paneljuego (getWidth() da el ancho total del panel juego y se le resta el ancho de pixeles del texto y el -20 es un margen de separacion desde el borde derecho de la ventana para que no quede pegado al borde)
         int y = 40; //se coloca en la posicion y en el paneljuego
 
         g.setColor(Color.WHITE); //se setea el color del texto en blanco
-        g.drawString(textoTiempo, x, y); //se dibuja el string textoTiempo en las posiciones x e y calculadas 
+        //g.drawString(textoTiempo, x, y); //se dibuja el string textoTiempo en las posiciones x e y calculadas 
+
+        g2.dispose();
         }
         
         

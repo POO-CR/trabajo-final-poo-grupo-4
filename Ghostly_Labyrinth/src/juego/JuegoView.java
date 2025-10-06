@@ -22,7 +22,7 @@ public class JuegoView extends JFrame {
     int anchoPantalla;
     public int altoPantalla;*/
 
-    private final JPanel jp;
+    public final JPanel jp;
 
     // panel juego es la vista
 
@@ -47,6 +47,10 @@ public class JuegoView extends JFrame {
         setLocationRelativeTo(null);
         setResizable(true);
         jp = new JuegoPanel(controlador);
+        add(jp);
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            jp.requestFocusInWindow();
+        });
         //this.addKeyListener(controlador); // esto lo ponia el profe, vamos a ver que hace
         setContentPane(jp);
        }
@@ -99,6 +103,7 @@ public class JuegoView extends JFrame {
     } */
 
     public void pintarPanel () {
+        //System.out.println("LLAMANDO A REPAINT");
         jp.repaint();
     }
 

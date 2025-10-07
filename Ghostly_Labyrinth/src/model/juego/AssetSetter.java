@@ -28,6 +28,7 @@ public class AssetSetter {
             l.setX(p.x * gc.getAnchoBloque());
             l.setY(p.y * gc.getAltoBloque());
             gc.setObjeto(l); //TODO: ojo con esto q está medio hardcoded
+
         }
         catch (Exception e){
             e.printStackTrace();

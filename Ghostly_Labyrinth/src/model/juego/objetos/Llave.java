@@ -8,10 +8,11 @@ import controller.juego.GameController;
 public class Llave extends Objeto {
 
     GameController gc;
-    Image imagen;
+    //Image imagen;
 
     public Llave(GameController gc) {
         super(gc);
+        this.gc = gc; // faltaba esta linea nomas
         setNombre("Llave");
         setColision(false);
         tilePermitida = 3;

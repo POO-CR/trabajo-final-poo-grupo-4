@@ -145,8 +145,9 @@ public class ColisionChecker {
                 if (e.areaColision.intersects(objeto.getAreaColision())){
                     if (objeto.getColision() == true) {
                         e.colisionOn = true;
-                        return objeto;
+                        
                     }
+                    return objeto; // cambie esta linea porque no entraba en colision con el objeto agarrable y el jugador
                 }
 
                 objeto.volverDefaultAreaColision();

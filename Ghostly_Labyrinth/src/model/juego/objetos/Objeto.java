@@ -8,7 +8,7 @@ import controller.juego.GameController;
 // esta es la superclase para todos los objetos
 public abstract class Objeto {
 
-    private BufferedImage imagen;
+    protected BufferedImage imagen;
     private String nombre;
     private boolean colision = false;
     protected int tilePermitida;

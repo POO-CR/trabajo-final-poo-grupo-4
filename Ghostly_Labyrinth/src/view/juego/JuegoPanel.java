@@ -80,10 +80,10 @@ public class JuegoPanel extends JPanel{
         //Carga la fuente del texto
         fuenteJuego = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/assets/font/gaspi.otf"));
         fuenteJuego = fuenteJuego.deriveFont(Font.PLAIN,28f);
-        System.out.println("Fuente cargada");
+        //System.out.println("Fuente cargada");
         } catch (FontFormatException | IOException e) {
             fuenteJuego = new Font("Arial", Font.PLAIN, 24);
-            System.out.println("Fuente no pudo ser cargada");
+            //System.out.println("Fuente no pudo ser cargada");
     }
         return fuenteJuego;   
     }
@@ -247,6 +247,7 @@ public class JuegoPanel extends JPanel{
 
         //Se dibujan los objetos en el panel
         //System.out.println("pintando objetos");
+        //System.out.println("Cantidad de objetos recibidos en vista: " + objetos.size());
         Objeto obj;
         for (int i=0; i < objetos.size(); i++) {
                 if (objetos.get(i) != null) {

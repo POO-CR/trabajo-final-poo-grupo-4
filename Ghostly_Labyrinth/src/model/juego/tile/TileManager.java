@@ -42,7 +42,7 @@ public class TileManager {
                     t.colision = true;
                     break;}
                 case 9: {t = new Tile();
-                    t.setSprite(ImageIO.read(getClass().getResourceAsStream("/assets/img/baldosa.jpg")));
+                    t.setSprite(ImageIO.read(getClass().getResourceAsStream("/assets/img/laberinto/escaleraSola.png")));
                     break;}
                 default: t = new Tile();
             }

@@ -29,8 +29,8 @@ public class NivelCreator implements Runnable{
 
     private static Posicion getPosicionDefaultMapa(int nivel) {
         return switch (nivel) {
-            case 0 -> new Posicion (10, 10);
-            case 1 -> new Posicion (2, 3);
+            case 0 -> new Posicion (2, 5);
+            case 1 -> new Posicion (2, 3); //TODO: cambiar a otras cosas cuando hagamos más mapas
             case 2 -> new Posicion (2, 3);
             default -> new Posicion (3, 3);
         };

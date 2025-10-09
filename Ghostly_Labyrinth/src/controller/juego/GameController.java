@@ -47,9 +47,14 @@ public class GameController {
     //para ancho y alto de cada bloque 
     private final int anchoBloque = tileSize;
     private final int altoBloque = tileSize;
+
+    private final int screenW;
+    private final int screenH;
     int indiceprueba = 0;
 
     private JuegoView juegoView;
+
+    private Boolean huboCambioNivel = false;
 
 
     public GameController() {
@@ -63,8 +68,8 @@ public class GameController {
         this.tituloJuego = "Ghostly Labyrinth";
 
         // obtener tamaño pantalla
-        int screenW = Toolkit.getDefaultToolkit().getScreenSize().width;
-        int screenH = Toolkit.getDefaultToolkit().getScreenSize().height;
+        screenW = Toolkit.getDefaultToolkit().getScreenSize().width;
+        screenH = Toolkit.getDefaultToolkit().getScreenSize().height;
 
         this.jugador = new Player(this, screenW, screenH);
         
@@ -84,20 +89,22 @@ public class GameController {
     }
 
     public void cambiarNivel(){
+        // detenerGameLoop(); //por alguna razón con el detener e iniciar va más rápido el personaje (capaz algo de las actualizaciones por segundo?)
         System.out.println("CREANDO NIVEL " + indiceprueba);
+        this.huboCambioNivel = true;
         this.siguienteNivel = nivelManager.crearSiguienteNivel();
         this.nivel = siguienteNivel;
         if (this.nivel != null) {
             indiceprueba++;
+            jugador.setScreenXY(screenW, screenH);
             obj.clear();
             setupJuego();
             this.juegoView.setNivel(nivel);
             System.out.println("poniendo personaje en " + nivel.getPosDefaultX() + ", " + nivel.getPosDefaultY());
-            this.jugador.setPosicionPersonaje(nivel.getPosDefaultX(), nivel.getPosDefaultY());
-            System.out.println("personaje en " + jugador.getMundoX() + ", " + jugador.getMundoY());
             if (this.juegoView != null) {
-            this.juegoView.pintarPanel(); 
-        }
+            this.juegoView.pintarPanel();
+            }
+            // iniciarGameLoop();
         }
         else {
             System.out.println("GANASTE !!! (acá iría la pantalla de ganar)"); //TODO: pantalla de ganar
@@ -214,6 +221,10 @@ public class GameController {
 
 
     public void update(){
+        if (huboCambioNivel) {
+            huboCambioNivel = false;
+            jugador.setPosicionPersonaje(nivel.getPosDefaultX(), nivel.getPosDefaultY());
+        }
         actualizarMovimiento();
         mensaje.updateMsj();
     }
@@ -318,11 +329,11 @@ public class GameController {
     }
 
     public int getCamX () {
-        return getMundoXJugador() - getScreenXJugador();
+        return jugador.getMundoX() - jugador.getScreenX();
     }
 
     public int getCamY () {
-        return getMundoYJugador() - getScreenYJugador();
+        return jugador.getMundoY() - jugador.getScreenY();
     }
 
     //metodo para cronometro

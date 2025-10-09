@@ -32,6 +32,7 @@ public class JuegoPanel extends JPanel{
     // posis del jugador según la cámara
     private int camX;
     private int camY;
+    private Graphics2D g2;
 
     private Nivel nivel; // acá
 
@@ -235,16 +236,14 @@ public class JuegoPanel extends JPanel{
     //el override hace referencia a que es un metodo heredado de JPanel
     @Override
     public void paintComponent(Graphics g) {
-        //System.out.println("LLAMADO PAINTCOMPONENT");
-
         super.paintComponent(g);
 
         // offset calculado según su posición en el mundo y su posición en pantalla
-        camX = controlador.getCamX();
-        camY = controlador.getCamY();
+        int camX = controlador.getCamX();
+        int camY = controlador.getCamY();
 
-        Graphics2D g2 = (Graphics2D) g.create();
-        g2.translate(-camX, -camY); // mueve todo lo que se dibuje segun la camara
+        this.g2 = (Graphics2D) g.create();
+        this.g2.translate(-camX, -camY); // mueve todo lo que se dibuje segun la camara
 
         
         //Se dibuja el laberinto en el panel  //SE MODIFICO 01:25
@@ -252,8 +251,6 @@ public class JuegoPanel extends JPanel{
         paintLaberinto(g2);
 
         //Se dibujan los objetos en el panel
-        //System.out.println("pintando objetos");
-        //System.out.println("Cantidad de objetos recibidos en vista: " + objetos.size());
         Objeto obj;
         for (int i=0; i < objetos.size(); i++) {
                 if (objetos.get(i) != null) {
@@ -262,10 +259,8 @@ public class JuegoPanel extends JPanel{
             }//SE MODIFICO 01:25 el length
         }
 
-        //jugador.draw(g2); // dibuja el jugador en el mundo, esto hace que funcione mal
         
         // SE DIBUJA JUGADOR EN EL PANEL 
-        //System.out.println("pintando jugador");
         g.drawImage(getImagenJugador(), controlador.getScreenXJugador(), controlador.getScreenYJugador(), controlador.getAnchoJugador(), controlador.getAltoJugador(), null); // dibuja el jugador en pantalla
 
         //Se dibuja la luz en el panel 

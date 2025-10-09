@@ -17,8 +17,8 @@ public class Player extends Entity {
     //variable que indica si el jugador agarro la llave
     private boolean tieneLlave = false;
 
-    public final int screenX; // DONDE SE VA A DIBUJAR PLAYER EN PANTALLA
-    public final int screenY;
+    public int screenX; // DONDE SE VA A DIBUJAR PLAYER EN PANTALLA
+    public int screenY;
 
      //Caracteristicas de la vida
     private final int vidaTope = 3;
@@ -41,13 +41,10 @@ public class Player extends Entity {
 
         super();
         this.gc = gc;
-        setValoresDefault();
+        setValoresDefault(screenAncho, screenAlto);
 
         anchoPersonaje = (int)(gc.getAnchoBloque()*escalaPersonaje);
         altoPersonaje = (int)(gc.getAltoBloque()*escalaPersonaje);
-
-        screenX = screenAncho / 2 - (anchoPersonaje / 2); //centrado en pantalla
-        screenY = screenAlto / 2 - (altoPersonaje / 2); //centrado en pantalla
 
         int colisionW = (int)(anchoPersonaje * 0.5); // ancho del area de colisión (50% del sprite)
         int colisionH = (int)(altoPersonaje * 0.3);  // alto del area de colisión
@@ -67,22 +64,28 @@ public class Player extends Entity {
     }
 
 
-    public void setValoresDefault () {
+    public void setValoresDefault (int screenAncho, int screenAlto) {
         // posicion del player en el mundo (NO POSICION EN PANTALLA)
-        // ES EL PUNTO DE PARTIDA EN LA MATRIZ DEL LABERINTO 
+        // ES EL PUNTO DE PARTIDA EN LA MATRIZ DEL LABERINTO
+        setScreenXY(screenAncho, screenAlto);
         movimiento = 10; // pixeles por movimiento
         direccion = "down";
         ultimaDireccion = "down";
     }
 
+    public void setScreenXY (int screenAncho, int screenAlto){
+        screenX = screenAncho / 2 - (anchoPersonaje / 2); //centrado en pantalla
+        screenY = screenAlto / 2 - (altoPersonaje / 2); //centrado en pantalla
+    }
+
     public void setPosicionDefault(){
-        mundoX = 3 * gc.getAnchoBloque(); // 3 tiles desde la izquierda
-        mundoY = 3 *gc.getAltoBloque();  // 3 tiles desde arriba
+        super.setMundoX(3 * gc.getAnchoBloque()); // 3 tiles desde la izquierda
+        super.setMundoY(3 *gc.getAltoBloque());  // 3 tiles desde arriba
     }
 
     public void setPosicionPersonaje(int x, int y){
-        mundoX = x * gc.getAnchoBloque();
-        mundoY = y * gc.getAltoBloque();
+        super.setMundoX(x * gc.getAnchoBloque()); 
+        super.setMundoY(y *gc.getAltoBloque());
     }
 
 

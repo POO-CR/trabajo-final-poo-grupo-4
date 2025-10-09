@@ -59,7 +59,6 @@ public class JuegoView extends JFrame {
        }
 
     public void pintarPanel () {
-        //System.out.println("LLAMANDO A REPAINT");
         jp.repaint();
     }
 

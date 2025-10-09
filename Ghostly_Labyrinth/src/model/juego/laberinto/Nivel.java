@@ -5,11 +5,25 @@ public class Nivel {
 
     Tile [][] matBaldosas;
     private static record Dimension(int alto, int ancho){}
+    private static record Posicion(int x, int y){}
     Dimension dim;
+    Posicion posDefault;
 
     public Nivel (int alto, int ancho) {
         this.dim = new Dimension(alto, ancho);
         this.matBaldosas = new Tile[alto][ancho];
+    }
+
+    public void setPosicionDefault(int x, int y){
+        this.posDefault = new Posicion(x, y);
+    }
+
+    public int getPosDefaultX(){
+        return posDefault.x;
+    }
+
+    public int getPosDefaultY(){
+        return posDefault.y;
     }
 
     public int getAlto () {

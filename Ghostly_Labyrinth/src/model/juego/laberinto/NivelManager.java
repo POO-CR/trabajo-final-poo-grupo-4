@@ -1,81 +1,44 @@
 package model.juego.laberinto;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.*;
-
-import model.juego.tile.Tile;
-import model.juego.tile.TileManager;
-import model.juego.tile.TileSpriteSetter;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class NivelManager {
-    ArrayList <Tile[][]> mapas = new ArrayList<>();
+
     private final int cantNiveles;
-    private static record Dimension(int alto, int ancho) {}
-    private Dimension dim;
-    private TileManager tm;
-    private TileSpriteSetter tileSS;
-    Nivel nivel;
+    private final ArrayList<Integer> nivelesDisponibles;
+    private NivelCreator nivelCreator;
+    Random rnd;
 
-    private static Dimension getDimensionMapa(int nivel) {
-        return switch (nivel) {
-            case 0 -> new Dimension(20, 30);
-            case 1 -> new Dimension(4, 6);
-            case 2 -> new Dimension(20, 30);
-            default -> new Dimension(20, 30);
-        };
-    }
-
-    public int getMapaAlto (int nivel){
-        return getDimensionMapa(nivel).alto;
-    }
-
-    public int getMapaAncho (int nivel){
-        return getDimensionMapa(nivel).ancho;
-    }
-
-
-    public NivelManager(){
-        tm = new TileManager();
+    public NivelManager() {
         cantNiveles = 2;
+        nivelesDisponibles = new ArrayList<>();
+        for (int i = 0; i <= cantNiveles; i++) {
+            nivelesDisponibles.add(i);
+        }
     }
 
-    public Nivel getNivel(int nivelNumero){
-        try {
-                this.dim = getDimensionMapa(nivelNumero);
-                this.nivel = new Nivel(dim.alto, dim.ancho);
-                InputStream is = getClass().getResourceAsStream(String.format("/assets/mapas/mapa%d.txt", nivelNumero));
-                BufferedReader buffer = new BufferedReader(new InputStreamReader(is));
+    public Nivel crearSiguienteNivel () {
+        rnd = new Random();
+        int indiceTemp;
+        int nuevoNivel;
+        System.out.println("niveles disponibles: " + nivelesDisponibles);
+        if (nivelesDisponibles.size() > 0) {
+            indiceTemp = rnd.nextInt(nivelesDisponibles.size());
+            nuevoNivel = nivelesDisponibles.get(indiceTemp);
+            nivelesDisponibles.remove(indiceTemp);
+            nivelCreator = new NivelCreator(nuevoNivel);
 
-                int col = 0;
-                int fila = 0;
-                while (col < dim.ancho && fila < dim.alto) {
-                    String linea = buffer.readLine();
-                    while (col < dim.ancho) {
-                        String numeros[] = linea.split(" ");
-                        int num = Integer.parseInt(numeros[col]);
-                        nivel.matBaldosas[fila][col] = tm.crearNuevoObjetoTile(num);
+            // nivelCreator = new NivelCreator(nuevoNivel);
+            // Thread hilo = new Thread(nivelCreator);
+            // hilo.start();
 
-                        col++;
-                    }
-                    if (col == dim.ancho) {
-                        col = 0;
-                        fila++;
-                    }
-                }
-                buffer.close();
-                this.tileSS = new TileSpriteSetter(nivel);
-                tileSS.setearTileRandom(tm.getTile(0));
-                tileSS.setearTileSegunVecinos(tm.getTile(1));
-                return nivel;
-            }catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        
+            // while (!hilo.isAlive()){} //dios sacar esto 
+            return nivelCreator.crearnivel(); //buscar bien como devolver el nivel
+        }
+        System.out.println("devolviendo null pq no hay niveles");
+
+        return null;
     }
-
-
-
+    
 }

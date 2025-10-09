@@ -69,13 +69,20 @@ public class Player extends Entity {
 
     public void setValoresDefault () {
         // posicion del player en el mundo (NO POSICION EN PANTALLA)
-        // ES EL PUNTO DE PARTIDA EN LA MATRIZ DEL LABERINTO
-        mundoX = 3 * gc.getAnchoBloque(); // 3 tiles desde la izquierda
-        mundoY = 3 *gc.getAltoBloque();  // 3 tiles desde arriba
-
+        // ES EL PUNTO DE PARTIDA EN LA MATRIZ DEL LABERINTO 
         movimiento = 10; // pixeles por movimiento
         direccion = "down";
         ultimaDireccion = "down";
+    }
+
+    public void setPosicionDefault(){
+        mundoX = 3 * gc.getAnchoBloque(); // 3 tiles desde la izquierda
+        mundoY = 3 *gc.getAltoBloque();  // 3 tiles desde arriba
+    }
+
+    public void setPosicionPersonaje(int x, int y){
+        mundoX = x * gc.getAnchoBloque();
+        mundoY = y * gc.getAltoBloque();
     }
 
 

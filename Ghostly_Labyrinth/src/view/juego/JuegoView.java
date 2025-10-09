@@ -6,6 +6,7 @@ import javax.swing.*;
 import controller.juego.GameController;
 import model.juego.KeyHandler;
 
+import model.juego.laberinto.Nivel; //TODO: preg esto
 
 //Clase Juego debe heredar los atributos y metodos de JPanel
 public class JuegoView extends JFrame {
@@ -24,7 +25,7 @@ public class JuegoView extends JFrame {
     int anchoPantalla;
     public int altoPantalla;*/
 
-    public final JPanel jp;
+    public final JuegoPanel jp;
 
     // panel juego es la vista
 
@@ -57,56 +58,13 @@ public class JuegoView extends JFrame {
         setContentPane(jp);
        }
 
-        
-
-        // Crear jugador
-        /*jugador.setNombre(usuario);
-
-        this.laberinto = lab;
-        this.jugador = jugador;
-        this.mensaje = mensaje;
-        this.light = new LightView(this.jugador);
-
-
-        panelJuego.setFocusable(true);       //puede recibir foco
-        panelJuego.requestFocusInWindow();   //pedir foco para teclado
-
-        add(panelJuego);
-        setVisible(true);
-        setLocationRelativeTo(null);
-        setVisible(true);
-
-        
-
-        stopwatch = new Stopwatch(() -> repaint());  //cada vez que el stopwatch incrementa el tiempo en 1 segundo se redibuja el panelJuego 
-        stopwatch.iniciar();
-
-        //para la fuente de todos los textos del juego
-        try {
-            fuenteJuego = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/assets/font/shloprg.otf"));
-            fuenteJuego = fuenteJuego.deriveFont(Font.PLAIN, 28f); // estilo y tamaño
-        } catch (Exception e) {
-            e.printStackTrace();
-            // en el caso de que falle se pone arial es para que no tire exception y se rompa 
-            fuenteJuego = new Font("Arial", Font.PLAIN, 28);
-
-            
-        // se fuerza que este al frente y tenga foco
-        toFront();
-        requestFocus();
-        setAlwaysOnTop(true);   // para que quede al frente
-        setAlwaysOnTop(false);  // lo volvemos a normal
-
-        // despues de hacer visible la ventana, asegurar foco en el panel
-        javax.swing.SwingUtilities.invokeLater(() -> {
-        panelJuego.requestFocusInWindow();
-        });}
-
-    } */
-
     public void pintarPanel () {
         //System.out.println("LLAMANDO A REPAINT");
         jp.repaint();
+    }
+
+    public void setNivel(Nivel nivel){
+        this.jp.setNivel(nivel);
     }
 
 

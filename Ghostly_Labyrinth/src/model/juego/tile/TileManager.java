@@ -2,8 +2,6 @@ package model.juego.tile;
 
 import javax.imageio.ImageIO;
 
-import model.juego.tile.Puerta;
-
 
 public class TileManager {
     
@@ -43,6 +41,9 @@ public class TileManager {
                     t.setSprite(ImageIO.read(getClass().getResourceAsStream("/assets/img/laberinto/paredFrente.png")));
                     t.colision = true;
                     break;}
+                case 9: {t = new Tile();
+                    t.setSprite(ImageIO.read(getClass().getResourceAsStream("/assets/img/baldosa.jpg")));
+                    break;}
                 default: t = new Tile();
             }
             t.num = i;
@@ -56,5 +57,9 @@ public class TileManager {
 
     public Tile getTile(int i) {
         return tile[i];
+    }
+
+    public int getTileESpecial(){
+        return 9;
     }
 }

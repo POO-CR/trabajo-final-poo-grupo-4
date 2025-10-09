@@ -1,26 +1,23 @@
 package model.juego;
+import controller.juego.GameController;
+import java.util.ArrayList;
 import model.juego.entidades.*;
 import model.juego.laberinto.*;
 import model.juego.objetos.*;
 import model.juego.tile.*;
 
-import java.util.ArrayList;
-
-import controller.juego.GameController;
-
 public class ColisionChecker {
     
-    GameController gc;
-    ArrayList<Objeto> obj;
-    Nivel nivel;
+    private GameController gc;
+    private ArrayList<Objeto> obj;
+    private Nivel nivel;
 
-    public ColisionChecker(GameController gc, ArrayList<Objeto> obj, Nivel nivel) {
+    public ColisionChecker(GameController gc) {
         this.gc = gc;
-        this.obj = obj;
-        this.nivel = nivel;
     }
 
     public void checkearTile(Entity entidad) {
+        this.nivel = gc.getNivel();
         // calcula la posición de las esquinas del rectángulo de colisión
         int entidadLeftX = entidad.getMundoX() + entidad.areaColisionDefaultX;
         int entidadRightX = entidad.getMundoX() + entidad.areaColisionDefaultX + entidad.areaColision.width;
@@ -41,6 +38,7 @@ public class ColisionChecker {
         
         Tile tile1, tile2;
 
+        
         // entidad para poder agregar fantasmas también
         switch(entidad.direccion) {
             case "up" -> {
@@ -52,12 +50,18 @@ public class ColisionChecker {
                 tile1 = nivel.getTile(entidadFilaSuperior, entidadColumnaIzquierda);
                 tile2 = nivel.getTile(entidadFilaSuperior, entidadColumnaDerecha);
 
-                entidad.tieneAcceso(tile1);
-                entidad.tieneAcceso(tile2);
-
-                if (tile1.colision || tile2.colision){ // && !(tileNum1 == 2 || tileNum2 == 2) && entidad.getTieneLlave() == true
-                    entidad.colisionOn = true;
+                if (tile1.getNum() == gc.getTileEspecial() || tile2.getNum() == gc.getTileEspecial()){
+                    System.out.println("TOCO TILE ESPECIAL, LLAMANDO A CAMBIAR NIVEL");
+                    gc.cambiarNivel();
                 }
+                else {
+                    entidad.tieneAcceso(tile1);
+                    entidad.tieneAcceso(tile2);
+
+                    if (tile1.colision || tile2.colision){ // && !(tileNum1 == 2 || tileNum2 == 2) && entidad.getTieneLlave() == true
+                        entidad.colisionOn = true;
+                    }
+                }   
             }
 
             case "down" -> {
@@ -69,11 +73,16 @@ public class ColisionChecker {
                 // tile1 = lab.tile[tileNum1];
                 // tile2 = lab.tile[tileNum2];
 
-                entidad.tieneAcceso(tile1);
-                entidad.tieneAcceso(tile2);
-
-                if (tile1.colision || tile2.colision){ // && !(tileNum1 == 2 || tileNum2 == 2) && entidad.getTieneLlave() == true
-                    entidad.colisionOn = true;
+                if (tile1.getNum() == gc.getTileEspecial() || tile2.getNum() == gc.getTileEspecial()){ //poner todos en .getNum}
+                    System.out.println("TOCO TILE ESPECIAL, LLAMANDO A CAMBIAR NIVEL");
+                    gc.cambiarNivel();
+                }
+                else {
+                    entidad.tieneAcceso(tile1);
+                    entidad.tieneAcceso(tile2);
+                    if (tile1.colision || tile2.colision){ // && !(tileNum1 == 2 || tileNum2 == 2) && entidad.getTieneLlave() == true
+                        entidad.colisionOn = true;
+                    }
                 }
             }
 
@@ -82,14 +91,17 @@ public class ColisionChecker {
                 if (entidadColumnaIzquierda < 0 ) entidadColumnaIzquierda = 0;
                 tile1 = nivel.getTile(entidadFilaSuperior, entidadColumnaIzquierda);
                 tile2 = nivel.getTile(entidadFilaInferior, entidadColumnaIzquierda); 
-                // tile1 = lab.tile[tileNum1];
-                // tile2 = lab.tile[tileNum2];
-
-                entidad.tieneAcceso(tile1);
-                entidad.tieneAcceso(tile2);
-
-                if (tile1.colision || tile2.colision){ // && !(tileNum1 == 2 || tileNum2 == 2) && entidad.getTieneLlave() == true
-                    entidad.colisionOn = true;
+            
+                if (tile1.getNum() == gc.getTileEspecial() || tile2.getNum() == gc.getTileEspecial()){
+                    System.out.println("TOCO TILE ESPECIAL, LLAMANDO A CAMBIAR NIVEL");
+                    gc.cambiarNivel();
+                }
+                else {
+                    entidad.tieneAcceso(tile1);
+                    entidad.tieneAcceso(tile2);
+                    if (tile1.colision || tile2.colision){ // && !(tileNum1 == 2 || tileNum2 == 2) && entidad.getTieneLlave() == true
+                        entidad.colisionOn = true;
+                    }
                 }
             }
             case "right" -> {
@@ -100,11 +112,16 @@ public class ColisionChecker {
                 // tile1 = lab.tile[tileNum1];
                 // tile2 = lab.tile[tileNum2];
 
-                entidad.tieneAcceso(tile1);
-                entidad.tieneAcceso(tile2);
-
-                if (tile1.colision || tile2.colision){ // && !(tileNum1 == 2 || tileNum2 == 2) && entidad.getTieneLlave() == true
-                    entidad.colisionOn = true;
+                if (tile1.getNum() == gc.getTileEspecial() || tile2.getNum() == gc.getTileEspecial()){
+                    System.out.println("TOCO TILE ESPECIAL, LLAMANDO A CAMBIAR NIVEL");
+                    gc.cambiarNivel();
+                }
+                else{
+                    entidad.tieneAcceso(tile1);
+                    entidad.tieneAcceso(tile2);
+                    if (tile1.colision || tile2.colision){ // && !(tileNum1 == 2 || tileNum2 == 2) && entidad.getTieneLlave() == true
+                        entidad.colisionOn = true;
+                    }
                 }
             }
 
@@ -115,6 +132,7 @@ public class ColisionChecker {
 
     // TODO: pensar esto para no estar preguntando si es el player
     public Objeto checkearObjeto (Entity e) {
+        obj = gc.getObjArray();
 
         for (Objeto objeto: obj) {
             if (objeto != null) {
@@ -129,25 +147,17 @@ public class ColisionChecker {
 
                 // TODO: esto lo cambié, chequear si funciona bien
                 switch (e.direccion) {
-                case "up":
-                    e.areaColision.y -= e.getMovimiento();
-                    break;
-                case "down":
-                    e.areaColision.y += e.getMovimiento();
-                    break;
-                case "left":
-                    e.areaColision.x -= e.getMovimiento();
-                    break;
-                case "right":
-                    e.areaColision.x += e.getMovimiento();
-                    break;
+                case "up" -> e.areaColision.y -= e.getMovimiento();
+                case "down" -> e.areaColision.y += e.getMovimiento();
+                case "left" -> e.areaColision.x -= e.getMovimiento();
+                case "right" -> e.areaColision.x += e.getMovimiento();
                 }
                 if (e.areaColision.intersects(objeto.getAreaColision())){
                     if (objeto.getColision() == true) {
                         e.colisionOn = true;
                         
                     }
-                    return objeto; // cambie esta linea porque no entraba en colision con el objeto agarrable y el jugador
+                    return objeto;
                 }
 
                 objeto.volverDefaultAreaColision();

@@ -18,6 +18,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import model.juego.laberinto.Nivel; // acá
 import javax.swing.*;
 
 import controller.juego.GameController;
@@ -31,7 +32,10 @@ public class JuegoPanel extends JPanel{
     // posis del jugador según la cámara
     private int camX;
     private int camY;
-    final private ArrayList<Objeto> objetos;
+
+    private Nivel nivel; // acá
+
+    private ArrayList<Objeto> objetos;
     ///SE MODIFICO 01:25 private Labyrinth laberinto; 
     //SE MODIFICO 01:25 private LightView light;
     // private Objeto[] obj; TAMBIEN ES MODELO
@@ -45,23 +49,16 @@ public class JuegoPanel extends JPanel{
     final private int distancia = 10;
 
     //características del lab
-    private final int cantidadFilas;
-    private final int cantidadColumnas;
-    private final int anchoBloque;
-    private final int altoBloque;
+    private int cantidadFilas;
+    private int cantidadColumnas;
+    private int anchoBloque;
+    private int altoBloque;
 
 
     //, Labyrinth laberinto, LightView light SE MODIFICO 01:25 se sacaron los dos parametros
     public JuegoPanel (GameController controlador) {
         this.controlador = controlador;
-        //SE MODIFICO 01:25 this.laberinto = laberinto; // ESTO ES VIEW, HAY QUE CAMBIAR NOMBRE 
-        //this.obj = controlador.getObjArray();  
-        this.cantidadColumnas = controlador.getAnchoNivel();
-        this.cantidadFilas = controlador.getAltoNivel();
-        this.altoBloque = controlador.getAltoBloque();
-        this.anchoBloque = controlador.getAnchoBloque(); 
-        this.objetos = controlador.getObjArray();
-        super.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize()); // para que tome el tamaño de la pantalla nativa!! copado!!
+        super.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize()); 
         super.setBackground(Color.black);
         super.setDoubleBuffered(true); // guarda 2 buffer en memoria para que no carguen en tiempo real en pan                         // igual según internet no es necesario(?
         super.setFocusable(true); // el setfocusable es para que se "concentre" en los eventos del teclado    
@@ -73,6 +70,15 @@ public class JuegoPanel extends JPanel{
         cargarSpritesJugador(); 
         cargarFuente();
         cargarImagenVida(); 
+    }
+
+    public void setNivel(Nivel nivel){
+        this.nivel = nivel;
+        this.cantidadColumnas = controlador.getAnchoNivel();
+        this.cantidadFilas = controlador.getAltoNivel();
+        this.altoBloque = controlador.getAltoBloque();
+        this.anchoBloque = controlador.getAnchoBloque(); 
+        this.objetos = controlador.getObjArray();
     }
 
     public Font cargarFuente(){
@@ -172,7 +178,7 @@ public class JuegoPanel extends JPanel{
             //columnas
             for(int columna = 0; columna < this.cantidadColumnas; columna++){
                     //variable para la iteracion
-                    grafico.drawImage(controlador.getSprite(fila, columna), columna * anchoBloque, fila * altoBloque, anchoBloque, altoBloque, null);
+                    grafico.drawImage(this.nivel.getTile(fila, columna).getSprite(), columna * anchoBloque, fila * altoBloque, anchoBloque, altoBloque, null);
                 }     
             }
         }

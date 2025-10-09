@@ -1,23 +1,18 @@
 package model.juego;
 
-import model.juego.laberinto.Nivel;
-import model.juego.objetos.*;
-
+import controller.juego.GameController;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import controller.juego.GameController;
+import model.juego.objetos.*;
 
 public class AssetSetter {
     
     GameController gc;
-    Nivel nivel;
 
-    public AssetSetter (GameController gc, Nivel nivel) {
+    public AssetSetter (GameController gc) {
         this.gc = gc;
-        this.nivel = nivel;
     }
 
     public void setearObjetosIniciales () {
@@ -27,7 +22,7 @@ public class AssetSetter {
             p = encontrarCoordsObjeto(l);
             l.setX(p.x * gc.getAnchoBloque());
             l.setY(p.y * gc.getAltoBloque());
-            gc.setObjeto(l); //TODO: ojo con esto q está medio hardcoded
+            gc.setObjeto(l); 
 
         }
         catch (Exception e){
@@ -51,7 +46,7 @@ public class AssetSetter {
         Random rnd = new Random();
         for (int i=0; i<rows ; i++) {
             for (int j=0; j<cols; j++){
-                if (nivel.getTile(i, j).getNum() == obj.getTilePermitida()) {
+                if (gc.getNivel().getTile(i, j).getNum() == obj.getTilePermitida()) {
                     opciones.add(new Point(j, i));
                 }
             }

@@ -82,7 +82,25 @@ public class NivelCreator implements Runnable{
                 this.tileSS = new TileSpriteSetter(nivel);
                 tileSS.setearTileRandom(tm.getTile(0));
                 tileSS.setearTileSegunVecinos(tm.getTile(1));
+
+                // para agregar las posiciones de los fantasmas segun el nivelll
+                switch (nivelNumero) {
+                    case 0 -> {
+                        nivel.agregarFantasma(2, 3);
+                        nivel.agregarFantasma(15, 8);
+                    }
+                    case 1 -> {
+                        nivel.agregarFantasma(3, 4);
+                    }
+                    case 2 -> {
+                        nivel.agregarFantasma(2, 2);
+                        nivel.agregarFantasma(4, 2);
+                    }
+                }
+
+
                 return nivel;
+                
             }catch (Exception e) {
                 e.printStackTrace();
                 return null;

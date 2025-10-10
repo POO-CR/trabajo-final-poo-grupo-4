@@ -82,5 +82,13 @@ public abstract class Entity {
         this.ultimaDireccion = ultimaDireccion;
     }
 
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String d) {
+        this.direccion = d;
+    }
+
 
 }

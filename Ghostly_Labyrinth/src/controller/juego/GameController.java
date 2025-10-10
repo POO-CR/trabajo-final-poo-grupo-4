@@ -1,7 +1,11 @@
 package controller.juego;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Toolkit; //SE MODIFICO 01:25
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.Timer;
 import model.juego.AssetSetter;
 import model.juego.ColisionChecker;
@@ -17,6 +21,7 @@ import view.juego.JuegoView;
 //public class GameController implements Runnable{ (VIEJO)
 public class GameController {
     private Player jugador;
+    //private Ghost fantasma;
 
     final private int FPS = 60;
     private Message mensaje;
@@ -30,6 +35,7 @@ public class GameController {
     private Nivel siguienteNivel;
     private TileManager tm;
 
+    private List<Ghost> fantasmas = new ArrayList<>(); // lista de los fantasmas, se recibe del nivel
 
     private Timer gameTimer; // NUEVO
 
@@ -72,6 +78,8 @@ public class GameController {
         screenH = Toolkit.getDefaultToolkit().getScreenSize().height;
 
         this.jugador = new Player(this, screenW, screenH);
+
+        //this.fantasma = new Ghost(this, 100, 100);
         
         // seteamos objetos en el mapa
         this.obj = new ArrayList<>();
@@ -101,6 +109,19 @@ public class GameController {
             setupJuego();
             this.juegoView.setNivel(nivel);
             System.out.println("poniendo personaje en " + nivel.getPosDefaultX() + ", " + nivel.getPosDefaultY());
+
+            
+            fantasmas.clear(); // limpiar lista de fantasmas
+            // crear fantasmas en las posiciones definidas en el nivel
+            for (Point p : nivel.getPosicionesFantasma()) {
+                fantasmas.add(new Ghost(this, p.x, p.y));
+            }
+            System.out.println("Fantasmas creados: " + fantasmas.size());
+            for (Ghost g : fantasmas) {
+                System.out.println(" - Fantasma en tiles (" + g.getMundoX() + ", " + g.getMundoY() + ")");
+            }
+
+            
             if (this.juegoView != null) {
             this.juegoView.pintarPanel();
             }
@@ -180,6 +201,79 @@ public class GameController {
 
     }
 
+    // recibe parametro porque no tenemos 1 solo fantasma en el juego, tenemos una lista de fantasmas, tonces tiene que recibir cual fantasma actualizar
+    public void actualizarMovimientoFantasma(Ghost fantasma) {
+
+        long ahora = System.currentTimeMillis(); // tiempo actual
+
+        // esperar hasta el siguiente movimiento permitido
+        if (ahora - fantasma.getTiempoUltimoMovimiento() < Ghost.getMovimientoIntervalo()) { // 80ms
+          return;
+        }
+
+        int pasos = getAnchoBloque() / 8; // se movera en 8 por tile 
+
+        // revisar colision antes de moverse
+        fantasma.colisionOn = false;
+        cChecker.checkearTile(fantasma);
+
+        if (fantasma.colisionOn) {
+            // si hay colison gira
+            String[] dirs = {"up", "down", "left", "right"};
+            String nuevaDir;
+            do {
+                nuevaDir = dirs[(int)(Math.random() * dirs.length)]; // elige una dir al azar
+            } while (nuevaDir.equals(fantasma.getDireccion())); // evita repetir la misma direccion
+            fantasma.setDireccion(nuevaDir);
+        } 
+        else {
+            // mover solo si no hay colision
+            switch (fantasma.getDireccion()) {
+                case "up" -> fantasma.setMundoY(fantasma.getMundoY() - pasos);
+                case "down" -> fantasma.setMundoY(fantasma.getMundoY() + pasos);
+                case "left" -> fantasma.setMundoX(fantasma.getMundoX() - pasos);
+                case "right" -> fantasma.setMundoX(fantasma.getMundoX() + pasos);
+            }
+        }
+
+        // animacion
+        fantasma.spriteCounter++;
+        if (fantasma.spriteCounter > 10) {
+            fantasma.spriteNum = (fantasma.spriteNum == 1) ? 2 : 1;
+            fantasma.spriteCounter = 0;
+        }
+
+        fantasma.setTiempoUltimoMovimiento(ahora);
+    }
+
+
+
+    private void verificarColisionJugadorFantasma(Ghost fantasma) {
+        // hitboxes actuales del jugador y el fantasma
+        Rectangle hitJugador = new Rectangle(
+            jugador.getMundoX() + jugador.areaColisionDefaultX,
+            jugador.getMundoY() + jugador.areaColisionDefaultY,
+            jugador.areaColision.width,
+            jugador.areaColision.height
+        );
+
+        Rectangle hitFantasma = new Rectangle(
+            fantasma.getMundoX() + fantasma.areaColisionDefaultX,
+            fantasma.getMundoY() + fantasma.areaColisionDefaultY,
+            fantasma.areaColision.width,
+            fantasma.areaColision.height
+        );
+
+        // a ver si se intersectan 
+        if (hitJugador.intersects(hitFantasma)) {
+        // si se tocan, el jugador recibe daño
+            System.out.println("te lastimo un fantasmaaaa");
+            jugador.recibirDanio(1);
+        }
+    }
+
+
+
     public void rtaColisionObjeto (Objeto objeto) {
         objeto.interaccionJugador();
         obj.remove(objeto);
@@ -227,6 +321,15 @@ public class GameController {
         }
         actualizarMovimiento();
         mensaje.updateMsj();
+
+        for (Ghost f: fantasmas) {
+            actualizarMovimientoFantasma(f);
+            verificarColisionJugadorFantasma(f);
+        }
+    }
+
+    public List<Ghost> getFantasmas() {
+        return this.fantasmas;
     }
 
     public int getTileEspecial(){

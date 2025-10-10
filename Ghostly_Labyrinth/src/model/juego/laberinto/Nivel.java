@@ -1,4 +1,8 @@
 package model.juego.laberinto;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
+
 import model.juego.tile.*;
 
 public class Nivel {
@@ -9,10 +13,24 @@ public class Nivel {
     Dimension dim;
     Posicion posDefault;
 
+    private List<Point> posicionesFantasma = new ArrayList<>(); // posiciones de los fantasmas en el nivel
+
     public Nivel (int alto, int ancho) {
         this.dim = new Dimension(alto, ancho);
         this.matBaldosas = new Tile[alto][ancho];
     }
+
+    
+    
+    public void agregarFantasma(int x, int y) { // agrega una posicion de fantasma al nivel
+        posicionesFantasma.add(new Point(x, y)); // usa point para guardar x e y juntos
+    }
+
+    public List<Point> getPosicionesFantasma() { // devuelve la lista de posiciones de fantasmas
+        return posicionesFantasma;
+    }
+
+
 
     public void setPosicionDefault(int x, int y){
         this.posDefault = new Posicion(x, y);

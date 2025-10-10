@@ -223,6 +223,7 @@ public class GameController {
     public void update(){
         if (huboCambioNivel) {
             huboCambioNivel = false;
+            jugador.setTieneLlave(false);
             jugador.setPosicionPersonaje(nivel.getPosDefaultX(), nivel.getPosDefaultY());
         }
         actualizarMovimiento();

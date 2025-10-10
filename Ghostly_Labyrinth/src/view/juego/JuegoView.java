@@ -72,6 +72,10 @@ public class JuegoView extends JFrame {
         jp.addKeyListener(kh);
     }
 
+    public JuegoPanel getJuegoPanel() {
+    return this.jp;
+}
+
 }
 
 

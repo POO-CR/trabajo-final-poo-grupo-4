@@ -166,4 +166,9 @@ public class Player extends Entity {
             System.out.println("GAME OVER");
         }}
 
+    public void resetVida() {
+        vida = vidaTope;
+        finInmune = 0;
+    } //para reiniciar partida
+
 }

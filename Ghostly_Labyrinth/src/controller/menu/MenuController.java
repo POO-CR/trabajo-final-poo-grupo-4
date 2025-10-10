@@ -32,8 +32,16 @@ public class MenuController {
         // boton Jugar
         this.view.getBttnJugar().addActionListener((ActionEvent e) -> {
             
+                     //Si hay musica sonando en el menu la pausa antes de iniciar el juego
+                    if (music != null) {
+                        music.pausar();
+                    }
+
+                    //Se crea un nuevo controlador del juego 
                     this.gc = new GameController();
+
                     gc.iniciarJuego("usuario");
+
                 }); // el controlador
                
             

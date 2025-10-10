@@ -26,6 +26,7 @@ public class JuegoView extends JFrame {
     public int altoPantalla;*/
 
     public final JuegoPanel jp;
+    
 
     // panel juego es la vista
 
@@ -56,6 +57,7 @@ public class JuegoView extends JFrame {
         });
         //this.addKeyListener(controlador); // esto lo ponia el profe, vamos a ver que hace
         setContentPane(jp);
+
        }
 
     public void pintarPanel () {
@@ -66,12 +68,13 @@ public class JuegoView extends JFrame {
         this.jp.setNivel(nivel);
     }
 
-
-
     public void añadirKeyListener (KeyHandler kh){
         jp.addKeyListener(kh);
     }
-        
-
 
 }
+
+
+
+
+

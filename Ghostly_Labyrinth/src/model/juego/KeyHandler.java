@@ -6,9 +6,19 @@ import java.awt.event.KeyEvent;
 public class KeyHandler extends KeyAdapter{
 
     public boolean upPressed, downPressed, leftPressed, rightPressed;
+    // variable que indica si se presiono la tecla esc (para pausar)
+    public boolean escPressed = false;
 
     @Override
     public void keyPressed (KeyEvent e){
+
+        int codePausa = e.getKeyCode(); //se obtiene el codigo de la tecla presionada
+
+        // si se presiona la tecla esc
+        if (codePausa == KeyEvent.VK_ESCAPE) {
+            escPressed = true; //se marca que se presiono esc 
+        }   
+
         // int [][] laberinto = lab.obtenerLaberinto();
 
         int code = e.getKeyCode();

@@ -278,7 +278,6 @@ public class GameController {
         chequearPowerups();
         actualizarMovimiento();
         mensaje.updateMsj();
-        System.out.println("se actualiza juego");
 
     }
 
@@ -478,6 +477,7 @@ public class GameController {
     }
     huboCambioNivel = true; //indica que se cargo un nuevo nivel
 
+    aSetter.resetearPosicionesUsadas();
     obj.clear();
     setupJuego();
 
@@ -495,7 +495,9 @@ public class GameController {
     juegoView = new JuegoView(this); //se crea una nueva vista
     juegoView.setNivel(nivel); //se asigna el nivel actual
     juegoView.setVisible(true); //muestra la ventana
+    keyH.resetearTeclas();
     juegoView.añadirKeyListener(keyH); //se vuelve a escuchar el teclado
+
 
     // Se conecta nuevamente el listener del boton pausa esto no dejaba abrir la pausa del boton del panel del juego porque solo estaba en iniciarjuego() 
     juegoView.getJuegoPanel().getBtnPausa().addActionListener(e -> pausarJuego());

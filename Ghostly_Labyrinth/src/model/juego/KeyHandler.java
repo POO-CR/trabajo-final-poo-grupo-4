@@ -9,6 +9,14 @@ public class KeyHandler extends KeyAdapter{
     // variable que indica si se presiono la tecla esc (para pausar)
     public boolean escPressed = false;
 
+    public void resetearTeclas() {
+        upPressed = false;
+        downPressed = false;
+        leftPressed = false;
+        rightPressed = false;
+        escPressed = false;
+    }
+
     @Override
     public void keyPressed (KeyEvent e){
 

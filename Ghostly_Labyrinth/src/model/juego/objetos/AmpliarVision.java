@@ -15,7 +15,7 @@ public class AmpliarVision extends Objeto{
         setColision(false);
         tilePermitida = 5;
         duracion = 8; //segundos
-        aumentoRadio = 250; //pixeles
+        aumentoRadio = 200; //pixeles
         try{
             this.imagen = javax.imageio.ImageIO.read(getClass().getResourceAsStream("/assets/img/objetos/visionAmpliada.png"));
         }catch(Exception e){ 

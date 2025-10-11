@@ -54,7 +54,7 @@ public class Player extends Entity {
         anchoPersonaje = (int)(gc.getAnchoBloque()*escalaPersonaje);
         altoPersonaje = (int)(gc.getAltoBloque()*escalaPersonaje);
 
-        int colisionW = (int)(anchoPersonaje * 0.45); // ancho del area de colisión (50% del sprite)
+        int colisionW = (int)(anchoPersonaje * 0.4); // ancho del area de colisión (40% del sprite)
         int colisionH = (int)(altoPersonaje * 0.3);  // alto del area de colisión
         int colisionX = (anchoPersonaje - colisionW) / 2; // centrado
         int colisionY = (altoPersonaje - colisionH) / 2 + (int)(altoPersonaje * 0.29); // un poco mas abajo del centro, para los pies

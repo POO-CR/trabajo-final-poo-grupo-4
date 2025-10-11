@@ -28,7 +28,7 @@ public class AssetSetter {
             Random rnd = new Random();
 
             // para q genere entre 5 y 15 powerups 
-            int cantPowerUps = rnd.nextInt(5, 15);
+            int cantPowerUps = rnd.nextInt(5, 10);
             System.out.println("generando " + cantPowerUps + " powerups");
             for (int i=0; i<=cantPowerUps; i++) {
                 //para q genere un powerup al azar

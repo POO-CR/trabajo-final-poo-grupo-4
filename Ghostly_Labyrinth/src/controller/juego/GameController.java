@@ -2,6 +2,7 @@ package controller.juego;
 import java.awt.Toolkit; //SE MODIFICO 01:25
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.Timer;
 import model.juego.AssetSetter;
@@ -12,6 +13,7 @@ import model.juego.Stopwatch;
 import model.juego.entidades.*;
 import model.juego.laberinto.*;
 import model.juego.objetos.*;
+import model.juego.objetos.efectos.PowerUpEffect;
 import model.juego.tile.TileManager;
 import view.juego.JuegoPausa;
 import view.juego.JuegoView;
@@ -58,6 +60,8 @@ public class GameController {
     private JuegoView juegoView;
 
     private Boolean huboCambioNivel = false;
+    private Boolean cambioLuz = false;
+    private int aumentoLuz = 0;
 
 
     public GameController() {
@@ -99,6 +103,8 @@ public class GameController {
         this.nivel = siguienteNivel;
         if (this.nivel != null) {
             indiceprueba++;
+            aSetter.resetearPosicionesUsadas();
+            jugador.setTieneLlave(false);
             jugador.setScreenXY(screenW, screenH);
             obj.clear();
             setupJuego();
@@ -112,10 +118,6 @@ public class GameController {
         else {
             System.out.println("GANASTE !!! (acá iría la pantalla de ganar)"); //TODO: pantalla de ganar
         }
-        // jugador.setMundoX(0);
-        // jugador.setMundoY(0);
-        // jugador.setTieneLlave(false);
-        // cChecker = new ColisionChecker(this, obj, nivel);
     }
 
     public void actualizarMovimiento() {
@@ -184,9 +186,11 @@ public class GameController {
     }
 
     public void rtaColisionObjeto (Objeto objeto) {
-        objeto.interaccionJugador();
-        obj.remove(objeto);
-
+        PowerUpEffect efectoNuevo = objeto.interactuar(jugador); // interactuamos, y si el objeto tiene efecto, lo devuelve
+        if (efectoNuevo != null) {
+            jugador.agregarEfecto(efectoNuevo); //agregamos el efecto al array de efectos activos del jugador
+        }
+        obj.remove(objeto); //sacamos el objeto del array de objetos del nivel
     }
 
     
@@ -222,12 +226,36 @@ public class GameController {
         stopwatch.iniciar();
     }
 
+    public void cambiarLuz(int aumentoLuz){
+        this.cambioLuz = true;
+        this.aumentoLuz = aumentoLuz;
+    }
+
+    public void chequearPowerups(){
+        ArrayList<PowerUpEffect> efectos = jugador.getEfectosActivos();
+        Iterator<PowerUpEffect> iterator = efectos.iterator();
+        while (iterator.hasNext()) {
+            PowerUpEffect efecto = iterator.next();
+            if (efecto.isCaducado()) {
+                efecto.remover(jugador); //removemos el efecto del jugador
+                iterator.remove(); //removemos el efecto del array de efectos activos
+            }
+        }
+    }
+
 
     public void update(){
         if (huboCambioNivel) {
             huboCambioNivel = false;
             jugador.setPosicionPersonaje(nivel.getPosDefaultX(), nivel.getPosDefaultY());
         }
+
+        if (cambioLuz){
+            System.out.println("cambiando luz en " + aumentoLuz);
+            cambioLuz = false;
+            juegoView.setRadioLuz(juegoView.getRadioDefault() + aumentoLuz);
+        }
+
         if (keyH.escPressed) { //si se presiona la tecla esc 
             keyH.escPressed = false; //se le asigna false para no repetir la accion varias veces seguidas 
             if (!juegoPausado) { //si el juego esta corriendo
@@ -236,7 +264,7 @@ public class GameController {
                 reanudarJuego(); //se reanuda
             }    
         }
-
+        chequearPowerups();
         actualizarMovimiento();
         mensaje.updateMsj();
     }

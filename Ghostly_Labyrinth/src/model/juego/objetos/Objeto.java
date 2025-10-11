@@ -4,6 +4,9 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import controller.juego.GameController;
+import model.juego.entidades.Player;
+
+import model.juego.objetos.efectos.PowerUpEffect;
 
 // esta es la superclase para todos los objetos
 public abstract class Objeto {
@@ -22,7 +25,6 @@ public abstract class Objeto {
         this.areaColision = new Rectangle(0, 0, gc.getAnchoBloque(), gc.getAltoBloque());
     }
 
-    public abstract void interaccionJugador();
 
     public int getTilePermitida() {
         return this.tilePermitida;
@@ -36,6 +38,9 @@ public abstract class Objeto {
         this.areaColision.x = areaColisionDefaultX;
         this.areaColision.y = areaColisionDefaultY;
     }
+
+    // para interactuar con el jugador, devuelve un comando concreto
+    public abstract PowerUpEffect interactuar(Player jugador);
 
     
     public int getX () {

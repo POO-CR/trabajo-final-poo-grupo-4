@@ -72,6 +72,14 @@ public class JuegoView extends JFrame {
         jp.addKeyListener(kh);
     }
 
+    public void setRadioLuz(int radio){
+        this.jp.setRadioLuz(radio);
+    }
+
+    public int getRadioDefault(){
+        return this.jp.getRadioDefault();
+    }
+
 }
 
 

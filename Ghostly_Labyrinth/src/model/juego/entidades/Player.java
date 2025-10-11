@@ -4,6 +4,8 @@ import java.awt.Rectangle;
 
 import controller.juego.GameController;
 import model.juego.tile.Tile;
+import model.juego.objetos.efectos.PowerUpEffect;
+import java.util.ArrayList;
  
 public class Player extends Entity {
     
@@ -28,6 +30,12 @@ public class Player extends Entity {
     private final long tiempoInmune = 2000;
     private long finInmune=0;
 
+    public float multiplicadorVelocidad;
+
+    private long ultimaInteraccion;
+
+    private ArrayList<PowerUpEffect> efectosActivos;
+
 
     // sprites del jugador
     // las tiles son de 20x2=40 
@@ -46,7 +54,7 @@ public class Player extends Entity {
         anchoPersonaje = (int)(gc.getAnchoBloque()*escalaPersonaje);
         altoPersonaje = (int)(gc.getAltoBloque()*escalaPersonaje);
 
-        int colisionW = (int)(anchoPersonaje * 0.5); // ancho del area de colisión (50% del sprite)
+        int colisionW = (int)(anchoPersonaje * 0.45); // ancho del area de colisión (50% del sprite)
         int colisionH = (int)(altoPersonaje * 0.3);  // alto del area de colisión
         int colisionX = (anchoPersonaje - colisionW) / 2; // centrado
         int colisionY = (altoPersonaje - colisionH) / 2 + (int)(altoPersonaje * 0.29); // un poco mas abajo del centro, para los pies
@@ -56,19 +64,36 @@ public class Player extends Entity {
         areaColisionDefaultX = colisionX;
         areaColisionDefaultY = colisionY; // con estos cambios, player genera una hitbox proporcional a su sprite, para el tema de cambio de tamaño de tiles
 
-        // lo anterior, daba problemas con la colision del player con las paredes
-        //areaColision = new Rectangle(10, 30 , 28, 23);
-        //areaColisionDefaultX = areaColision.x;
-        //areaColisionDefaultY = areaColision.y;
+        efectosActivos = new ArrayList<>();
+        ultimaInteraccion = System.currentTimeMillis();
 
     }
 
+    public void setUltimaInteraccion(long ultimaInteraccion){
+        this.ultimaInteraccion = ultimaInteraccion;
+    }
+
+    public long getUltimaInteraccion(){
+        return this.ultimaInteraccion;
+    }
+
+    public void agregarEfecto(PowerUpEffect efecto) {
+        efectosActivos.add(efecto);
+    }
+
+    public void removerEfecto(PowerUpEffect efecto) {
+        efectosActivos.remove(efecto);
+    }
+
+    public ArrayList<PowerUpEffect> getEfectosActivos() {
+        return efectosActivos;
+    }
 
     public void setValoresDefault (int screenAncho, int screenAlto) {
         // posicion del player en el mundo (NO POSICION EN PANTALLA)
         // ES EL PUNTO DE PARTIDA EN LA MATRIZ DEL LABERINTO
         setScreenXY(screenAncho, screenAlto);
-        movimiento = 10; // pixeles por movimiento
+        setMovimiento(10); // en pixeles
         direccion = "down";
         ultimaDireccion = "down";
     }
@@ -158,7 +183,7 @@ public class Player extends Entity {
         long ahora = System.currentTimeMillis();
         if(ahora < finInmune) 
         return;
-    if (vida > 0){
+        if (vida > 0){
             vida--;
             finInmune = ahora + tiempoInmune;
         }
@@ -166,9 +191,17 @@ public class Player extends Entity {
             System.out.println("GAME OVER");
         }}
 
+    public void aumentarVida(){
+        vida++;
+    }
+
     public void resetVida() {
         vida = vidaTope;
         finInmune = 0;
     } //para reiniciar partida
+
+    public void cambiarLuz(int nuevoRadioLuz){
+        gc.cambiarLuz(nuevoRadioLuz);
+    }
 
 }

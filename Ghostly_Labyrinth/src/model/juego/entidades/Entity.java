@@ -9,7 +9,8 @@ public abstract class Entity {
     protected int mundoX, mundoY; // posicion en el mundo
     //protected int x;
     //protected int y;
-    protected int movimiento;
+    private int movimiento;
+    private float multiplicadorVelocidad = 1.0f;
     protected String nombre;
 
     public BufferedImage up0, up1, up2, down0, down1, down2, 
@@ -42,28 +43,12 @@ public abstract class Entity {
         this.mundoY = mundoY;
     }
 
-
-
-/* 
-    public int getX(){
-        return x;
+    public int getMovimiento() {
+        return (int) (multiplicadorVelocidad * movimiento);
     }
 
-    public int getY(){
-        return y;
-    }
-
-    public void setX(int x){
-        this.x = x;
-    }
-
-    public void setY(int y){
-        this.y = y;
-    }
-        */
-
-    public int getMovimiento(){
-        return movimiento;
+    public void setMultiplicadorVelocidad(float multiplicador) {
+        this.multiplicadorVelocidad = multiplicador;
     }
 
     public void setMovimiento(int m) {

@@ -13,9 +13,8 @@ public class NivelManager {
     public NivelManager() {
         cantNiveles = 2;
         nivelesDisponibles = new ArrayList<>();
-        for (int i = 0; i <= cantNiveles; i++) {
-            nivelesDisponibles.add(i);
-        }
+        rnd = new Random(); //se inicializa el generador de numeros aleatorios
+        reiniciar(); //llena la lista y deja todo en estado inicial
     }
 
     public Nivel crearSiguienteNivel () {
@@ -40,5 +39,19 @@ public class NivelManager {
 
         return null;
     }
+
+    // metodo para reiniciar el NivelManager(la lista de niveles vuelve a su estado inicial y los niveles se eligen aleatoriamente desde cero)
+    public void reiniciar() {
+        nivelesDisponibles.clear(); // se vacia la lista de niveles disponibles anterior
+        for (int i = 0; i <= cantNiveles; i++) {
+            nivelesDisponibles.add(i); // se reagregan todos los niveles del 0 al cantNiveles
+        }
+        nivelCreator = null; //se reinicia el creador de niveles
+        rnd = new Random(); //se reinicia el generador de numeros aleatorios
+        System.out.println("NivelManager reiniciado. Niveles disponibles: " + nivelesDisponibles);
+    }
+
+    
+
     
 }

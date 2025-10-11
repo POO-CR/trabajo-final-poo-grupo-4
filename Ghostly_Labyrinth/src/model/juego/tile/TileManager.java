@@ -41,6 +41,9 @@ public class TileManager {
                     t.setSprite(ImageIO.read(getClass().getResourceAsStream("/assets/img/laberinto/paredFrente.png")));
                     t.colision = true;
                     break;}
+                case 5: {t = new Tile();
+                    t.setSprite(ImageIO.read(getClass().getResourceAsStream("/assets/img/laberinto/pisoSolo.png")));
+                    break;}
                 case 9: {t = new Tile();
                     t.setSprite(ImageIO.read(getClass().getResourceAsStream("/assets/img/laberinto/escaleraSola.png")));
                     break;}

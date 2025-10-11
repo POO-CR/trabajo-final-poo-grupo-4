@@ -63,7 +63,7 @@ public class ColisionChecker {
                     entidad.tieneAcceso(tile1);
                     entidad.tieneAcceso(tile2);
 
-                    if (tile1.colision || tile2.colision){ // && !(tileNum1 == 2 || tileNum2 == 2) && entidad.getTieneLlave() == true
+                    if (tile1.colision || tile2.colision){
                         entidad.colisionOn = true;
                     }
                 }   
@@ -85,7 +85,7 @@ public class ColisionChecker {
                 else {
                     entidad.tieneAcceso(tile1);
                     entidad.tieneAcceso(tile2);
-                    if (tile1.colision || tile2.colision){ // && !(tileNum1 == 2 || tileNum2 == 2) && entidad.getTieneLlave() == true
+                    if (tile1.colision || tile2.colision){ 
                         entidad.colisionOn = true;
                     }
                 }

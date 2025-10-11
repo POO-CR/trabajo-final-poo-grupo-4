@@ -28,6 +28,9 @@ import controller.juego.GameController;
 public class JuegoPanel extends JPanel{
 
     final private GameController controlador;
+    private JButton btnPausa;
+
+
     private Font fuenteJuego; //SE MODIFICO 01:25
     private Image imagenVida; //SE MODIFICO 01:25
     // posis del jugador según la cámara
@@ -94,6 +97,38 @@ public class JuegoPanel extends JPanel{
         cargarSpritesJugador(); 
         cargarFuente();
         cargarImagenVida(); 
+        crearBotonPausa();
+    }
+
+    private void crearBotonPausa() {
+        ImageIcon iconoOriginal = new ImageIcon(getClass().getResource("/assets/img/botones/EscButton.png"));
+        ImageIcon iconoOriginalHover = new ImageIcon(getClass().getResource("/assets/img/botones/EscButtonHover.png"));
+
+        // Escalar imagen a 80x50
+        Image imgEscalada = iconoOriginal.getImage().getScaledInstance(80, 50, Image.SCALE_SMOOTH);
+        ImageIcon icono = new ImageIcon(imgEscalada);
+
+        // Escalar imagen hover a 80x50
+        Image imgEscaladaHover = iconoOriginalHover.getImage().getScaledInstance(80, 50, Image.SCALE_SMOOTH);
+        ImageIcon iconohover = new ImageIcon(imgEscaladaHover);
+
+
+        btnPausa = new JButton(icono);
+        btnPausa.setRolloverIcon(iconohover);
+        btnPausa.setBorderPainted(false);
+        btnPausa.setContentAreaFilled(false);
+        btnPausa.setFocusPainted(false);
+
+        // Posicion
+        int x = Toolkit.getDefaultToolkit().getScreenSize().width - 60 - 20;
+        int y = 20;
+        btnPausa.setBounds(x, y, 80, 50);
+
+        add(btnPausa);
+    }
+
+    public JButton getBtnPausa() {
+        return btnPausa;
     }
 
     public void setNivel(Nivel nivel){
@@ -104,7 +139,7 @@ public class JuegoPanel extends JPanel{
         this.anchoBloque = controlador.getAnchoBloque(); 
         this.objetos = controlador.getObjArray();
     }
-
+    
     public Font cargarFuente(){
     try{
         //Carga la fuente del texto

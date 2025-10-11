@@ -211,6 +211,10 @@ public class GameController {
         }
     }
 
+    private void reanudarGameLoop() {
+        if (gameTimer != null) gameTimer.start();
+    }
+
     // NUEVO
     public void iniciarJuego(String usuario) {
         for (java.awt.Window window : java.awt.Window.getWindows()) {
@@ -222,8 +226,13 @@ public class GameController {
         juegoView.setVisible(true);
         juegoView.añadirKeyListener(keyH);
 
+        // Listener del boton de pausa en el panel
+        juegoView.getJuegoPanel().getBtnPausa().addActionListener(e -> pausarJuego());
+        
         iniciarGameLoop();
         stopwatch.iniciar();
+
+        
     }
 
     public void cambiarLuz(int aumentoLuz){
@@ -245,6 +254,7 @@ public class GameController {
 
 
     public void update(){
+        
         if (huboCambioNivel) {
             huboCambioNivel = false;
             jugador.setTieneLlave(false);
@@ -268,6 +278,8 @@ public class GameController {
         chequearPowerups();
         actualizarMovimiento();
         mensaje.updateMsj();
+        System.out.println("se actualiza juego");
+
     }
 
     public int getTileEspecial(){
@@ -355,11 +367,9 @@ public class GameController {
         return jugador.getAltoPersonaje();
     }
 
-    
     public void mostrarMensaje(String texto, int milisegundos){ 
         mensaje.mostrar(texto, milisegundos);
     } 
-
 
     public Player getJugador(){
     return this.jugador;
@@ -383,19 +393,24 @@ public class GameController {
     }
 
     public void pausarJuego() {
-    juegoPausado = true; //se marca el estado del juego como pausado 
-    if (gameTimer != null) gameTimer.stop(); //se detiene el bucle principal del juego (no se vuelve a pintar ni actualizar)
-    if (stopwatch != null) stopwatch.detener(); //se detiene el cronometro del tiempo de juego
+        juegoPausado = true;
+        detenerGameLoop();
+        if (stopwatch != null) stopwatch.detener();
 
-    if (juegoView != null) {
+        // Mostrar ventana de pausa
+        mostrarDialogoPausa();
+    }
+
+
+    private void mostrarDialogoPausa() {
+    JuegoPausa Pausa = new JuegoPausa(juegoView);
         
-        // se crea un cuadro de dialogo modal de pausa (bloquea la ventana del juego)
-        JuegoPausa Pausa = new JuegoPausa(juegoView);
 
         // cuando se presiona continuar se reanuda el juego y se cierra el dialogo
         Pausa.getbtnContinuar().addActionListener(e -> {
+            Pausa.dispose(); //cierra el dialogo
             reanudarJuego(); //llama a reanudar juego
-            Pausa.dispose(); //cierra el dialogo 
+            
         });
 
         // cuando se presiona reiniciar se cierra el dialogo y se reinicia el juego desde cero
@@ -410,17 +425,33 @@ public class GameController {
         // se muestra la ventana de pausa y se bloquea hasta que se cierre
         Pausa.setVisible(true); 
     }
-}
 
     // metodo que reanuda el juego tras haber estado pausado
     public void reanudarJuego() {
         if (juegoPausado) {  //solo reanuda si realmente estaba pausado
             juegoPausado = false; //cambia el estado a no pausado
 
-            if (gameTimer != null) gameTimer.start(); // reanuda el loop
+            reanudarGameLoop();
+            
             if (stopwatch != null) stopwatch.iniciar(); // reanuda el cronometro 
 
-            System.out.println("Juego reanudado"); }
+
+            //Cuando se muestra un JDialog modal (como JuegoPausa con super(parent, "Pausa", true)), Swing bloquea todos los eventos del hilo de la interfaz (EDT) hasta que el dialogo se cierra
+            //aunque el Timer corre en el EDT también, cuando el dialogo modal se cierra, a veces el foco no vuelve al JPanel del juego, y entonces:
+            //no detecta teclas (ni KeyHandler),
+            //y en algunos casos no vuelve a repintar aunque se actualice internamente.
+           
+
+            // Recuperar foco del teclado y redibujar panel, esto no me dejaba que luego de tocar continuar en la pausa del boton del panel se repinte el panel pense que era problema del timer
+            if (juegoView != null && juegoView.getJuegoPanel() != null) {
+            juegoView.getJuegoPanel().requestFocusInWindow();
+            juegoView.pintarPanel(); // fuerza repintado inmediato
+            }
+
+            System.out.println("Juego reanudado");
+
+
+         }
     }
 
     //metodo que reinicia completamente el juego
@@ -430,7 +461,7 @@ public class GameController {
     if (gameTimer != null) {
         gameTimer.stop();
         gameTimer = null;
-    }
+    }   
 
      // se detiene y reinicia cronometro
     if (stopwatch != null) {
@@ -465,6 +496,9 @@ public class GameController {
     juegoView.setNivel(nivel); //se asigna el nivel actual
     juegoView.setVisible(true); //muestra la ventana
     juegoView.añadirKeyListener(keyH); //se vuelve a escuchar el teclado
+
+    // Se conecta nuevamente el listener del boton pausa esto no dejaba abrir la pausa del boton del panel del juego porque solo estaba en iniciarjuego() 
+    juegoView.getJuegoPanel().getBtnPausa().addActionListener(e -> pausarJuego());
 
     // Reinicia loop y cronometro
     iniciarGameLoop();

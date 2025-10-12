@@ -33,6 +33,8 @@ public class JuegoPanel extends JPanel{
 
     private Font fuenteJuego; //SE MODIFICO 01:25
     private Image imagenVida; //SE MODIFICO 01:25
+     private Image imagenVidaPerdida; 
+    private Image imagenDibujar; //Guarda la imagen del corazon que hay que mostrar en pantalla
     // posis del jugador según la cámara
     private Graphics2D g2;
 
@@ -97,6 +99,7 @@ public class JuegoPanel extends JPanel{
         cargarSpritesJugador(); 
         cargarFuente();
         cargarImagenVida(); 
+        cargarImagenVidaPerdida();
         crearBotonPausa();
     }
 
@@ -162,6 +165,16 @@ public class JuegoPanel extends JPanel{
         return imagenVida; 
     }
 
+    public Image cargarImagenVidaPerdida(){ 
+    try{
+        //Carga la foto de vida
+        imagenVidaPerdida = ImageIO.read(getClass().getResourceAsStream("/assets/img/VidaPerdida.png"));
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return imagenVidaPerdida;        
+    }
+
     public void cargarImagenLlave(){
 
     }
@@ -209,25 +222,30 @@ public class JuegoPanel extends JPanel{
     public void drawMensaje(Graphics2D g2, int panelAncho, int panelAlto) {
         if (controlador.getIsVisible()) {
             // Fuente y color del mensaje
-            Font fuente = new Font("Arial", Font.BOLD, 40);
-            g2.setFont(fuente);
-            FontMetrics metrics = g2.getFontMetrics(fuente);
+             Font fuenteMensaje = fuenteJuego.deriveFont(Font.BOLD, 40f);
+            g2.setFont(fuenteMensaje);
+            FontMetrics metrics = g2.getFontMetrics(fuenteMensaje);
 
             // Medidas para centrar el texto
             int x = (panelAncho - metrics.stringWidth(controlador.getTexto())) / 2;
-            int y = panelAlto / 2;
+            int y = panelAlto / 5;
             
             // Texto
-            g2.setColor(Color.WHITE);
+            g2.setColor(Color.red);
             g2.drawString(controlador.getTexto(), x, y); 
         }
     } 
 
-    public void paintVida(Graphics grafico, int vida){
+        public void paintVida(Graphics grafico, int vidaActual, int vidaMaxima){
         
-        for (int i = 0; i < vida; i++) {
+        for (int i = 0; i < vidaMaxima; i++) {
+            if (i < vidaActual){
+                imagenDibujar = imagenVida;
+            } else{
+                imagenDibujar = imagenVidaPerdida;
+            }
             int x = x0 + i * (anchofoto + distancia);
-            grafico.drawImage(imagenVida, (x + distancia), y0, anchofoto, altofoto, null);
+            grafico.drawImage(imagenDibujar, (x + distancia), y0, anchofoto, altofoto, null);
         } 
     }
 
@@ -318,7 +336,7 @@ public class JuegoPanel extends JPanel{
 
 
         //Se dibujan las vidas en el panel 
-        paintVida(g,controlador.vidaActual());//SE MODIFICO 01:25
+        paintVida(g,controlador.vidaActual(),controlador.vidaTope());//SE MODIFICO 01:25
 
 
 

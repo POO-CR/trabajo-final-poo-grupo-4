@@ -20,16 +20,16 @@ import view.juego.JuegoView;
 
 //public class GameController implements Runnable{ (VIEJO)
 public class GameController {
-    private Player jugador;
+    protected Player jugador;
 
     final private int FPS = 60;
     private Message mensaje;
 
-    private KeyHandler keyH;
+    protected KeyHandler keyH;
     private AssetSetter aSetter;
     private ColisionChecker cChecker;
     private String tituloJuego;
-    private NivelManager nivelManager;
+    protected NivelManager nivelManager;
     private Nivel nivel;
     private Nivel siguienteNivel;
     private TileManager tm;
@@ -57,7 +57,7 @@ public class GameController {
     private final int screenH;
     int indiceprueba = 0;
 
-    private JuegoView juegoView;
+    protected JuegoView juegoView;
 
     private Boolean huboCambioNivel = false;
     private Boolean cambioLuz = false;
@@ -217,22 +217,8 @@ public class GameController {
 
     // NUEVO
     public void iniciarJuego(String usuario) {
-        for (java.awt.Window window : java.awt.Window.getWindows()) {
-            if (window.isShowing()) window.dispose();
-        }
-
-        this.juegoView = new JuegoView(this);
-        cambiarNivel();
-        juegoView.setVisible(true);
-        juegoView.añadirKeyListener(keyH);
-
-        // Listener del boton de pausa en el panel
-        juegoView.getJuegoPanel().getBtnPausa().addActionListener(e -> pausarJuego());
-        
-        iniciarGameLoop();
-        stopwatch.iniciar();
-
-        
+        Nivel primerNivel = nivelManager.crearSiguienteNivel();
+        iniciarNivel(primerNivel);
     }
 
     public void cambiarLuz(int aumentoLuz){
@@ -276,7 +262,7 @@ public class GameController {
             }    
         }
         chequearPowerups();
-        actualizarMovimiento();
+        procesarMovimiento();
         mensaje.updateMsj();
 
     }
@@ -376,6 +362,10 @@ public class GameController {
 
     public int vidaActual(){
         return jugador.getVida();
+    }
+
+    public int vidaTope(){
+        return jugador.getVidaTope();
     }
 
     public int getCamX () {
@@ -525,6 +515,40 @@ public class GameController {
     // se vuelve a abrir el menu principal
     new controller.menu.MenuController();
 
+}
+
+protected void procesarMovimiento(){ //Metodo generado para realizar un override en el tutorial y que el jugador no se mueva cuando queramos
+    actualizarMovimiento();
+}
+
+protected void iniciarNivel(Nivel nivelACargar) { //Como se debe cargar un nivel para el tutorial y el juego normal
+    // Cierra la ventana
+    for (java.awt.Window window : java.awt.Window.getWindows()) {
+        if (window.isShowing()) window.dispose();
+    }
+    //carga la nueva ventana
+    this.juegoView = new JuegoView(this);
+    
+    this.nivel = nivelACargar;
+
+    if (this.nivel != null) {
+        aSetter.resetearPosicionesUsadas();
+        jugador.setTieneLlave(false);
+        jugador.setPosicionPersonaje(nivel.getPosDefaultX(), nivel.getPosDefaultY());
+        obj.clear();
+        setupJuego();
+        
+        juegoView.setNivel(this.nivel);
+        juegoView.setVisible(true);
+        juegoView.añadirKeyListener(keyH);
+        juegoView.getJuegoPanel().getBtnPausa().addActionListener(e -> pausarJuego());
+        
+        iniciarGameLoop();
+        stopwatch.iniciar();
+    } else {
+        System.out.println("El nivel a cargar es nulo");
+        salirAlMenuPrincipal();
+    }
 }
 
  

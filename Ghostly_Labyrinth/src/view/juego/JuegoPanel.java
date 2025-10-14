@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import model.juego.laberinto.Nivel; // acá
 import javax.swing.*;
+import javax.tools.Tool;
 
 import controller.juego.GameController;
 
@@ -27,11 +28,12 @@ import controller.juego.GameController;
 public class JuegoPanel extends JPanel{
 
     final private GameController controlador;
+    private JButton btnPausa;
+
+
     private Font fuenteJuego; //SE MODIFICO 01:25
     private Image imagenVida; //SE MODIFICO 01:25
     // posis del jugador según la cámara
-    private int camX;
-    private int camY;
     private Graphics2D g2;
 
     private Nivel nivel; // acá
@@ -56,16 +58,43 @@ public class JuegoPanel extends JPanel{
     private int anchoBloque;
     private int altoBloque;
 
+    //para la luz
+    private int radioLuz = 280;
+    private final int radioLuzDefault = 280;
+    // Gradiente de la linterna
+    private final float[] dist = {0f, 0.65f, 1f};
+    private final Color[] cols = {
+        new Color(0, 0, 0, 250),  // centro casi opaco
+        new Color(0, 0, 0, 100),  // intermedio
+        new Color(0, 0, 0, 0)     // borde transparente
+    };
 
-    //, Labyrinth laberinto, LightView light SE MODIFICO 01:25 se sacaron los dos parametros
+    private final int offsetXLuz;
+    private final int offsetYLuz;
+    private final int cx;
+    private final int cy;
+
+    private RadialGradientPaint grad;
+    private Point centroLuz;
+    private BufferedImage layer; 
+
+
     public JuegoPanel (GameController controlador) {
         this.controlador = controlador;
         super.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize()); 
         super.setBackground(Color.black);
         super.setDoubleBuffered(true); // guarda 2 buffer en memoria para que no carguen en tiempo real en pan                         // igual según internet no es necesario(?
         super.setFocusable(true); // el setfocusable es para que se "concentre" en los eventos del teclado    
+
+        //inicializamos datos de la luz
+        offsetXLuz = -5;
+        offsetYLuz = -5;
+        cx = controlador.getScreenXJugador() + controlador.getAnchoJugador() / 2 + offsetXLuz;
+        cy = controlador.getScreenYJugador() + controlador.getAltoJugador() / 2 + offsetYLuz;
+        this.centroLuz = new Point(cx, cy);
         // para que no salte el overridable method call in constructor
         init();
+        setRadioLuz(radioLuz);
     }
 
     private void init() {
@@ -74,6 +103,38 @@ public class JuegoPanel extends JPanel{
         cargarImagenVida(); 
 
         cargarSpritesFantasma(); 
+        crearBotonPausa();
+    }
+
+    private void crearBotonPausa() {
+        ImageIcon iconoOriginal = new ImageIcon(getClass().getResource("/assets/img/botones/EscButton.png"));
+        ImageIcon iconoOriginalHover = new ImageIcon(getClass().getResource("/assets/img/botones/EscButtonHover.png"));
+
+        // Escalar imagen a 80x50
+        Image imgEscalada = iconoOriginal.getImage().getScaledInstance(80, 50, Image.SCALE_SMOOTH);
+        ImageIcon icono = new ImageIcon(imgEscalada);
+
+        // Escalar imagen hover a 80x50
+        Image imgEscaladaHover = iconoOriginalHover.getImage().getScaledInstance(80, 50, Image.SCALE_SMOOTH);
+        ImageIcon iconohover = new ImageIcon(imgEscaladaHover);
+
+
+        btnPausa = new JButton(icono);
+        btnPausa.setRolloverIcon(iconohover);
+        btnPausa.setBorderPainted(false);
+        btnPausa.setContentAreaFilled(false);
+        btnPausa.setFocusPainted(false);
+
+        // Posicion
+        int x = Toolkit.getDefaultToolkit().getScreenSize().width - 60 - 20;
+        int y = 20;
+        btnPausa.setBounds(x, y, 80, 50);
+
+        add(btnPausa);
+    }
+
+    public JButton getBtnPausa() {
+        return btnPausa;
     }
 
     public void setNivel(Nivel nivel){
@@ -84,7 +145,7 @@ public class JuegoPanel extends JPanel{
         this.anchoBloque = controlador.getAnchoBloque(); 
         this.objetos = controlador.getObjArray();
     }
-
+    
     public Font cargarFuente(){
     try{
         //Carga la fuente del texto
@@ -214,48 +275,36 @@ public class JuegoPanel extends JPanel{
         }
 
 
-
-    public void paintLuz(Graphics2D g) {
-        if (g == null || controlador == null) return;
-
+    public void setRadioLuz(int radio){
+        this.radioLuz = radio;
+        this.grad = new RadialGradientPaint(centroLuz, radioLuz, dist, cols);
         int anchoPanel = getWidth();
         int altoPanel = getHeight();
+        if (anchoPanel <= 0) anchoPanel = Toolkit.getDefaultToolkit().getScreenSize().width;
+        if (altoPanel <= 0) altoPanel = Toolkit.getDefaultToolkit().getScreenSize().height;
 
-        // capa temporal del tamaño del panel con transparencia
-        BufferedImage layer = new BufferedImage(anchoPanel, altoPanel, BufferedImage.TYPE_INT_ARGB);
+        // Capa temporal del tamaño del panel con transparencia
+        layer = new BufferedImage(anchoPanel, altoPanel, BufferedImage.TYPE_INT_ARGB);
         Graphics2D lg = layer.createGraphics();
 
         // pinta toda la pantalla con negro (oscuridad)
         lg.setComposite(AlphaComposite.Src);
         lg.setColor(new Color(0, 0, 0, 255)); // 255 = completamente oscuro
         lg.fillRect(0, 0, anchoPanel, altoPanel);
-
-    // centro de circulo de luz (en coordenadas de pantalla)
-        int offsetX = -5;
-        int offsetY = -5;
-        int cx = controlador.getScreenXJugador() + controlador.getAnchoJugador() / 2 + offsetX;
-        int cy = controlador.getScreenYJugador() + controlador.getAltoJugador() / 2 + offsetY;
-
-        int radiusPx = 280;
-
-        // gradiente de la linterna
-        float[] dist = {0f, 0.65f, 1f};
-        Color[] cols = {
-            new Color(0, 0, 0, 250),  // centro casi opaco
-            new Color(0, 0, 0, 100),  // intermedio
-            new Color(0, 0, 0, 0)     // borde transparente
-        };
-
-        RadialGradientPaint grad = new RadialGradientPaint(new Point(cx, cy), radiusPx, dist, cols);
-
-        // corta el agujero circular en la oscuridad
         lg.setComposite(AlphaComposite.DstOut);
         lg.setPaint(grad);
-        lg.fillOval(cx - radiusPx, cy - radiusPx, radiusPx * 2, radiusPx * 2);
+        lg.fillOval(cx - radioLuz, cy - radioLuz, radioLuz * 2, radioLuz * 2);
 
         lg.dispose();
+    }
 
-        // dibuja la capa sobre la pantalla
+    public int getRadioDefault(){
+        return radioLuzDefault;
+    }
+
+    public void paintLuz(Graphics2D g) {
+        if (g == null || controlador == null) return;
+        // Dibuja la capa sobre la pantalla
         g.drawImage(layer, 0, 0, null);
     }
 

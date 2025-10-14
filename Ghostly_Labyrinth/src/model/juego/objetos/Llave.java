@@ -4,6 +4,10 @@ import java.awt.Image;
 import java.io.IOException;
 
 import controller.juego.GameController;
+import model.juego.entidades.Player;
+
+import model.juego.objetos.efectos.PowerUpEffect;
+
 
 public class Llave extends Objeto {
 
@@ -23,8 +27,10 @@ public class Llave extends Objeto {
         }
     }
 
-    public void interaccionJugador () {
-        gc.getJugador().setTieneLlave(true);
+    @Override
+    public PowerUpEffect interactuar(Player jugador) {
+        jugador.setTieneLlave(true);
+        return null; // la llave no efectua un efecto temporal
     }
 
 

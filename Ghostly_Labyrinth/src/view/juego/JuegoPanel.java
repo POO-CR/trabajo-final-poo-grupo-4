@@ -262,21 +262,16 @@ public class JuegoPanel extends JPanel{
             int y = panelAlto / 5;
             
             // Texto
-            g2.setColor(Color.red);
+            g2.setColor(Color.WHITE);
             g2.drawString(controlador.getTexto(), x, y); 
         }
     } 
 
-        public void paintVida(Graphics grafico, int vidaActual, int vidaMaxima){
+    public void paintVida(Graphics grafico, int vida){
         
-        for (int i = 0; i < vidaMaxima; i++) {
-            if (i < vidaActual){
-                imagenDibujar = imagenVida;
-            } else{
-                imagenDibujar = imagenVidaPerdida;
-            }
+        for (int i = 0; i < vida; i++) {
             int x = x0 + i * (anchofoto + distancia);
-            grafico.drawImage(imagenDibujar, (x + distancia), y0, anchofoto, altofoto, null);
+            grafico.drawImage(imagenVida, (x + distancia), y0, anchofoto, altofoto, null);
         } 
     }
 
@@ -375,7 +370,7 @@ public class JuegoPanel extends JPanel{
 
 
         //Se dibujan las vidas en el panel 
-        paintVida(g,controlador.vidaActual(),controlador.vidaTope());//SE MODIFICO 01:25
+        paintVida(g,controlador.vidaActual());//SE MODIFICO 01:25
 
 
 

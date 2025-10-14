@@ -56,7 +56,7 @@ public class ColisionChecker {
                 tile2 = nivel.getTile(entidadFilaSuperior, entidadColumnaDerecha);
 
 
-                if (entidad instanceof Player) { // jugador, puede cambiar de nivel o abrir puertas
+               // if (entidad instanceof Player) { // jugador, puede cambiar de nivel o abrir puertas
                     // instanceof chequea si entidad es instancia de Player
 
                     if (tile1.getNum() == gc.getTileEspecial() || tile2.getNum() == gc.getTileEspecial()){
@@ -72,11 +72,11 @@ public class ColisionChecker {
                         }
                     }   
 
-                } else { // fantasma, solo bloquea
-                    if (tile1.colision || tile2.colision){
-                        entidad.colisionOn = true;
-                    }   
-                }
+                //} //else { // fantasma, solo bloquea
+                    //if (tile1.colision || tile2.colision){
+                      //  entidad.colisionOn = true;
+                   // }   
+                //}
             }
 
             case "down" -> {
@@ -88,7 +88,7 @@ public class ColisionChecker {
                 // tile1 = lab.tile[tileNum1];
                 // tile2 = lab.tile[tileNum2];
 
-                if (entidad instanceof Player) {
+               // if (entidad instanceof Player) {
 
                     if (tile1.getNum() == gc.getTileEspecial() || tile2.getNum() == gc.getTileEspecial()){ //poner todos en .getNum}
                         System.out.println("TOCO TILE ESPECIAL, LLAMANDO A CAMBIAR NIVEL");
@@ -101,11 +101,11 @@ public class ColisionChecker {
                             entidad.colisionOn = true;
                         }
                     } 
-                } else { //fantasma
-                    if (tile1.colision || tile2.colision){
-                        entidad.colisionOn = true;
-                    }
-                }
+                //} //else { //fantasma
+                    //if (tile1.colision || tile2.colision){
+                      //  entidad.colisionOn = true;
+                    //}
+                //}
             }
 
             case "left" -> {
@@ -113,7 +113,7 @@ public class ColisionChecker {
                 if (entidadColumnaIzquierda < 0 ) entidadColumnaIzquierda = 0;
                 tile1 = nivel.getTile(entidadFilaSuperior, entidadColumnaIzquierda);
                 tile2 = nivel.getTile(entidadFilaInferior, entidadColumnaIzquierda); 
-                if (entidad instanceof Player) {
+                //if (entidad instanceof Player) {
                     if (tile1.getNum() == gc.getTileEspecial() || tile2.getNum() == gc.getTileEspecial()){
                         System.out.println("TOCO TILE ESPECIAL, LLAMANDO A CAMBIAR NIVEL");
                         gc.cambiarNivel();
@@ -125,11 +125,11 @@ public class ColisionChecker {
                             entidad.colisionOn = true;
                         }
                     }
-                } else { //fantasma
-                    if (tile1.colision || tile2.colision){
-                        entidad.colisionOn = true;
-                    }
-                }   
+                //} //else { //fantasma
+                    //if (tile1.colision || tile2.colision){
+                      //  entidad.colisionOn = true;
+                    //}
+               // }   
             }
 
             case "right" -> {
@@ -139,7 +139,7 @@ public class ColisionChecker {
                 tile2 = nivel.getTile(entidadFilaInferior, entidadColumnaDerecha); //[entidadColumnaDerecha][entidadFilaInferior];
                 // tile1 = lab.tile[tileNum1];
                 // tile2 = lab.tile[tileNum2];
-                if (entidad instanceof Player) {
+                //if (entidad instanceof Player) {
                     if (tile1.getNum() == gc.getTileEspecial() || tile2.getNum() == gc.getTileEspecial()){
                         System.out.println("TOCO TILE ESPECIAL, LLAMANDO A CAMBIAR NIVEL");
                         gc.cambiarNivel();
@@ -151,11 +151,11 @@ public class ColisionChecker {
                             entidad.colisionOn = true;
                         }
                     }
-                } else { //fantasma
-                    if (tile1.colision || tile2.colision){
-                        entidad.colisionOn = true;
-                    }
-                }
+                //} else { //fantasma
+                  //  if (tile1.colision || tile2.colision){
+                    //    entidad.colisionOn = true;
+                   // }
+                //}
 
             } 
         }

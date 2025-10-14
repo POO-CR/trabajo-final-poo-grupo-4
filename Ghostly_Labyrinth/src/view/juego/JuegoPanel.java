@@ -89,8 +89,8 @@ public class JuegoPanel extends JPanel{
         super.setFocusable(true); // el setfocusable es para que se "concentre" en los eventos del teclado    
 
         //inicializamos datos de la luz
-        offsetXLuz = -55;
-        offsetYLuz = -55;
+        offsetXLuz = -10;
+        offsetYLuz = -10;
         cx = controlador.getScreenXJugador() + controlador.getAnchoJugador() / 2 + offsetXLuz;
         cy = controlador.getScreenYJugador() + controlador.getAltoJugador() / 2 + offsetYLuz;
         this.centroLuz = new Point(cx, cy);

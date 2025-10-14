@@ -41,11 +41,11 @@ public class JuegoView extends JFrame {
         setTitle("Ghostly Labyrinth");
         //setSize(ancho, alto);
 
-        setSize(Toolkit.getDefaultToolkit().getScreenSize()); // pantalla completa
+        //setSize(Toolkit.getDefaultToolkit().getScreenSize()); // pantalla completa
 
         // POR AHORA ESTO NO PORQUE NO TENEMOS MENU PAUSAR, Y NO SE PUEDE SALIR
-        //setUndecorated(true); // quita la barra de titulo y bordes
-        //setExtendedState(JFrame.MAXIMIZED_BOTH); // ocupa toda la pantalla
+        setUndecorated(true); // quita la barra de titulo y bordes
+        setExtendedState(JFrame.MAXIMIZED_BOTH); // ocupa toda la pantalla
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);

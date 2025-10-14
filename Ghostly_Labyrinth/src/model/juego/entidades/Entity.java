@@ -9,7 +9,7 @@ public abstract class Entity {
     protected int mundoX, mundoY; // posicion en el mundo
     //protected int x;
     //protected int y;
-    private int movimiento;
+    protected int movimiento;
     private float multiplicadorVelocidad = 1.0f;
     protected String nombre;
 

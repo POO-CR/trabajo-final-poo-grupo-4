@@ -1,6 +1,7 @@
 package controller.juego;
 import java.awt.Toolkit; //SE MODIFICO 01:25
 import java.awt.image.BufferedImage;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -64,7 +65,7 @@ public class GameController {
     private int aumentoLuz = 0;
 
 
-    public GameController() {
+    public GameController(Connection dbConnection) {
 
         this.nivelManager = new NivelManager();
         this.aSetter = new AssetSetter(this);
@@ -117,6 +118,24 @@ public class GameController {
         }
         else {
             System.out.println("GANASTE !!! (acá iría la pantalla de ganar)"); //TODO: pantalla de ganar
+
+            //se detiene el juego 
+            detenerGameLoop();
+            if (stopwatch != null) {
+                stopwatch.detener();
+            }
+
+            //se cierra la ventana del juego 
+            if (juegoView != null) {
+                juegoView.dispose();
+            }
+
+            //abrir ventana de ingreso de apodo 
+            javax.swing.SwingUtilities.invokeLater(() -> {
+            view.juego.MenuRegisterStart menuGanador = new view.juego.MenuRegisterStart(null, this);
+            menuGanador.setVisible(true);
+        });
+
         }
     }
 
@@ -523,7 +542,7 @@ public class GameController {
     }
 
     // se vuelve a abrir el menu principal
-    new controller.menu.MenuController();
+    new controller.menu.MenuController(this);
 
 }
 

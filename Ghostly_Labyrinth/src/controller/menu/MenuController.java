@@ -5,6 +5,7 @@ import javax.swing.JOptionPane;
 
 import controller.juego.GameController;
 import model.menu.Music;
+import view.juego.MenuRegisterStart;
 import view.menu.MenuView;
 
 public class MenuController {
@@ -16,8 +17,11 @@ public class MenuController {
     private Music music;
     GameController gc;
 
-    public MenuController() {
+    private final GameController gameController;
+
+    public MenuController(GameController gameController) {
         //this.model = new MenuModel();
+        this.gameController = gameController;
         System.out.println("arrancó mc");
         this.view = new MenuView();
         this.actions();
@@ -37,10 +41,7 @@ public class MenuController {
                         music.pausar();
                     }
 
-                    //Se crea un nuevo controlador del juego 
-                    this.gc = new GameController();
-
-                    gc.iniciarJuego("usuario");
+                    this.gameController.iniciarJuego("usuario");
 
                 }); // el controlador
                
@@ -59,8 +60,16 @@ public class MenuController {
 
         // boton Opciones
         this.view.getBttnOpciones().addActionListener((ActionEvent e) -> {
-            JOptionPane.showMessageDialog(view,"Mostrar el menu de opciones");        
+            //JOptionPane.showMessageDialog(view,"Mostrar el menu de opciones"); descomentar luego de que ande 
+            //MenuRegisterStart menuRegister = new MenuRegisterStart(view);
+
+            // Acción para cerrar al presionar "Volver"
+            //menuRegister.getVolverButton().addActionListener(ev -> {
+            //menuRegister.dispose(); // cierra el JDialog
         });
+
+            //menuRegister.setVisible(true);
+       // });
     
 
         // boton Salir

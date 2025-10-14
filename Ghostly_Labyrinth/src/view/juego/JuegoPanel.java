@@ -101,15 +101,15 @@ public class JuegoPanel extends JPanel{
     }
 
     private void crearBotonPausa() {
-        ImageIcon iconoOriginal = new ImageIcon(getClass().getResource("/assets/img/botones/EscButton.png"));
-        ImageIcon iconoOriginalHover = new ImageIcon(getClass().getResource("/assets/img/botones/EscButtonHover.png"));
+        ImageIcon iconoOriginal = new ImageIcon(getClass().getResource("/assets/img/botones/PauseButton.png"));
+        ImageIcon iconoOriginalHover = new ImageIcon(getClass().getResource("/assets/img/botones/PauseButtonHover.png"));
 
-        // Escalar imagen a 80x50
-        Image imgEscalada = iconoOriginal.getImage().getScaledInstance(80, 50, Image.SCALE_SMOOTH);
+        // Escalar imagen a 70x60
+        Image imgEscalada = iconoOriginal.getImage().getScaledInstance(70, 60, Image.SCALE_SMOOTH);
         ImageIcon icono = new ImageIcon(imgEscalada);
 
-        // Escalar imagen hover a 80x50
-        Image imgEscaladaHover = iconoOriginalHover.getImage().getScaledInstance(80, 50, Image.SCALE_SMOOTH);
+        // Escalar imagen hover a 70x60
+        Image imgEscaladaHover = iconoOriginalHover.getImage().getScaledInstance(70, 60, Image.SCALE_SMOOTH);
         ImageIcon iconohover = new ImageIcon(imgEscaladaHover);
 
 

@@ -4,7 +4,7 @@ package controller.menu;
 import java.util.function.Consumer;
 
 import model.menu.MenuLoginModel;
-import view.menu.MenuRegisterStart;
+import view.juego.MenuRegisterStart;
 
 public class MenuLoginController {
 

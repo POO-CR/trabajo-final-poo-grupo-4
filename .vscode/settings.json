@@ -4,7 +4,8 @@
     ],
     
     "java.project.referencedLibraries": [
-        "lib/**/*.jar"
+        "lib/**/*.jar",
+        "Ghostly_Labyrinth/lib/postgresql-42.7.8.jar"
     ],
     "java.debug.settings.onBuildFailureProceed": true,
     "sarif-viewer.connectToGithubCodeScanning": "off"

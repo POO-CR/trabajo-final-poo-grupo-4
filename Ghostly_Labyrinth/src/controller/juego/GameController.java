@@ -124,6 +124,7 @@ public class GameController {
             for (Point p : nivel.getPosicionesFantasma()) {
                 fantasmas.add(new Ghost(this, p.x, p.y));
             }
+            
             System.out.println("Fantasmas creados: " + fantasmas.size());
             for (Ghost g : fantasmas) {
                 System.out.println(" - Fantasma en tiles (" + g.getMundoX() + ", " + g.getMundoY() + ")");
@@ -638,6 +639,11 @@ protected void iniciarNivel(Nivel nivelACargar) { //Como se debe cargar un nivel
         jugador.setPosicionPersonaje(nivel.getPosDefaultX(), nivel.getPosDefaultY());
         obj.clear();
         setupJuego();
+
+        fantasmas.clear(); 
+        for (Point p : nivel.getPosicionesFantasma()) {
+            fantasmas.add(new Ghost(this, p.x, p.y));
+        }
         
         juegoView.setNivel(this.nivel);
         juegoView.setVisible(true);

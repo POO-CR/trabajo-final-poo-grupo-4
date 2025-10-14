@@ -88,15 +88,42 @@ public class NivelCreator implements Runnable{
                 // para agregar las posiciones de los fantasmas segun el nivelll
                 switch (nivelNumero) {
                     case 0 -> {
-                        nivel.agregarFantasma(2, 3);
-                        nivel.agregarFantasma(15, 8);
+                        nivel.agregarFantasma(26, 3);
+                        nivel.agregarFantasma(3, 3);
+                        nivel.agregarFantasma(18, 4);
+                        nivel.agregarFantasma(10, 10);
+                        nivel.agregarFantasma(23, 12);
+                        nivel.agregarFantasma(6, 16);
+                        nivel.agregarFantasma(27, 7);
+                        
                     }
                     case 1 -> {
-                        nivel.agregarFantasma(3, 4);
+                        nivel.agregarFantasma(3, 3);
+                        nivel.agregarFantasma(5, 2);
+                        nivel.agregarFantasma(33, 2);
+                        nivel.agregarFantasma(15, 7);
+                        //nivel.agregarFantasma(25, 10);
+                        //nivel.agregarFantasma(8, 14);
+                        //nivel.agregarFantasma(36, 19);
+                        //nivel.agregarFantasma(4, 20);
+                        //nivel.agregarFantasma(28, 23);
+                        
+                    
                     }
                     case 2 -> {
                         nivel.agregarFantasma(2, 2);
+                        nivel.agregarFantasma(7, 2);
+                        nivel.agregarFantasma(28, 3);
+                        //nivel.agregarFantasma(4, 7);
+                        //nivel.agregarFantasma(33, 9);
+                        //nivel.agregarFantasma(11, 13);
+                        //nivel.agregarFantasma(25, 17);
+                        //nivel.agregarFantasma(8, 22);
+                        //nivel.agregarFantasma(30, 27);
+                        //nivel.agregarFantasma(5, 33);
+                        //nivel.agregarFantasma(36, 41);
                         nivel.agregarFantasma(4, 2);
+                        
                     }
                 }
 

@@ -99,8 +99,8 @@ public class Player extends Entity {
     }
 
     public void setScreenXY (int screenAncho, int screenAlto){
-        screenX = screenAncho / 2 - (anchoPersonaje / 2); //centrado en pantalla
-        screenY = screenAlto / 2 - (altoPersonaje / 2); //centrado en pantalla
+        screenX = screenAncho / 2 - (anchoPersonaje / 2) -55; //centrado en pantalla
+        screenY = screenAlto / 2 - (altoPersonaje / 2) - 55; //centrado en pantalla
     }
 
     public void setPosicionDefault(){

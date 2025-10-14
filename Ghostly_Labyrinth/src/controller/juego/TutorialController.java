@@ -1,5 +1,6 @@
 package controller.juego;
 import javax.swing.Timer;
+import model.juego.SoundEffect;
 
 import model.juego.laberinto.Nivel;
 
@@ -7,9 +8,11 @@ public class TutorialController extends GameController{
     private int etapaTutorial = 0;
     private boolean quieto = false;
     private boolean tutorialcompleto =false;
+    private SoundEffect visionLossSound;
 
     public TutorialController(){
         super();
+        this.visionLossSound = new SoundEffect("/assets/music/Vision_perdida.wav");
     }
      private void ejecutarConRetraso(int delayMillis, Runnable accion) { //Metodo para generar Delay en el tutorial
         Timer timer = new Timer(delayMillis, e -> accion.run());
@@ -33,22 +36,22 @@ public class TutorialController extends GameController{
                 
             case 2:
             mostrarMensaje("Ahora busca la llave y ve a la puerta", 2000);
+                    visionLossSound.play(); // Reproduce el sonido de pérdida de visión
                     ejecutarConRetraso(2000,() -> {
-                    quieto = true;     //Hacemos que el jugador no se pueda mover          
+                    quieto = true;     //Hacemos que el jugador no se pueda mover                             
                     cambiarLuz(-279);     
                     });
                     ejecutarConRetraso(3500,() -> {
                         cambiarLuz(0); 
                         mostrarMensaje("Suerte que tienes tu linterna", 2000);                        
-                        ejecutarConRetraso(500,() -> {
                             quieto = false; 
-                        });
+                            etapaTutorial = 3;
                     });                   
-                    etapaTutorial++;                 
+                    etapaTutorial = 4;              
                 break;
-                case 3:
-                    ejecutarConRetraso(12000,() -> {
-                    mostrarMensaje("A lo largo del mapa encontraras distintas habilidades", 1500);
+                case 3:      
+                    ejecutarConRetraso(3000, () -> {;        
+                    mostrarMensaje("A lo largo del mapa encontraras distintas habilidades", 2000);
                     etapaTutorial++;
                     });
                 break;

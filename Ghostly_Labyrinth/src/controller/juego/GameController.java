@@ -103,6 +103,41 @@ public class GameController {
         });
     }
 
+    public GameController() {
+
+        this.nivelManager = new NivelManager();
+        this.aSetter = new AssetSetter(this);
+
+
+        this.tm = new TileManager();
+
+        this.tituloJuego = "Ghostly Labyrinth";
+
+        // obtener tamaño pantalla
+        screenW = Toolkit.getDefaultToolkit().getScreenSize().width;
+        screenH = Toolkit.getDefaultToolkit().getScreenSize().height;
+
+        this.jugador = new Player(this, screenW, screenH);
+
+        //this.fantasma = new Ghost(this, 100, 100);
+        
+        // seteamos objetos en el mapa
+        this.obj = new ArrayList<>();
+
+        this.mensaje = new Message(obj);
+        
+        this.cChecker = new ColisionChecker(this);
+
+        this.keyH = new KeyHandler();
+
+        this.stopwatch = new Stopwatch(() -> {
+        // Esto se ejecuta cada segundo sin frenar el juego
+        if (juegoView != null) juegoView.pintarPanel();
+        });
+    }
+
+    
+
     public void cambiarNivel(){
         // detenerGameLoop(); //por alguna razón con el detener e iniciar va más rápido el personaje (capaz algo de las actualizaciones por segundo?)
         System.out.println("CREANDO NIVEL " + indiceprueba);

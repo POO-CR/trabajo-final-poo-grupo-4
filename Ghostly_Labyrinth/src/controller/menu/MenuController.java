@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 
 import controller.juego.GameController;
+import controller.juego.TutorialController;
 import model.menu.Music;
 import view.juego.MenuRegisterStart;
 import view.menu.MenuView;
@@ -26,9 +27,13 @@ public class MenuController {
         this.view = new MenuView();
         this.actions();
         this.view.setVisible(true);
-        this.music = new Music("/assets/music/FireboyAndWatergirlSoundtrack.wav");
-        this.music.reproducirLoop(); // Se inicializa la musica como encendida
-
+        
+        if (music == null) {
+            music = new Music("/assets/music/FireboyAndWatergirlSoundtrack.wav");
+        }
+        if (!music.isReproduciendo()) {
+            music.reproducirLoop();
+        }
     }
 
     private void actions() {
@@ -49,7 +54,12 @@ public class MenuController {
        
         // boton Tutorial
         this.view.getBttnTutorial().addActionListener((ActionEvent e) -> {
-            JOptionPane.showMessageDialog(view,"Mostrar tutorial");        
+                if (music != null) {
+                music.pausar();
+                }
+                TutorialController tutorialController = new TutorialController();
+                tutorialController.iniciarTutorial();
+                this.view.dispose();    
         });
             
          // boton Score

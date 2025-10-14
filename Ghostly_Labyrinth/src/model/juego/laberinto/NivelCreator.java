@@ -23,6 +23,7 @@ public class NivelCreator implements Runnable{
             case 0 -> new Dimension(20, 30);
             case 1 -> new Dimension(40, 40);
             case 2 -> new Dimension(40, 40);
+            case 3 -> new Dimension(11, 15);
             default -> new Dimension(20, 30);
         };
     }
@@ -32,6 +33,7 @@ public class NivelCreator implements Runnable{
             case 0 -> new Posicion (2, 5);
             case 1 -> new Posicion (19, 3); //TODO: cambiar a otras cosas cuando hagamos más mapas
             case 2 -> new Posicion (37, 5);
+            case 3 -> new Posicion (1, 1);
             default -> new Posicion (3, 3);
         };
     }
@@ -82,7 +84,25 @@ public class NivelCreator implements Runnable{
                 this.tileSS = new TileSpriteSetter(nivel);
                 tileSS.setearTileRandom(tm.getTile(0));
                 tileSS.setearTileSegunVecinos(tm.getTile(1));
+
+                // para agregar las posiciones de los fantasmas segun el nivelll
+                switch (nivelNumero) {
+                    case 0 -> {
+                        nivel.agregarFantasma(2, 3);
+                        nivel.agregarFantasma(15, 8);
+                    }
+                    case 1 -> {
+                        nivel.agregarFantasma(3, 4);
+                    }
+                    case 2 -> {
+                        nivel.agregarFantasma(2, 2);
+                        nivel.agregarFantasma(4, 2);
+                    }
+                }
+
+
                 return nivel;
+                
             }catch (Exception e) {
                 e.printStackTrace();
                 return null;

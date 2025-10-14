@@ -33,14 +33,20 @@ public class JuegoPanel extends JPanel{
 
     private Font fuenteJuego; //SE MODIFICO 01:25
     private Image imagenVida; //SE MODIFICO 01:25
+     private Image imagenVidaPerdida; 
+    private Image imagenDibujar; //Guarda la imagen del corazon que hay que mostrar en pantalla
     // posis del jugador según la cámara
     private Graphics2D g2;
 
     private Nivel nivel; // acá
 
     private ArrayList<Objeto> objetos;
-    private BufferedImage up0, up1, up2, down0, down1, down2, left0, left1, left2, right0, right1, right2;
-    
+    ///SE MODIFICO 01:25 private Labyrinth laberinto; 
+    //SE MODIFICO 01:25 private LightView light;
+    // private Objeto[] obj; TAMBIEN ES MODELO
+    private BufferedImage up0, up1, up2, down0, down1, down2, left0, left1, left2, right0, right1, right2; // del jugador
+    private BufferedImage gUp1, gUp2, gDown1, gDown2, gLeft1, gLeft2, gRight1, gRight2; //del fantasma
+
     //Caracteristicas de la foto vida
     final private int x0 = 10; //inicio del x
     final private int y0 = 10;
@@ -83,8 +89,8 @@ public class JuegoPanel extends JPanel{
         super.setFocusable(true); // el setfocusable es para que se "concentre" en los eventos del teclado    
 
         //inicializamos datos de la luz
-        offsetXLuz = -5;
-        offsetYLuz = -5;
+        offsetXLuz = -55;
+        offsetYLuz = -55;
         cx = controlador.getScreenXJugador() + controlador.getAnchoJugador() / 2 + offsetXLuz;
         cy = controlador.getScreenYJugador() + controlador.getAltoJugador() / 2 + offsetYLuz;
         this.centroLuz = new Point(cx, cy);
@@ -97,6 +103,8 @@ public class JuegoPanel extends JPanel{
         cargarSpritesJugador(); 
         cargarFuente();
         cargarImagenVida(); 
+        cargarImagenVidaPerdida();
+        cargarSpritesFantasma(); 
         crearBotonPausa();
     }
 
@@ -162,11 +170,21 @@ public class JuegoPanel extends JPanel{
         return imagenVida; 
     }
 
+    public Image cargarImagenVidaPerdida(){ 
+    try{
+        //Carga la foto de vida
+        imagenVidaPerdida = ImageIO.read(getClass().getResourceAsStream("/assets/img/VidaPerdida.png"));
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return imagenVidaPerdida;        
+    }
+
     public void cargarImagenLlave(){
 
     }
 
-        
+    // -------- JUGADOR --------
     public void cargarSpritesJugador(){
         try {
             up0 = ImageIO.read(getClass().getResourceAsStream("/assets/img/player/espalda_0.png"));
@@ -203,19 +221,45 @@ public class JuegoPanel extends JPanel{
             default -> down1;
         };
     }
+
+    // -------- FANTASMAAAA --------
+    public void cargarSpritesFantasma() { 
+        try {
+            gUp1 = ImageIO.read(getClass().getResourceAsStream("/assets/img/ghost/espalda_1.png"));
+            gUp2 = ImageIO.read(getClass().getResourceAsStream("/assets/img/ghost/espalda_2.png"));
+            gDown1 = ImageIO.read(getClass().getResourceAsStream("/assets/img/ghost/frente_1.png"));
+            gDown2 = ImageIO.read(getClass().getResourceAsStream("/assets/img/ghost/frente_2.png"));
+            gLeft1 = ImageIO.read(getClass().getResourceAsStream("/assets/img/ghost/izq_1.png"));
+            gLeft2 = ImageIO.read(getClass().getResourceAsStream("/assets/img/ghost/izq_2.png"));
+            gRight1 = ImageIO.read(getClass().getResourceAsStream("/assets/img/ghost/der_1.png"));
+            gRight2 = ImageIO.read(getClass().getResourceAsStream("/assets/img/ghost/der_2.png"));
+        } catch (IOException e) {
+        e.printStackTrace();
+        }
+    }
+
+    public BufferedImage getImagenFantasma(String direccion, int spriteNum) {
+        return switch (direccion) {
+            case "up"    -> (spriteNum == 1) ? gUp1    : gUp2;
+            case "down"  -> (spriteNum == 1) ? gDown1  : gDown2;
+            case "left"  -> (spriteNum == 1) ? gLeft1  : gLeft2;
+            case "right" -> (spriteNum == 1) ? gRight1 : gRight2;
+            default      -> gDown1;
+        };
+    }
     
 
 
     public void drawMensaje(Graphics2D g2, int panelAncho, int panelAlto) {
         if (controlador.getIsVisible()) {
             // Fuente y color del mensaje
-            Font fuente = new Font("Arial", Font.BOLD, 40);
-            g2.setFont(fuente);
-            FontMetrics metrics = g2.getFontMetrics(fuente);
+             Font fuenteMensaje = fuenteJuego.deriveFont(Font.BOLD, 40f);
+            g2.setFont(fuenteMensaje);
+            FontMetrics metrics = g2.getFontMetrics(fuenteMensaje);
 
             // Medidas para centrar el texto
             int x = (panelAncho - metrics.stringWidth(controlador.getTexto())) / 2;
-            int y = panelAlto / 2;
+            int y = panelAlto / 5;
             
             // Texto
             g2.setColor(Color.WHITE);
@@ -243,7 +287,6 @@ public class JuegoPanel extends JPanel{
         }
 
 
-
     public void setRadioLuz(int radio){
         this.radioLuz = radio;
         this.grad = new RadialGradientPaint(centroLuz, radioLuz, dist, cols);
@@ -256,7 +299,7 @@ public class JuegoPanel extends JPanel{
         layer = new BufferedImage(anchoPanel, altoPanel, BufferedImage.TYPE_INT_ARGB);
         Graphics2D lg = layer.createGraphics();
 
-        // Pinta toda la pantalla con negro (oscuridad)
+        // pinta toda la pantalla con negro (oscuridad)
         lg.setComposite(AlphaComposite.Src);
         lg.setColor(new Color(0, 0, 0, 255)); // 255 = completamente oscuro
         lg.fillRect(0, 0, anchoPanel, altoPanel);
@@ -305,6 +348,16 @@ public class JuegoPanel extends JPanel{
             }//SE MODIFICO 01:25 el length
         }
 
+        // SE DIBUJAN LOS FANTASMAS EN EL PANEL 
+        // var es para declarar una variable sin definir el tipo, lo infiere solo
+        for (var ghost : controlador.getFantasmas()) {
+            BufferedImage spriteFantasma = getImagenFantasma(ghost.getDireccion(), ghost.spriteNum);
+
+            int pantallaX = ghost.getMundoX();
+            int pantallaY = ghost.getMundoY();
+
+            g2.drawImage(spriteFantasma, pantallaX, pantallaY, controlador.getAnchoBloque(), controlador.getAltoBloque(), null);
+        }
         
         // SE DIBUJA JUGADOR EN EL PANEL 
         g.drawImage(getImagenJugador(), controlador.getScreenXJugador(), controlador.getScreenYJugador(), controlador.getAnchoJugador(), controlador.getAltoJugador(), null); // dibuja el jugador en pantalla
@@ -313,7 +366,6 @@ public class JuegoPanel extends JPanel{
         paintLuz((Graphics2D) g);
         
         //Se dibuja el mensaje en el panel ////////////////////////
-
         drawMensaje((Graphics2D) g, getWidth(), getHeight()); //SE MODIFICO 01:25
 
 

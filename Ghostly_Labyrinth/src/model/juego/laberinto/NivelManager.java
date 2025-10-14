@@ -51,7 +51,10 @@ public class NivelManager {
         System.out.println("NivelManager reiniciado. Niveles disponibles: " + nivelesDisponibles);
     }
 
-    
+    public Nivel crearNivelEspecifico(int numeroNivel) {
+        nivelCreator = new NivelCreator(numeroNivel);
+        return nivelCreator.crearnivel();
+    }
 
     
 }

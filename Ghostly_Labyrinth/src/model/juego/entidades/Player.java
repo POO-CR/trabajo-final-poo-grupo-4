@@ -4,11 +4,15 @@ import java.awt.Rectangle;
 
 import controller.juego.GameController;
 import model.juego.tile.Tile;
+import model.juego.Observador;
+import model.juego.Sujeto;
 import model.juego.objetos.efectos.PowerUpEffect;
 import java.util.ArrayList;
+import java.util.List;
  
-public class Player extends Entity {
-    
+public class Player extends Entity implements Sujeto {
+
+    private final List<Observador> observadores = new ArrayList<>();
 
     private final GameController gc;
     private final float escalaPersonaje = 1.5f;
@@ -186,9 +190,11 @@ public class Player extends Entity {
         if (vida > 0){
             vida--;
             finInmune = ahora + tiempoInmune;
+            notificarObservadores("GOLPE");
         }
         if (vida == 0){
             System.out.println("GAME OVER");
+            notificarObservadores("GAME_OVER");
         }}
 
     public void aumentarVida(){
@@ -202,6 +208,23 @@ public class Player extends Entity {
 
     public void cambiarLuz(int nuevoRadioLuz){
         gc.cambiarLuz(nuevoRadioLuz);
+    }
+
+    @Override
+    public void registrarObservador(Observador o) {
+        observadores.add(o);
+    }
+
+    @Override
+    public void removerObservador(Observador o) {
+        observadores.remove(o);
+    }
+
+    @Override
+    public void notificarObservadores(String evento) {
+        for (Observador o : observadores) {
+            o.actualizar(evento);
+        }
     }
 
 }

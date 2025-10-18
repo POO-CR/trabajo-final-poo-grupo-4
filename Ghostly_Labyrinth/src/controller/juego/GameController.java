@@ -13,6 +13,10 @@ import model.juego.AssetSetter;
 import model.juego.ColisionChecker;
 import model.juego.KeyHandler;
 import model.juego.Message;
+import model.juego.SonidoGameOver;
+import model.juego.SonidoGolpe;
+import model.juego.SonidoObjeto;
+import model.juego.SonidoPasos;
 import model.juego.Stopwatch;
 import model.juego.entidades.*;
 import model.juego.laberinto.*;
@@ -85,6 +89,17 @@ public class GameController {
 
         this.jugador = new Player(this, screenW, screenH);
 
+        SonidoPasos sonidoPasos = new SonidoPasos();
+        jugador.registrarObservador(sonidoPasos);
+        SonidoGolpe sonidoGolpe = new SonidoGolpe();
+        jugador.registrarObservador(sonidoGolpe);
+
+        SonidoGameOver sonidoGameOver = new SonidoGameOver();
+        jugador.registrarObservador(sonidoGameOver);
+
+        SonidoObjeto sonidoObjeto = new SonidoObjeto();
+        jugador.registrarObservador(sonidoObjeto);
+
         //this.fantasma = new Ghost(this, 100, 100);
         
         // seteamos objetos en el mapa
@@ -149,6 +164,8 @@ public class GameController {
         
         if (keyH.upPressed == true || keyH.downPressed == true ||
             keyH.leftPressed == true || keyH.rightPressed == true){
+            
+            jugador.notificarObservadores("MOVIENDOSE");
         
             if (keyH.upPressed == true){
             
@@ -171,6 +188,7 @@ public class GameController {
         
         else {
             jugador.setDireccion("quieto");
+            jugador.notificarObservadores("QUIETO"); 
         }
 
         jugador.colisionOn = false;
@@ -212,7 +230,7 @@ public class GameController {
         long ahora = System.currentTimeMillis(); // tiempo actual
 
         // esperar hasta el siguiente movimiento permitido
-        if (ahora - fantasma.getTiempoUltimoMovimiento() < Ghost.getMovimientoIntervalo()) { // 80ms
+        if (ahora - fantasma.getTiempoUltimoMovimiento() < Ghost.getMovimientoIntervalo()) { // 80ms // sirve para que no se mueva tan rapido
           return;
         }
 
@@ -285,6 +303,7 @@ public class GameController {
             jugador.agregarEfecto(efectoNuevo); //agregamos el efecto al array de efectos activos del jugador
         }
         obj.remove(objeto); //sacamos el objeto del array de objetos del nivel
+        jugador.notificarObservadores("AGARRAR_OBJETO");
     }
 
     

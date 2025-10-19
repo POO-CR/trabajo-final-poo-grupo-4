@@ -7,5 +7,10 @@
         "lib/**/*.jar"
     ],
     "java.debug.settings.onBuildFailureProceed": true,
-    "sarif-viewer.connectToGithubCodeScanning": "off"
+
+    "java.project.resourceFilters": [
+        "!**/*.java", // Ignora los archivos .java
+        "!**/*.class" // Ignora los archivos .class
+    ]
+
 }

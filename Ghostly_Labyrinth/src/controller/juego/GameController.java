@@ -8,6 +8,8 @@ import java.util.Iterator;
 
 import java.util.List;
 
+import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
 import javax.swing.Timer;
 import model.juego.AssetSetter;
 import model.juego.ColisionChecker;
@@ -25,6 +27,7 @@ import model.juego.objetos.efectos.PowerUpEffect;
 import model.juego.tile.TileManager;
 import view.juego.JuegoPausa;
 import view.juego.JuegoView;
+import view.juego.CargaPanel;
 
 //public class GameController implements Runnable{ (VIEJO)
 public class GameController {
@@ -39,8 +42,8 @@ public class GameController {
     private String tituloJuego;
     protected NivelManager nivelManager;
     private Nivel nivel;
-    private Nivel siguienteNivel;
     private TileManager tm;
+    protected Boolean inicioJuego;
 
     private boolean juegoPausado = false; //para saber el estado del juego
     private List<Ghost> fantasmas = new ArrayList<>(); // lista de los fantasmas, se recibe del nivel
@@ -71,6 +74,8 @@ public class GameController {
     private Boolean huboCambioNivel = false;
     private Boolean cambioLuz = false;
     private int aumentoLuz = 0;
+
+    protected NivelWorker nivelWorker;
 
 
     public GameController() {
@@ -119,41 +124,98 @@ public class GameController {
 
     public void cambiarNivel(){
         // detenerGameLoop(); //por alguna razón con el detener e iniciar va más rápido el personaje (capaz algo de las actualizaciones por segundo?)
-        System.out.println("CREANDO NIVEL " + indiceprueba);
         this.huboCambioNivel = true;
-        this.siguienteNivel = nivelManager.crearSiguienteNivel();
-        this.nivel = siguienteNivel;
-        if (this.nivel != null) {
-            indiceprueba++;
-            aSetter.resetearPosicionesUsadas();
-            jugador.setTieneLlave(false);
-            jugador.setScreenXY(screenW, screenH);
-            obj.clear();
-            setupJuego();
-            this.juegoView.setNivel(nivel);
-            System.out.println("poniendo personaje en " + nivel.getPosDefaultX() + ", " + nivel.getPosDefaultY());
+        keyH.resetearTeclas();
+        // para pasar la etiqueta de estado al panel
+        // es un consumidor que le setea el status al panel según el paso de carga en el que 
+        // está el worker
+        java.util.function.Consumer<String> statusUpdater = juegoView.getPanelCarga()::setStatus;
+        
+        this.nivelWorker = nivelManager.crearSiguienteNivelWorker(statusUpdater);
+        if (this.nivelWorker != null) {
+            // le pasamos el worker para que actualice la pantalla de carga
+            System.out.println("poniendo panel de carga");
+            juegoView.ponerPanelCarga();
+            juegoView.setVisible(true);
 
-            
-            fantasmas.clear(); // limpiar lista de fantasmas
-            // crear fantasmas en las posiciones definidas en el nivel
-            for (Point p : nivel.getPosicionesFantasma()) {
-                fantasmas.add(new Ghost(this, p.x, p.y));
-            }
-            
-            System.out.println("Fantasmas creados: " + fantasmas.size());
-            for (Ghost g : fantasmas) {
-                System.out.println(" - Fantasma en tiles (" + g.getMundoX() + ", " + g.getMundoY() + ")");
-            }
+            setupNivelWorker();
 
-            
-            if (this.juegoView != null) {
-            this.juegoView.pintarPanel();
-            }
-            // iniciarGameLoop();
+            System.out.println("ejecutando worker");
+            nivelWorker.execute();
+
         }
         else {
             System.out.println("GANASTE !!! (acá iría la pantalla de ganar)"); //TODO: pantalla de ganar
         }
+    }
+
+    protected void setupNivelWorker () {
+        CargaPanel cargaPanel = juegoView.getPanelCarga();
+        nivelWorker.addPropertyChangeListener(evt -> { // escuchamos cuando cambia la propiedad del worker
+        switch (evt.getPropertyName()) {
+            case "progress" -> {
+                int progress = (Integer) evt.getNewValue();
+                // Actualizamos la barra de progreso
+                cargaPanel.getProgressBar().setIndeterminate(false);
+                cargaPanel.getProgressBar().setValue(progress);
+            }
+            case "state" -> {
+                if (evt.getNewValue() == SwingWorker.StateValue.DONE) {
+                    try {
+                        nivel = nivelWorker.get();
+                        System.out.println("poniendo panel juego");
+                        this.juegoView.ponerPanelJuego();
+                        terminarCompletarNivel();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(juegoView, "Error al cargar nivel: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                        salirAlMenuPrincipal();
+                    } finally {
+                        juegoView.setContenedor(juegoView.getJuegoPanel());
+                    }
+                }
+            }
+        }
+    });
+        
+    }
+
+
+    // en un método separado pq se llama solo cuando terminó el worker
+    private void terminarCompletarNivel(){
+        aSetter.resetearPosicionesUsadas();
+        jugador.setScreenXY(screenW, screenH);
+        obj.clear();
+        setupJuego();
+        this.juegoView.setNivel(nivel);
+        
+
+        
+        fantasmas.clear(); // limpiar lista de fantasmas
+        // crear fantasmas en las posiciones definidas en el nivel
+        for (Point p : nivel.getPosicionesFantasma()) {
+            fantasmas.add(new Ghost(this, p.x, p.y));
+        }
+
+        
+        if (this.juegoView != null) {
+        this.juegoView.pintarPanel();
+
+            jugador.setTieneLlave(false);
+            jugador.setPosicionPersonaje(nivel.getPosDefaultX(), nivel.getPosDefaultY());
+
+            if (inicioJuego) {
+                inicioJuego = false;
+                terminarCompletarNivel();
+
+                juegoView.setVisible(true);
+                juegoView.añadirKeyListener(keyH);
+                juegoView.getJuegoPanel().getBtnPausa().addActionListener(e -> pausarJuego());
+                iniciarGameLoop();
+            }
+            stopwatch.iniciar();
+        }
+        // iniciarGameLoop();
     }
 
     public void actualizarMovimiento() {
@@ -330,8 +392,7 @@ public class GameController {
 
     // NUEVO
     public void iniciarJuego(String usuario) {
-        Nivel primerNivel = nivelManager.crearSiguienteNivel();
-        iniciarNivel(primerNivel);
+        iniciarNivel();
     }
 
     public void cambiarLuz(int aumentoLuz){
@@ -575,13 +636,17 @@ public class GameController {
 
      // se detiene y reinicia cronometro
     if (stopwatch != null) {
-        stopwatch.detener();
         stopwatch.reiniciar();
+        stopwatch.detener();
     }
 
     // Reiniciar nivel y objetos
     nivelManager.reiniciar(); // se vacia y vuelve a generar los niveles disponibles
-    nivel = nivelManager.crearSiguienteNivel(); // crea el nuevo nivel inicial
+
+
+    //TODO: arreglar cuando ande la carga
+    cambiarNivel();
+    
     if (nivel == null) {
         System.out.println("Error: no hay niveles disponibles!");
         return;
@@ -593,19 +658,19 @@ public class GameController {
     setupJuego();
 
     // Reiniciar jugador
-    jugador.setPosicionDefault(); //posicion inicial
-    jugador.setTieneLlave(false);//elimina cualquier llave obtenida 
+    // jugador.setPosicionDefault(); //posicion inicial
+    // jugador.setTieneLlave(false);//elimina cualquier llave obtenida 
     jugador.resetVida(); //restaura la vida 
     jugador.direccion = "down"; //direccion inicial
     jugador.ultimaDireccion = "down";
 
     // Reiniciar vista 
-    if (juegoView != null) {
-        juegoView.dispose(); //se cierra la ventana actual
-    }
-    juegoView = new JuegoView(this); //se crea una nueva vista
-    juegoView.setNivel(nivel); //se asigna el nivel actual
-    juegoView.setVisible(true); //muestra la ventana
+    // if (juegoView != null) {
+    //     juegoView.dispose(); //se cierra la ventana actual
+    // }
+    // juegoView = new JuegoView(this); //se crea una nueva vista
+    // juegoView.setNivel(nivel); //se asigna el nivel actual
+    // juegoView.setVisible(true); //muestra la ventana
     keyH.resetearTeclas();
     juegoView.añadirKeyListener(keyH); //se vuelve a escuchar el teclado
 
@@ -615,7 +680,6 @@ public class GameController {
 
     // Reinicia loop y cronometro
     iniciarGameLoop();
-    stopwatch.iniciar();
 
     System.out.println("Juego reiniciado correctamente.");
 }
@@ -642,39 +706,19 @@ protected void procesarMovimiento(){ //Metodo generado para realizar un override
     actualizarMovimiento();
 }
 
-protected void iniciarNivel(Nivel nivelACargar) { //Como se debe cargar un nivel para el tutorial y el juego normal
+protected void iniciarNivel() { //Como se debe cargar un nivel para el tutorial y el juego normal
+
+    inicioJuego = true;
     // Cierra la ventana
     for (java.awt.Window window : java.awt.Window.getWindows()) {
         if (window.isShowing()) window.dispose();
     }
     //carga la nueva ventana
     this.juegoView = new JuegoView(this);
-    
-    this.nivel = nivelACargar;
 
-    if (this.nivel != null) {
-        aSetter.resetearPosicionesUsadas();
-        jugador.setTieneLlave(false);
-        jugador.setPosicionPersonaje(nivel.getPosDefaultX(), nivel.getPosDefaultY());
-        obj.clear();
-        setupJuego();
+    cambiarNivel();
 
-        fantasmas.clear(); 
-        for (Point p : nivel.getPosicionesFantasma()) {
-            fantasmas.add(new Ghost(this, p.x, p.y));
-        }
-        
-        juegoView.setNivel(this.nivel);
-        juegoView.setVisible(true);
-        juegoView.añadirKeyListener(keyH);
-        juegoView.getJuegoPanel().getBtnPausa().addActionListener(e -> pausarJuego());
-        
-        iniciarGameLoop();
-        stopwatch.iniciar();
-    } else {
-        System.out.println("El nivel a cargar es nulo");
-        salirAlMenuPrincipal();
-    }
+
 }
 
  

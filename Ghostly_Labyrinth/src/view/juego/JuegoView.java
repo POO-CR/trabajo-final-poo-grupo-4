@@ -1,5 +1,6 @@
 package view.juego;
 
+import java.awt.BorderLayout;
 import java.awt.Toolkit;
 import javax.swing.*;
 
@@ -11,39 +12,18 @@ import model.juego.laberinto.Nivel; //TODO: preg esto
 //Clase Juego debe heredar los atributos y metodos de JPanel
 public class JuegoView extends JFrame {
 
-    //objetos para poder ser dibujados 
-    /*Labyrinth laberinto;
-    Player jugador;
-    protected LightView light;
-    protected Stopwatch stopwatch; //atributo para el Stopwatch
-    protected Font fuenteJuego; //atributo para la fuente
-    protected Message mensaje;
-    protected Objeto obj[];
-    protected JPanel panelJuego;
+    private final JuegoPanel jp;
+    private final CargaPanel cargaPanel;
 
-    // propiedades del panel
-    int anchoPantalla;
-    public int altoPantalla;*/
+    private JPanel contenedor;
 
-    public final JuegoPanel jp;
-    
 
-    // panel juego es la vista
 
-    // juegoview => JFrame
-    // juegoview llama a JuegoPanel => JPanel
-    // JuegoPanel tiene @override paintComponent
 
-    //public JuegoView (String tituloJuego, String usuario, Labyrinth lab, Player jugador, 
-       //                 GameController controlador, Message mensaje, Objeto[] obj){
-       public JuegoView (GameController controlador) {
+    public JuegoView (GameController controlador) {
 
         setTitle("Ghostly Labyrinth");
-        //setSize(ancho, alto);
 
-        //setSize(Toolkit.getDefaultToolkit().getScreenSize()); // pantalla completa
-
-        // POR AHORA ESTO NO PORQUE NO TENEMOS MENU PAUSAR, Y NO SE PUEDE SALIR
         setUndecorated(true); // quita la barra de titulo y bordes
         setExtendedState(JFrame.MAXIMIZED_BOTH); // ocupa toda la pantalla
 
@@ -51,14 +31,21 @@ public class JuegoView extends JFrame {
         setLocationRelativeTo(null);
         setResizable(true);
         jp = new JuegoPanel(controlador);
-        add(jp);
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            jp.requestFocusInWindow();
-        });
-        //this.addKeyListener(controlador); // esto lo ponia el profe, vamos a ver que hace
-        setContentPane(jp);
+        cargaPanel = new CargaPanel();
 
-       }
+        contenedor = new JPanel();
+        contenedor.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
+        add(contenedor);
+        setContentPane(contenedor);
+
+
+        // add(jp);
+        // javax.swing.SwingUtilities.invokeLater(() -> {
+        //     jp.requestFocusInWindow();
+        // });
+        // setContentPane(jp);
+
+    }
 
     public void pintarPanel () {
         jp.repaint();
@@ -74,7 +61,33 @@ public class JuegoView extends JFrame {
 
     public JuegoPanel getJuegoPanel() {
     return this.jp;
-}
+    }
+
+    public CargaPanel getPanelCarga() {
+        return cargaPanel;
+    }
+    
+    public void ponerPanelJuego(){
+        setContenedor(jp);
+    }
+
+    public void ponerPanelCarga(){
+        setContenedor(cargaPanel);
+    }
+
+    public void setContenedor(JPanel panel){
+        contenedor.removeAll();
+        contenedor.add(panel, BorderLayout.CENTER);
+        contenedor.revalidate();
+        contenedor.repaint();
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            panel.requestFocusInWindow();
+        });
+
+        revalidate();
+        repaint();
+    }
+
 
     public void setRadioLuz(int radio){
         this.jp.setRadioLuz(radio);

@@ -3,6 +3,8 @@ import javax.swing.Timer;
 import model.juego.SoundEffect;
 
 import model.juego.laberinto.Nivel;
+import model.juego.laberinto.NivelWorker;
+import view.juego.JuegoView;
 
 public class TutorialController extends GameController{
     private int etapaTutorial = 0;
@@ -83,10 +85,24 @@ public class TutorialController extends GameController{
     }
 
     public void iniciarTutorial() { //Metodo para que se inicie el nivel del tutorial
-    Nivel nivelTutorial = nivelManager.crearNivelEspecifico(3);
-    iniciarNivel(nivelTutorial);
-    if (this.juegoView != null) {
-        this.juegoView.setRadioLuz(juegoView.getRadioDefault() + 1000); 
+        int nivelTutorial = -1;
+        this.juegoView = new JuegoView(this);
+        java.util.function.Consumer<String> statusUpdater = juegoView.getPanelCarga()::setStatus;
+        nivelWorker = new NivelWorker(nivelTutorial, statusUpdater);
+        if (nivelWorker != null) {
+            // le pasamos el worker para que actualice la pantalla de carga
+            System.out.println("poniendo panel de carga");
+            juegoView.ponerPanelCarga();
+            juegoView.setVisible(true);
+
+            super.setupNivelWorker();
+
+            System.out.println("ejecutando worker");
+            super.inicioJuego = true;
+            nivelWorker.execute();
+            if (this.juegoView != null) {
+                this.juegoView.setRadioLuz(juegoView.getRadioDefault() + 1000); 
+            }
+        }
     }
-}
 }

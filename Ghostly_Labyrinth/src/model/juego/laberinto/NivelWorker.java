@@ -3,12 +3,17 @@ package model.juego.laberinto;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+
+import javax.swing.SwingWorker;
+
 import model.juego.tile.Tile;
 import model.juego.tile.TileManager;
 import model.juego.tile.TileSpriteSetter;
 
-public class NivelCreator implements Runnable{
+// string para devolver mensajes de progreso
+public class NivelWorker extends SwingWorker<Nivel, String>{
+
     ArrayList <Tile[][]> mapas = new ArrayList<>();
     private static record Dimension(int alto, int ancho) {}
     private static record Posicion(int x, int y) {}
@@ -16,48 +21,24 @@ public class NivelCreator implements Runnable{
     private TileManager tm;
     private TileSpriteSetter tileSS;
     private int nivelNumero;
+    private final java.util.function.Consumer<String> statusUpdater;
     private Nivel nivel;
 
-    private static Dimension getDimensionMapa(int nivel) {
-        return switch (nivel) {
-            case 0 -> new Dimension(20, 30);
-            case 1 -> new Dimension(40, 40);
-            case 2 -> new Dimension(40, 40);
-            case 3 -> new Dimension(11, 15);
-            default -> new Dimension(20, 30);
-        };
-    }
-
-    private static Posicion getPosicionDefaultMapa(int nivel) {
-        return switch (nivel) {
-            case 0 -> new Posicion (2, 5);
-            case 1 -> new Posicion (19, 3); //TODO: cambiar a otras cosas cuando hagamos más mapas
-            case 2 -> new Posicion (37, 5);
-            case 3 -> new Posicion (1, 1);
-            default -> new Posicion (3, 3);
-        };
-    }
-
-    public int getMapaAlto (int nivel){
-        return getDimensionMapa(nivel).alto;
-    }
-
-    public int getMapaAncho (int nivel){
-        return getDimensionMapa(nivel).ancho;
-    }
-
-
-    public NivelCreator(int nivelNumero) {
+    public NivelWorker(int nivelNumero, java.util.function.Consumer<String> statusUpdater){
         this.nivelNumero = nivelNumero;
+        this.statusUpdater = statusUpdater;
         tm = new TileManager();
     }
 
-    // public Nivel getSiguienteNivel() {
-    //     crearnivel();
-    //     return nivel;
-    // }
+    // método para trabajar en 2do plano
+    @Override
+    protected Nivel doInBackground() throws Exception {
 
-    public Nivel crearnivel (){
+        publish("Empezando creación...");
+        setProgress(0);
+        int progreso = 0;
+        long ultimaActualizacion = System.currentTimeMillis();
+
         try {
                 this.dim = getDimensionMapa(this.nivelNumero);
                 this.nivel = new Nivel(dim.alto, dim.ancho);
@@ -66,6 +47,14 @@ public class NivelCreator implements Runnable{
             try (BufferedReader buffer = new BufferedReader(new InputStreamReader(is))) {
                 int col = 0;
                 int fila = 0;
+                while (ultimaActualizacion + 800 > System.currentTimeMillis()) {
+                    // esperamos un toque para que no actualice tan rápido
+                }
+                publish ("Cargando laberinto fantasmal...");
+                progreso++;
+                setProgress(progreso * 25);
+                ultimaActualizacion = System.currentTimeMillis();
+
                 while (col < dim.ancho && fila < dim.alto) {
                     String linea = buffer.readLine();
                     while (col < dim.ancho) {
@@ -81,9 +70,25 @@ public class NivelCreator implements Runnable{
                     }
                 }
             }
+
+                while (ultimaActualizacion + 800 > System.currentTimeMillis()) {
+                    // esperamos un toque para que no actualice tan rápido
+                }
+                publish ("Poniendo screamers...");
+                progreso++;
+                setProgress(progreso * 25);
+                ultimaActualizacion = System.currentTimeMillis();
                 this.tileSS = new TileSpriteSetter(nivel);
                 tileSS.setearTileRandom(tm.getTile(0));
                 tileSS.setearTileSegunVecinos(tm.getTile(1));
+
+                while (ultimaActualizacion + 800 > System.currentTimeMillis()) {
+                    // esperamos un toque para que no actualice tan rápido
+                }
+                publish ("Colocando fantasmas...");
+                progreso++;
+                setProgress(progreso * 25);
+                ultimaActualizacion = System.currentTimeMillis();
 
                 // para agregar las posiciones de los fantasmas segun el nivelll
                 switch (nivelNumero) {
@@ -127,50 +132,61 @@ public class NivelCreator implements Runnable{
                     }
                 }
 
+                while (ultimaActualizacion + 800 > System.currentTimeMillis()) {
+                    // esperamos un toque para que no actualice tan rápido
+                }
+                publish ("Últimos retoques...");
+                progreso++;
+                setProgress(progreso * 25);
+                ultimaActualizacion = System.currentTimeMillis();
 
-                return nivel;
+                while (ultimaActualizacion + 200 > System.currentTimeMillis()) {
+                }
+
+                return nivel;            
                 
             }catch (Exception e) {
                 e.printStackTrace();
                 return null;
             }
-        
     }
 
-    //no puede devolver el nivel después de crearlo porque es un hilo
     @Override
-    public synchronized void run (){
-        try {
-                this.dim = getDimensionMapa(this.nivelNumero);
-                this.nivel = new Nivel(dim.alto, dim.ancho);
-                InputStream is = getClass().getResourceAsStream(String.format("/assets/mapas/mapa%d.txt", nivelNumero));
-            try (BufferedReader buffer = new BufferedReader(new InputStreamReader(is))) {
-                int col = 0;
-                int fila = 0;
-                while (col < dim.ancho && fila < dim.alto) {
-                    String linea = buffer.readLine();
-                    while (col < dim.ancho) {
-                        String numeros[] = linea.split(" ");
-                        int num = Integer.parseInt(numeros[col]);
-                        nivel.matBaldosas[fila][col] = tm.crearNuevoObjetoTile(num);
-
-                        col++;
-                    }
-                    if (col == dim.ancho) {
-                        col = 0;
-                        fila++;
-                    }
-                }
-            }
-                this.tileSS = new TileSpriteSetter(nivel);
-                tileSS.setearTileRandom(tm.getTile(0));
-                tileSS.setearTileSegunVecinos(tm.getTile(1));
-            }catch (Exception e) {
-                e.printStackTrace();
-            }
-        
+    protected void process(java.util.List<String> chunks) {
+        // obtener el último mensaje publicado
+        String mensaje = chunks.get(chunks.size() - 1);
+        statusUpdater.accept(mensaje);
     }
 
+    @Override
+    protected void done() {
+        try {
+            Nivel nivelCreado = get();
+            System.out.println("Nivel " + nivelNumero + " creado");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+    private static Dimension getDimensionMapa(int nivel) {
+        return switch (nivel) {
+            case -1 -> new Dimension(15, 15);
+            case 0 -> new Dimension(20, 30);
+            case 1 -> new Dimension(40, 40);
+            case 2 -> new Dimension(40, 40);
+            default -> new Dimension(20, 30);
+        };
+    }
 
+    private static Posicion getPosicionDefaultMapa(int nivel) {
+        return switch (nivel) {
+            case -1 -> new Posicion (1, 2);
+            case 0 -> new Posicion (2, 5);
+            case 1 -> new Posicion (19, 3); 
+            case 2 -> new Posicion (37, 5);
+            default -> new Posicion (3, 3);
+        };
+    }
+
+    
 }

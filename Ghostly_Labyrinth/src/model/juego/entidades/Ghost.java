@@ -39,8 +39,8 @@ public class Ghost extends Entity{
     }
 
     @Override
-    public void tieneAcceso(Tile tile) {
-        // los fantasmas no abren puertas
+    public boolean getTieneLlave() {
+        return false;
     }
 
     public long getTiempoUltimoMovimiento() { // devuelve el tiempo del ultimo movimiento

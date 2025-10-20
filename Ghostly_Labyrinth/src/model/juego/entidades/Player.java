@@ -108,16 +108,17 @@ public class Player extends Entity implements Sujeto {
     }
 
     public void setPosicionDefault(){
-        super.setMundoX(3 * gc.getAnchoBloque()); // 3 tiles desde la izquierda
+        super.setMundoX(3 * gc.getAnchoBloque()); 
         super.setMundoY(3 *gc.getAltoBloque());  // 3 tiles desde arriba
     }
 
     public void setPosicionPersonaje(int x, int y){
-        super.setMundoX(x * gc.getAnchoBloque()); 
-        super.setMundoY(y *gc.getAltoBloque());
+        super.setMundoX(x * gc.getAnchoBloque() -10); // 3 tiles desde la izquierda. menos dos pixeles pq spawneaba medio corrido
+        super.setMundoY(y *gc.getAltoBloque() +5);
     }
 
 
+    @Override
     public boolean getTieneLlave(){
         return tieneLlave;
     }
@@ -144,14 +145,6 @@ public class Player extends Entity implements Sujeto {
 
     public boolean estaVivo(){
         return vida > 0;
-    }
-
-    @Override
-    public void tieneAcceso (Tile tile) {
-        if (tile instanceof model.juego.tile.Puerta && tieneLlave) {
-            model.juego.tile.Puerta puerta = (model.juego.tile.Puerta) tile;
-            puerta.abrir(); 
-        }
     }
 
     public int getScreenX() {

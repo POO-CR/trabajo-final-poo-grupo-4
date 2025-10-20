@@ -24,7 +24,6 @@ import model.juego.entidades.*;
 import model.juego.laberinto.*;
 import model.juego.objetos.*;
 import model.juego.objetos.efectos.PowerUpEffect;
-import model.juego.tile.TileManager;
 import view.juego.JuegoPausa;
 import view.juego.JuegoView;
 import view.juego.CargaPanel;
@@ -42,7 +41,6 @@ public class GameController {
     private String tituloJuego;
     protected NivelManager nivelManager;
     private Nivel nivel;
-    private TileManager tm;
     protected Boolean inicioJuego;
 
     private boolean juegoPausado = false; //para saber el estado del juego
@@ -82,9 +80,6 @@ public class GameController {
 
         this.nivelManager = new NivelManager();
         this.aSetter = new AssetSetter(this);
-
-
-        this.tm = new TileManager();
 
         this.tituloJuego = "Ghostly Labyrinth";
 
@@ -449,9 +444,6 @@ public class GameController {
         return this.fantasmas;
     }
 
-    public int getTileEspecial(){
-        return tm.getTileESpecial();
-    }
 
     public int getAnchoNivel () {
         return nivel.getAncho();

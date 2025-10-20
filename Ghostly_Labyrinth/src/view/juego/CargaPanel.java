@@ -2,24 +2,38 @@ package view.juego;
 
 import java.awt.BorderLayout;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public class CargaPanel extends JPanel {
 
     private JProgressBar progressBar;
     private JLabel statusLabel;
 
+    BufferedImage background;
+
     public CargaPanel() {
         super(new GridBagLayout());
+        
         super.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize()); 
+
+        try {
+            background = ImageIO.read(getClass().getResource("/assets/img/carga/backgroundCarga.png"));
+        }
+        catch(IOException e) {}
+        this.setDoubleBuffered(true);
         this.setBackground(Color.BLACK);  
         this.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 
@@ -62,6 +76,15 @@ public class CargaPanel extends JPanel {
 
     public JProgressBar getProgressBar() {
         return progressBar;
+    }
+
+    @Override
+    protected void paintComponent (Graphics g){
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g.create();
+        
+        g2.drawImage(background,0,0,this.getWidth(), this.getHeight(), null);
+        
     }
 
     

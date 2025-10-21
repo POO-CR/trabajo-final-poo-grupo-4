@@ -1,12 +1,10 @@
 package view.juego;
 
-import java.awt.BorderLayout;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;

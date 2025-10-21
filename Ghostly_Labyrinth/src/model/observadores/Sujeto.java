@@ -1,4 +1,4 @@
-package model.juego;
+package model.observadores;
 
 public interface Sujeto {
 

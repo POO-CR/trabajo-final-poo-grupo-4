@@ -1,9 +1,9 @@
 package controller.juego;
 import javax.swing.Timer;
-import model.juego.SoundEffect;
 
 import model.juego.laberinto.Nivel;
 import model.juego.laberinto.NivelWorker;
+import model.observadores.SoundEffect;
 import view.juego.JuegoView;
 
 public class TutorialController extends GameController{

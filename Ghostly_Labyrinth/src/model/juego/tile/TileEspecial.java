@@ -5,9 +5,12 @@ import model.juego.entidades.Entity;
 
 public class TileEspecial extends Tile {
 
+
         @Override
     public boolean tieneAcceso(ColisionChecker cs, Entity entidad) {
-        cs.llamarCambioNivel();
+        if (cs.getUltimoCambioNivel() + 2000 < System.currentTimeMillis()){
+            cs.llamarCambioNivel();
+        }
         return colision;
     }
     

@@ -1,7 +1,6 @@
 package view.juego;
 
 import java.awt.BorderLayout;
-import java.awt.Toolkit;
 import javax.swing.*;
 
 import controller.juego.GameController;
@@ -14,9 +13,6 @@ public class JuegoView extends JFrame {
 
     private final JuegoPanel jp;
     private final CargaPanel cargaPanel;
-
-    private JPanel contenedor;
-
 
 
 
@@ -54,6 +50,10 @@ public class JuegoView extends JFrame {
 
     public void añadirKeyListener (KeyHandler kh){
         jp.addKeyListener(kh);
+    }
+
+    public void setearLuzInicial(){
+        jp.setRadioLuz(jp.getRadioDefault());
     }
 
     public JuegoPanel getJuegoPanel() {

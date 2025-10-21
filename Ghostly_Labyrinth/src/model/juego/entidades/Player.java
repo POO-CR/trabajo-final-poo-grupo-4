@@ -4,8 +4,8 @@ import java.awt.Rectangle;
 
 import controller.juego.GameController;
 import model.juego.tile.Tile;
-import model.juego.Observador;
-import model.juego.Sujeto;
+import model.observadores.Observador;
+import model.observadores.Sujeto;
 import model.juego.objetos.efectos.PowerUpEffect;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,11 +49,11 @@ public class Player extends Entity implements Sujeto {
     // ancho = 11x2x1.5 = 33
     // alto = 7x2x1.5 = 21
 
-    public Player (GameController gc, int screenAncho, int screenAlto) {
+    public Player (GameController gc) {
 
         super();
         this.gc = gc;
-        setValoresDefault(screenAncho, screenAlto);
+        setValoresDefault();
 
         anchoPersonaje = (int)(gc.getAnchoBloque()*escalaPersonaje);
         altoPersonaje = (int)(gc.getAltoBloque()*escalaPersonaje);
@@ -93,18 +93,16 @@ public class Player extends Entity implements Sujeto {
         return efectosActivos;
     }
 
-    public void setValoresDefault (int screenAncho, int screenAlto) {
-        // posicion del player en el mundo (NO POSICION EN PANTALLA)
-        // ES EL PUNTO DE PARTIDA EN LA MATRIZ DEL LABERINTO
-        setScreenXY(screenAncho, screenAlto);
+    public void setValoresDefault () {
+        //setScreenXY(screenAncho, screenAlto);
         setMovimiento(10); // en pixeles
         direccion = "down";
         ultimaDireccion = "down";
     }
 
     public void setScreenXY (int screenAncho, int screenAlto){
-        screenX = screenAncho / 2 - (anchoPersonaje / 2) -55; //centrado en pantalla
-        screenY = screenAlto / 2 - (altoPersonaje / 2) - 55; //centrado en pantalla
+        screenX = screenAncho / 2 - (anchoPersonaje / 2) ; //centrado en pantalla
+        screenY = screenAlto / 2 - (altoPersonaje / 2) ; //centrado en pantalla
     }
 
     public void setPosicionDefault(){
@@ -131,50 +129,6 @@ public class Player extends Entity implements Sujeto {
         this.direccion = direccion;
     }
 
-    public String getDireccion(){
-        return direccion;
-    }
-
-    public int getVida() {
-        return vida;
-    }
-
-    public int getVidaTope() {
-        return vidaTope;
-    }
-
-    public boolean estaVivo(){
-        return vida > 0;
-    }
-
-    public int getScreenX() {
-        return screenX;
-    }
-
-    public int getScreenY() {
-        return screenY;
-    }
-
-    //para el LightView
-    public int getCentroX() {
-        return mundoX + anchoPersonaje / 2;
-    }
-
-    public int getCentroY() {
-        return mundoY + altoPersonaje / 2;
-    }
-
-    public int getAnchoPersonaje() {
-    return anchoPersonaje;
-}
-
-    public int getAltoPersonaje() {
-        return altoPersonaje;
-    }
-
-    public boolean esInmune(){
-        return System.currentTimeMillis() < finInmune;
-    }
 
     public void recibirDanio(int danio){
         long ahora = System.currentTimeMillis();
@@ -218,6 +172,51 @@ public class Player extends Entity implements Sujeto {
         for (Observador o : observadores) {
             o.actualizar(evento);
         }
+    }
+
+        public String getDireccion(){
+        return direccion;
+    }
+
+    public int getVida() {
+        return vida;
+    }
+
+    public int getVidaTope() {
+        return vidaTope;
+    }
+
+    public boolean estaVivo(){
+        return vida > 0;
+    }
+
+    public int getScreenX() {
+        return screenX;
+    }
+
+    public int getScreenY() {
+        return screenY;
+    }
+
+    //para el LightView
+    public int getCentroX() {
+        return mundoX + anchoPersonaje / 2;
+    }
+
+    public int getCentroY() {
+        return mundoY + altoPersonaje / 2;
+    }
+
+    public int getAnchoPersonaje() {
+    return anchoPersonaje;
+}
+
+    public int getAltoPersonaje() {
+        return altoPersonaje;
+    }
+
+    public boolean esInmune(){
+        return System.currentTimeMillis() < finInmune;
     }
 
 }

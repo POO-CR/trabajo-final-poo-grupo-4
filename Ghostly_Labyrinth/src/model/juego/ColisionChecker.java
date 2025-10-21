@@ -11,6 +11,7 @@ public class ColisionChecker {
     private GameController gc;
     private ArrayList<Objeto> obj;
     private Nivel nivel;
+    private long ultimoCambioNivel;
 
     public ColisionChecker(GameController gc) {
         this.gc = gc;
@@ -98,6 +99,7 @@ public class ColisionChecker {
     }
 
     public void llamarCambioNivel(){
+        ultimoCambioNivel = System.currentTimeMillis();
         gc.cambiarNivel();
     }
 
@@ -139,6 +141,10 @@ public class ColisionChecker {
 
         return null;
 
+    }
+
+    public long getUltimoCambioNivel(){
+        return this.ultimoCambioNivel;
     }
 
 }

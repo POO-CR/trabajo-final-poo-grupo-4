@@ -2,6 +2,7 @@ package view.juego;
 
 import model.juego.Stopwatch;
 import model.juego.objetos.*;
+import model.observadores.Observador;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -25,7 +26,7 @@ import javax.tools.Tool;
 import controller.juego.GameController;
 
 
-public class JuegoPanel extends JPanel{
+public class JuegoPanel extends JPanel implements Observador{
 
     final private GameController controlador;
     private JButton btnPausa;
@@ -71,32 +72,27 @@ public class JuegoPanel extends JPanel{
         new Color(0, 0, 0, 0)     // borde transparente
     };
 
-    private final int offsetXLuz;
-    private final int offsetYLuz;
-    private final int cx;
-    private final int cy;
+    private int offsetXLuz;
+    private int offsetYLuz;
+    private int cx;
+    private int cy;
 
     private RadialGradientPaint grad;
     private Point centroLuz;
     private BufferedImage layer; 
 
+    private boolean pasoGolpe;
+    private long ultimoGolpe;
+
 
     public JuegoPanel (GameController controlador) {
         this.controlador = controlador;
-        super.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize()); 
         super.setBackground(Color.black);
         super.setDoubleBuffered(true); // guarda 2 buffer en memoria para que no carguen en tiempo real en pan                         // igual según internet no es necesario(?
         super.setFocusable(true); // el setfocusable es para que se "concentre" en los eventos del teclado    
 
-        //inicializamos datos de la luz
-        offsetXLuz = -10;
-        offsetYLuz = -10;
-        cx = controlador.getScreenXJugador() + controlador.getAnchoJugador() / 2 + offsetXLuz;
-        cy = controlador.getScreenYJugador() + controlador.getAltoJugador() / 2 + offsetYLuz;
-        this.centroLuz = new Point(cx, cy);
         // para que no salte el overridable method call in constructor
         init();
-        setRadioLuz(radioLuz);
     }
 
     private void init() {
@@ -288,12 +284,17 @@ public class JuegoPanel extends JPanel{
 
 
     public void setRadioLuz(int radio){
+        //inicializamos datos de la luz
+        offsetXLuz = -10;
+        offsetYLuz = -10;
+        cx = controlador.getScreenXJugador() + controlador.getAnchoJugador() / 2 ;
+        cy = controlador.getScreenYJugador() + controlador.getAltoJugador() / 2 ;
+        this.centroLuz = new Point(cx, cy);
         this.radioLuz = radio;
         this.grad = new RadialGradientPaint(centroLuz, radioLuz, dist, cols);
+
         int anchoPanel = getWidth();
         int altoPanel = getHeight();
-        if (anchoPanel <= 0) anchoPanel = Toolkit.getDefaultToolkit().getScreenSize().width;
-        if (altoPanel <= 0) altoPanel = Toolkit.getDefaultToolkit().getScreenSize().height;
 
         // Capa temporal del tamaño del panel con transparencia
         layer = new BufferedImage(anchoPanel, altoPanel, BufferedImage.TYPE_INT_ARGB);
@@ -318,6 +319,21 @@ public class JuegoPanel extends JPanel{
         if (g == null || controlador == null) return;
         // Dibuja la capa sobre la pantalla
         g.drawImage(layer, 0, 0, null);
+    }
+
+
+    @Override
+    public void actualizar(String evento){
+        if (evento.equals("GOLPE")){
+            pasoGolpe=true;
+            ultimoGolpe = System.currentTimeMillis();
+        }
+    }
+
+    public void paintGolpe(Graphics2D g2){
+        g2.setColor(new Color(100, 0, 20, 100));
+        g2.fillRect(0, 0, getWidth(), getHeight());
+        g2.dispose();
     }
 
 
@@ -356,7 +372,7 @@ public class JuegoPanel extends JPanel{
             int pantallaX = ghost.getMundoX();
             int pantallaY = ghost.getMundoY();
 
-            g2.drawImage(spriteFantasma, pantallaX, pantallaY, controlador.getAnchoBloque(), controlador.getAltoBloque(), null);
+            g2.drawImage(spriteFantasma, pantallaX, pantallaY, ghost.getAnchoFantasma(), ghost.getAltoFantasma(), null);
         }
         
         // SE DIBUJA JUGADOR EN EL PANEL 
@@ -364,9 +380,15 @@ public class JuegoPanel extends JPanel{
 
         //Se dibuja la luz en el panel 
         paintLuz((Graphics2D) g);
+
+        if (pasoGolpe){
+            if (ultimoGolpe + 300 > System.currentTimeMillis()){
+                paintGolpe((Graphics2D) g);
+            }
+        }
         
         //Se dibuja el mensaje en el panel ////////////////////////
-        drawMensaje((Graphics2D) g, getWidth(), getHeight()); //SE MODIFICO 01:25
+        drawMensaje((Graphics2D) (g), getWidth(), getHeight()); //SE MODIFICO 01:25
 
 
         //Se dibujan las vidas en el panel 

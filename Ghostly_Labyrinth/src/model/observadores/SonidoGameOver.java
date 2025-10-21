@@ -1,16 +1,17 @@
-package model.juego;
+package model.observadores;
 
 import javax.sound.sampled.*;
-import java.net.URL;
-import model.juego.Observador;
 
-public class SonidoGolpe implements Observador {
+
+import java.net.URL;
+
+public class SonidoGameOver implements Observador {
 
     private Clip clip;
 
-    public SonidoGolpe() {
+    public SonidoGameOver() {
         try {
-            URL sonidoURL = getClass().getResource("/assets/music/golpe.wav");
+            URL sonidoURL = getClass().getResource("/assets/music/perdio.wav");
             AudioInputStream audioIn = AudioSystem.getAudioInputStream(sonidoURL);
             clip = AudioSystem.getClip();
             clip.open(audioIn);
@@ -21,11 +22,10 @@ public class SonidoGolpe implements Observador {
 
     @Override
     public void actualizar(String evento) {
-        if (evento.equals("GOLPE")) {
-            if (clip.isRunning()) clip.stop(); // reinicia si ya estaba sonando
+        if (evento.equals("GAME_OVER")) {
+            if (clip.isRunning()) clip.stop();
             clip.setFramePosition(0);
             clip.start();
         }
     }
 }
-

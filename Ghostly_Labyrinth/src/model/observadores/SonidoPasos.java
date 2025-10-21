@@ -1,9 +1,7 @@
-package model.juego;
+package model.observadores;
 
 import javax.sound.sampled.*;
 import java.net.URL;
-import model.juego.entidades.Player;
-import model.juego.Observador;
 
 public class SonidoPasos implements Observador {
     

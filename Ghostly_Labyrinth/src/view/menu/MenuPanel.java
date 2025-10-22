@@ -21,6 +21,7 @@ public class MenuPanel extends JPanel {
     private ImageIcon musicOffIcon;
 
     // fondo y logo
+    private MenuBackground background;
     private JLabel lblLogo;
 
     // lista por si despues queremos manipular los botones mediante base de datos
@@ -28,8 +29,9 @@ public class MenuPanel extends JPanel {
 
     public MenuPanel() {
 
-        
-
+        // fondo
+        this.background = new MenuBackground("/assets/img/Background1.png");
+    
 
         // dimension general de los botones
         Dimension botonSize = new Dimension(210, 70);
@@ -115,7 +117,7 @@ public class MenuPanel extends JPanel {
 
         // columna izquierda (logo abajo)
         JPanel leftCol = new JPanel(new BorderLayout());
-        leftCol.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 0)); // margen para correr el logo
+        leftCol.setBorder(BorderFactory.createEmptyBorder(0, 50, 20, 0)); // margen para correr el logo
         leftCol.setOpaque(false);
         leftCol.add(lblLogo, BorderLayout.SOUTH);
 
@@ -151,7 +153,7 @@ public class MenuPanel extends JPanel {
         JPanel rightBottom = new JPanel();
         rightBottom.setOpaque(false);
         rightBottom.setLayout(new BoxLayout(rightBottom, BoxLayout.Y_AXIS));
-        rightBottom.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 40)); // margen para no pegarse tanto al borde
+        rightBottom.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 40)); // margen para no pegarse tanto al borde
         bttnSonido.setAlignmentX(Component.RIGHT_ALIGNMENT);
         version.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
@@ -160,12 +162,29 @@ public class MenuPanel extends JPanel {
         rightBottom.add(version);
         rightCol.add(rightBottom, BorderLayout.SOUTH);
 
-        // ensamblado final
         main.add(leftCol, BorderLayout.WEST);
         main.add(centerCol, BorderLayout.CENTER);
         main.add(rightCol, BorderLayout.EAST);
 
-        //background.add(main, BorderLayout.CENTER);
+        // el fondo centra el bloque con GridBagLayout
+        background.setLayout(new GridBagLayout());
+        background.setOpaque(true);  // el fondo pinta
+        GridBagConstraints gb = new GridBagConstraints();
+        // gridbagconstraints para centrar el main panel dentro del background
+        gb.gridx = 0;
+        gb.gridy = 0;
+        gb.weightx = 1.0;
+        gb.fill = GridBagConstraints.BOTH;
+        gb.weighty = 1.0;
+        gb.anchor = GridBagConstraints.CENTER;
+        
+        background.add(main, gb);
+
+        //  MenuPanel usa BorderLayout y
+        // el background va al CENTER (ocupa todo)
+        setLayout(new BorderLayout());
+        add(background, BorderLayout.CENTER);
+        
         
     }
 

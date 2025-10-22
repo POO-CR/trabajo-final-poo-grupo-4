@@ -39,13 +39,11 @@ public class FramePrincipal extends JFrame {
     private static final String PANEL_JUEGO = "juego";
     private static final String PANEL_MENU = "menu";
 
-    private MenuBackground background;
+
     
         
     public FramePrincipal (){
 
-        // fondo principal
-        background = new MenuBackground("/assets/img/Background1.png");
         
         // usamos el layout del MenuPanel como BorderLayout y agregamos el fondo dentro
         //this.add(background);
@@ -84,8 +82,9 @@ public class FramePrincipal extends JFrame {
         //setVisible(true);
         setContentPane(mainPanel);
 
-        mostrarMenu();
+        
         setVisible(true);
+        mostrarMenu();
     }
 
     

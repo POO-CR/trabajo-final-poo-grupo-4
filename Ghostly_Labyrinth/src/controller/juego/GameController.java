@@ -128,6 +128,7 @@ public class GameController {
         System.out.println("llamando a cambiarNivel");
         // detenerGameLoop(); //por alguna razón con el detener e iniciar va más rápido el personaje (capaz algo de las actualizaciones por segundo?)
         keyH.resetearTeclas();
+        cargaPanel.getProgressBar().setIndeterminate(true);
         // para pasar la etiqueta de estado al panel
         // es un consumidor que le setea el status al panel según el paso de carga en el que 
         // está el worker
@@ -171,12 +172,9 @@ public class GameController {
                     if (evt.getNewValue() == SwingWorker.StateValue.DONE) {
                         try {
                             nivel = nivelWorker.get();
-                            System.out.println("poniendo panel juego");
-                            framePrincipal.mostrarJuego();
                             terminarCompletarNivel();
                         } catch (Exception e) {
                             e.printStackTrace();
-                            salirAlMenuPrincipal();
                         } 
                     }
                 }
@@ -211,16 +209,19 @@ public class GameController {
 
         if (inicioJuego) {
             inicioJuego = false;
-            terminarCompletarNivel();
 
             //juegoView.setVisible(true);
-            juegoPanel.addKeyListener(keyH);
+            System.out.println("poniendo panel juego");
             jugador.setScreenXY(framePrincipal.getWidth(), framePrincipal.getHeight());
             framePrincipal.getJuegoPanel().getBtnPausa().addActionListener(e -> pausarJuego());
+            this.stopwatch = new Stopwatch(() -> juegoPanel.repaint());
+            System.out.println("CREANDO STOPWATCH " + stopwatch.toString());
             iniciarGameLoop();
             juegoPanel.setRadioLuz(juegoPanel.getRadioDefault());
         }
+        framePrincipal.mostrarJuego(keyH);
         stopwatch.iniciar();
+        
     }
 
 
@@ -399,8 +400,8 @@ public class GameController {
 
     // NUEVO
     public void iniciarJuego(String usuario) {
-        //this.stopwatch = new Stopwatch(() -> juegoPanel.repaint());
         System.out.println("llamando a iniciar juego");
+        this.inicioJuego = true;
         iniciarNivel();
     }
 
@@ -594,11 +595,12 @@ public class GameController {
         // cuando se presiona reiniciar se cierra el dialogo y se reinicia el juego desde cero
         pausa.getBtnReiniciar().addActionListener(e -> {
         pausa.dispose(); // cierra el dialogo 
-        reiniciarJuego(); // se reinicia todo el estado del juego
+        reiniciarJuego();
+        if (pausa != null) pausa.dispose(); // se reinicia todo el estado del juego
         });
 
         // cuando se presiona salir vuelve al menu principal
-        pausa.getbtnSalir().addActionListener(e -> salirAlMenuPrincipal());
+        pausa.getbtnSalir().addActionListener(e -> {pausa.dispose(); salirAlMenuPrincipal(); if (pausa != null) pausa.dispose();});
 
         // se muestra la ventana de pausa y se bloquea hasta que se cierre
         pausa.setVisible(true); 
@@ -622,8 +624,7 @@ public class GameController {
                 
 
                 // Recuperar foco del teclado y redibujar panel, esto no me dejaba que luego de tocar continuar en la pausa del boton del panel se repinte el panel pense que era problema del timer
-                juegoPanel.requestFocusInWindow();
-                juegoPanel.repaint(); // fuerza repintado inmediato
+                framePrincipal.añadirJuegoListener(keyH);
             }
 
             System.out.println("Juego reanudado");
@@ -702,7 +703,6 @@ protected void procesarMovimiento(){ //Metodo generado para realizar un override
 protected void iniciarNivel() { //Como se debe cargar un nivel para el tutorial y el juego normal
 
     System.out.println("llamando a iniciar nivel");
-    inicioJuego = true;
     //carga la nueva ventana
     jugador.registrarObservador(juegoPanel);
 

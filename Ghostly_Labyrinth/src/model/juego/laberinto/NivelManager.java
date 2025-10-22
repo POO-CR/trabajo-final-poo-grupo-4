@@ -13,7 +13,7 @@ public class NivelManager {
         cantNiveles = 2;
         nivelesDisponibles = new ArrayList<>();
         rnd = new Random(); //se inicializa el generador de numeros aleatorios
-        //reiniciar(); //llena la lista y deja todo en estado inicial
+        reiniciar(); //llena la lista y deja todo en estado inicial
     }
 
     public NivelWorker crearSiguienteNivelWorker (int nivel, java.util.function.Consumer<String> statusUpdater){

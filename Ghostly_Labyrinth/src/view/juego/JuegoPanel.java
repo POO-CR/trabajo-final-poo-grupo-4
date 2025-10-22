@@ -362,11 +362,13 @@ public class JuegoPanel extends JPanel implements Observador{
 
         //Se dibujan los objetos en el panel
         Objeto obj;
-        for (int i=0; i < objetos.size(); i++) {
-                if (objetos.get(i) != null) {
-                    obj = objetos.get(i);
-                    g2.drawImage(obj.getImage(), obj.getX(), obj.getY(), controlador.getAnchoBloque(), controlador.getAltoBloque(), null);
-            }//SE MODIFICO 01:25 el length
+        if (objetos != null) {
+            for (int i=0; i < objetos.size(); i++) {
+                    if (objetos.get(i) != null) {
+                        obj = objetos.get(i);
+                        g2.drawImage(obj.getImage(), obj.getX(), obj.getY(), controlador.getAnchoBloque(), controlador.getAltoBloque(), null);
+                }
+            }
         }
 
         // SE DIBUJAN LOS FANTASMAS EN EL PANEL 

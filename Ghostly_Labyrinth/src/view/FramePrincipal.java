@@ -1,14 +1,10 @@
 package view;
 
-import javax.smartcardio.Card;
 import javax.swing.*;
 
-import controller.juego.GameController;
-import controller.juego.TutorialController;
-import controller.menu.MenuController;
+import model.juego.KeyHandler;
 import view.juego.CargaPanel;
 import view.juego.JuegoPanel;
-import view.menu.MenuBackground;
 import view.menu.MenuPanel;
 
 import java.awt.*;
@@ -102,12 +98,17 @@ public class FramePrincipal extends JFrame {
         });
     }
 
-    public void mostrarJuego() {
+    public void mostrarJuego(KeyHandler keyH) {
         cardLayout.show(mainPanel, PANEL_JUEGO);
+        añadirJuegoListener(keyH);
+    }
+
+    public void añadirJuegoListener(KeyHandler keyH){
+        mainPanel.addKeyListener(keyH);
         javax.swing.SwingUtilities.invokeLater(() -> {
             mainPanel.validate();
-            mainPanel.repaint();
             mainPanel.requestFocusInWindow();
+            repaint();
         });
     }
 

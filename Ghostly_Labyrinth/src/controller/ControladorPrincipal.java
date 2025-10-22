@@ -3,6 +3,7 @@ package controller;
 import view.FramePrincipal;
 import controller.juego.*;
 import controller.menu.*;
+import model.juego.KeyHandler;
 
 public class ControladorPrincipal {
 
@@ -22,13 +23,13 @@ public class ControladorPrincipal {
     public void pasarAJuego(){
         gc = new GameController(framePrincipal);
         gc.iniciarJuego("usuario");
-        framePrincipal.mostrarJuego();
+        //framePrincipal.mostrarJuego();
     }
 
     public void pasarATutorial(){
         tutoC = new TutorialController(framePrincipal);
         tutoC.iniciarTutorial();
-        framePrincipal.mostrarJuego();
+        framePrincipal.mostrarJuego(new KeyHandler());
     }
 
     public void pasarAMenu(){

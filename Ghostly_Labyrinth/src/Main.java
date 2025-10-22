@@ -1,14 +1,14 @@
 import javax.swing.SwingUtilities;
 
-import controller.menu.MenuController;
-
+import controller.ControladorPrincipal;
 
 
 public class Main {
+
     public static void main(String[] args) throws Exception {
         SwingUtilities.invokeLater(() -> {
             System.out.println("arrancó main");
-            MenuController mc = new MenuController();
+            ControladorPrincipal controladorPrincipal = new ControladorPrincipal();
         });
 
     }

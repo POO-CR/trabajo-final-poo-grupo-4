@@ -3,26 +3,32 @@ package controller.menu;
 import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 
+import controller.ControladorPrincipal;
 import controller.juego.GameController;
 import controller.juego.TutorialController;
 import model.menu.Music;
-import view.menu.MenuView;
+import view.FramePrincipal;
+import view.menu.MenuPanel;
 
 public class MenuController {
 
-    private MenuView view;
+    private MenuPanel view;
     //private MenuModel model;
 
     private boolean sonidoActivado = true;
     private Music music;
-    GameController gc;
 
-    public MenuController() {
+    private ControladorPrincipal controladorPrincipal;
+    private FramePrincipal framePrincipal;
+
+    public MenuController(ControladorPrincipal controladorPrincipal, FramePrincipal framePrincipal) {
         //this.model = new MenuModel();
         System.out.println("arrancó mc");
-        this.view = new MenuView();
+        this.framePrincipal = framePrincipal;
+        this.view = framePrincipal.getMenuPanel();
         this.actions();
         this.view.setVisible(true);
+        this.controladorPrincipal = controladorPrincipal;
         
         if (music == null) {
             music = new Music("/assets/music/FireboyAndWatergirlSoundtrack.wav");
@@ -41,11 +47,9 @@ public class MenuController {
                     if (music != null) {
                         music.pausar();
                     }
-
+                    
                     //Se crea un nuevo controlador del juego 
-                    this.gc = new GameController();
-
-                    gc.iniciarJuego("usuario");
+                    this.controladorPrincipal.pasarAJuego();
 
                 }); // el controlador
                
@@ -56,9 +60,7 @@ public class MenuController {
                 if (music != null) {
                 music.pausar();
                 }
-                TutorialController tutorialController = new TutorialController();
-                tutorialController.iniciarTutorial();
-                this.view.dispose();    
+                controladorPrincipal.pasarATutorial();
         });
             
          // boton Score

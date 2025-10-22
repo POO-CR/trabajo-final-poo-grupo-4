@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class MenuView extends JFrame {
+public class MenuPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -21,38 +21,15 @@ public class MenuView extends JFrame {
     private ImageIcon musicOffIcon;
 
     // fondo y logo
-    private MenuBackground background;
     private JLabel lblLogo;
 
     // lista por si despues queremos manipular los botones mediante base de datos
     private ArrayList<JButton> buttons = new ArrayList<>();
 
-    public MenuView() {
+    public MenuPanel() {
 
-        // titulo y config basica de la ventana
-        this.setTitle("Ghostly Mansion");
-
-
-        // PARA PANTALLA COMPLETAAA
-        this.setUndecorated(true); // quita la barra de titulo y bordes
-        this.setExtendedState(JFrame.MAXIMIZED_BOTH); // ocupa toda la pantalla
         
 
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-
-        // icono de la ventana
-        try {
-            ImageIcon windowIcon = new ImageIcon(getClass().getResource("/assets/img/GhostlyMansionLogo.png"));
-            if (windowIcon.getImage() != null) this.setIconImage(windowIcon.getImage());
-        } catch (Exception e) {
-            System.err.println("Error al cargar el icono del juego: " + e.getMessage());
-        }
-
-        // fondo principal
-        background = new MenuBackground("/assets/img/Background1.png");
-        background.setLayout(new BorderLayout());
-        this.setContentPane(background);
 
         // dimension general de los botones
         Dimension botonSize = new Dimension(210, 70);
@@ -188,7 +165,8 @@ public class MenuView extends JFrame {
         main.add(centerCol, BorderLayout.CENTER);
         main.add(rightCol, BorderLayout.EAST);
 
-        background.add(main, BorderLayout.CENTER);
+        //background.add(main, BorderLayout.CENTER);
+        
     }
 
     // metodo para darle estilo a los botones con imagen (es un helper)

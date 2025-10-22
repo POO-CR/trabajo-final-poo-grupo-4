@@ -11,88 +11,84 @@ import model.juego.laberinto.Nivel; //TODO: preg esto
 //Clase Juego debe heredar los atributos y metodos de JPanel
 public class JuegoView extends JFrame {
 
-    private final JuegoPanel jp;
-    private final CargaPanel cargaPanel;
+    // private final JuegoPanel jp;
+    // private final CargaPanel cargaPanel;
 
 
 
-    public JuegoView (GameController controlador) {
-
-        setTitle("Ghostly Labyrinth");
-         // quita la barra de titulo y bordes
-        setExtendedState(JFrame.MAXIMIZED_BOTH); // ocupa toda la pantalla
-
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-        setResizable(true);
-        jp = new JuegoPanel(controlador);
-        cargaPanel = new CargaPanel();
-
-        setLayout(new BorderLayout());
-        setUndecorated(true);
+    // public JuegoView (GameController controlador) {
 
 
-        // add(jp);
-        // javax.swing.SwingUtilities.invokeLater(() -> {
-        //     jp.requestFocusInWindow();
-        // });
-        // setContentPane(jp);
+    //     jp = new JuegoPanel();
+    //     cargaPanel = new CargaPanel();
 
-    }
+    //     setLayout(new BorderLayout());
+    //     setUndecorated(true);
 
-    public void pintarPanel () {
-        jp.repaint();
-    }
 
-    public void setNivel(Nivel nivel){
-        this.jp.setNivel(nivel);
-    }
+    //     // add(jp);
+    //     // javax.swing.SwingUtilities.invokeLater(() -> {
+    //     //     jp.requestFocusInWindow();
+    //     // });
+    //     // setContentPane(jp);
 
-    public void añadirKeyListener (KeyHandler kh){
-        jp.addKeyListener(kh);
-    }
+    // }
 
-    public void setearLuzInicial(){
-        jp.setRadioLuz(jp.getRadioDefault());
-    }
+    // public void pintarPanel () {
+    //     jp.repaint();
+    // }
 
-    public JuegoPanel getJuegoPanel() {
-    return this.jp;
-    }
+    // public void setNivel(Nivel nivel){
+    //     this.jp.setNivel(nivel);
+    // }
 
-    public CargaPanel getPanelCarga() {
-        return cargaPanel;
-    }
+    // public void añadirKeyListener (KeyHandler kh){
+    //     jp.addKeyListener(kh);
+    // }
+
+    // public void setearLuzInicial(){
+    //     jp.setRadioLuz(jp.getRadioDefault());
+    // }
+
+    // public JuegoPanel getJuegoPanel() {
+    // return this.jp;
+    // }
+
+    // public CargaPanel getPanelCarga() {
+    //     return cargaPanel;
+    // }
     
-    public void ponerPanelJuego(){
-        setContenedor(jp);
-    }
+    // public void ponerPanelJuego(){
+    //     setContenedor(jp);
+    // }
 
-    public void ponerPanelCarga(){
-        setContenedor(cargaPanel);
-    }
+    // public void ponerPanelCarga(){
+    //     setContenedor(cargaPanel);
+    // }
 
-    public void setContenedor(JPanel panel){
-        getContentPane().removeAll();
-        getContentPane().add(panel, BorderLayout.CENTER);
-        revalidate();
-        repaint();
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            panel.requestFocusInWindow();
-        });
+    // public void setContenedor(JPanel panel){
+    //     getContentPane().removeAll();
+    //     getContentPane().add(panel, BorderLayout.CENTER);
+    //     revalidate();
+    //     repaint();
+    //     javax.swing.SwingUtilities.invokeLater(() -> {
+    //         panel.requestFocusInWindow();
+    //     });
 
-        revalidate();
-        repaint();
-    }
+    //     revalidate();
+    //     repaint();
+    // }
+
+    
+
+    // public void setRadioLuz(int radio){
+    //     this.jp.setRadioLuz(radio);
+    // }
 
 
-    public void setRadioLuz(int radio){
-        this.jp.setRadioLuz(radio);
-    }
-
-    public int getRadioDefault(){
-        return this.jp.getRadioDefault();
-    }
+    // public int getRadioDefault(){
+    //     return this.jp.getRadioDefault();
+    // }
 
 }
 

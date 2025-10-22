@@ -28,7 +28,8 @@ import controller.juego.GameController;
 
 public class JuegoPanel extends JPanel implements Observador{
 
-    final private GameController controlador;
+    
+    private GameController controlador;
     private JButton btnPausa;
 
 
@@ -85,14 +86,18 @@ public class JuegoPanel extends JPanel implements Observador{
     private long ultimoGolpe;
 
 
-    public JuegoPanel (GameController controlador) {
-        this.controlador = controlador;
+    public JuegoPanel () {
+        
         super.setBackground(Color.black);
         super.setDoubleBuffered(true); // guarda 2 buffer en memoria para que no carguen en tiempo real en pan                         // igual según internet no es necesario(?
         super.setFocusable(true); // el setfocusable es para que se "concentre" en los eventos del teclado    
 
         // para que no salte el overridable method call in constructor
         init();
+    }
+
+    public void setGameController(GameController controlador){
+        this.controlador = controlador;
     }
 
     private void init() {

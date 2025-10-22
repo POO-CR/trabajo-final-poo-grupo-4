@@ -1,19 +1,26 @@
 package controller.juego;
 import javax.swing.Timer;
 
+import controller.ControladorPrincipal;
 import model.juego.laberinto.Nivel;
 import model.juego.laberinto.NivelWorker;
 import model.observadores.SoundEffect;
-import view.juego.JuegoView;
+import view.FramePrincipal;
+import view.juego.JuegoPanel;
 
 public class TutorialController extends GameController{
+
     private int etapaTutorial = 0;
     private boolean quieto = false;
     private boolean tutorialcompleto =false;
     private SoundEffect visionLossSound;
+    private FramePrincipal framePrincipal; 
+    private ControladorPrincipal controladorPrincipal;
 
-    public TutorialController(){
-        super();
+    public TutorialController(FramePrincipal framePrincipal){
+        super(framePrincipal);
+        this.framePrincipal = framePrincipal;
+        this.controladorPrincipal = controladorPrincipal;
         this.visionLossSound = new SoundEffect("/assets/music/Vision_perdida.wav");
     }
      private void ejecutarConRetraso(int delayMillis, Runnable accion) { //Metodo para generar Delay en el tutorial
@@ -86,23 +93,21 @@ public class TutorialController extends GameController{
 
     public void iniciarTutorial() { //Metodo para que se inicie el nivel del tutorial
         int nivelTutorial = -1;
-        this.juegoView = new JuegoView(this);
-        java.util.function.Consumer<String> statusUpdater = juegoView.getPanelCarga()::setStatus;
+        JuegoPanel jp = framePrincipal.getJuegoPanel();
+        java.util.function.Consumer<String> statusUpdater = framePrincipal.getCargaPanel()::setStatus;
         nivelWorker = new NivelWorker(nivelTutorial, statusUpdater);
         if (nivelWorker != null) {
             // le pasamos el worker para que actualice la pantalla de carga
             System.out.println("poniendo panel de carga");
-            juegoView.ponerPanelCarga();
-            juegoView.setVisible(true);
+            framePrincipal.mostrarCarga();
 
             super.setupNivelWorker();
 
             System.out.println("ejecutando worker");
             super.inicioJuego = true;
             nivelWorker.execute();
-            if (this.juegoView != null) {
-                this.juegoView.setRadioLuz(juegoView.getRadioDefault() + 1000); 
-            }
+            jp.setRadioLuz(jp.getRadioDefault() + 1000); 
+            
         }
     }
 }

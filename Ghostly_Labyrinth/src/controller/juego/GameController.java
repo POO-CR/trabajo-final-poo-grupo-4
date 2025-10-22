@@ -10,6 +10,8 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
+
+import controller.ControladorPrincipal;
 import model.juego.AssetSetter;
 import model.juego.ColisionChecker;
 import model.juego.KeyHandler;
@@ -25,10 +27,13 @@ import model.observadores.SonidoObjeto;
 import model.observadores.SonidoPasos;
 import view.juego.JuegoPausa;
 import view.juego.JuegoView;
+import view.FramePrincipal;
 import view.juego.CargaPanel;
+import view.juego.JuegoPanel;
 
 //public class GameController implements Runnable{ (VIEJO)
 public class GameController {
+    
     protected Player jugador;
 
     final private int FPS = 60;
@@ -64,7 +69,7 @@ public class GameController {
 
     int indiceprueba = 0;
 
-    protected JuegoView juegoView;
+    //protected JuegoView juegoView;
 
     private Boolean huboCambioNivel = false;
     private Boolean cambioLuz = false;
@@ -72,8 +77,17 @@ public class GameController {
 
     protected NivelWorker nivelWorker;
 
+    private JuegoPanel juegoPanel;
+    private FramePrincipal framePrincipal;
+    private CargaPanel cargaPanel;
 
-    public GameController() {
+    public GameController(FramePrincipal framePrincipal) {
+        System.out.println("se creo gamecontroller");
+
+        this.framePrincipal = framePrincipal;
+        this.juegoPanel = framePrincipal.getJuegoPanel();
+        juegoPanel.setGameController(this);
+        this.cargaPanel = framePrincipal.getCargaPanel();
 
         this.nivelManager = new NivelManager();
         this.aSetter = new AssetSetter(this);
@@ -88,10 +102,8 @@ public class GameController {
         jugador.registrarObservador(sonidoPasos);
         SonidoGolpe sonidoGolpe = new SonidoGolpe();
         jugador.registrarObservador(sonidoGolpe);
-
         SonidoGameOver sonidoGameOver = new SonidoGameOver();
         jugador.registrarObservador(sonidoGameOver);
-
         SonidoObjeto sonidoObjeto = new SonidoObjeto();
         jugador.registrarObservador(sonidoObjeto);
 
@@ -106,27 +118,31 @@ public class GameController {
 
         this.keyH = new KeyHandler();
 
-        this.stopwatch = new Stopwatch(() -> {
+        
         // Esto se ejecuta cada segundo sin frenar el juego
-        if (juegoView != null) juegoView.pintarPanel();
-        });
+        //if (juegoView != null) juegoView.pintarPanel();
+        //});
     }
 
     public void cambiarNivel(){
+        System.out.println("llamando a cambiarNivel");
         // detenerGameLoop(); //por alguna razón con el detener e iniciar va más rápido el personaje (capaz algo de las actualizaciones por segundo?)
         keyH.resetearTeclas();
         // para pasar la etiqueta de estado al panel
         // es un consumidor que le setea el status al panel según el paso de carga en el que 
         // está el worker
-        java.util.function.Consumer<String> statusUpdater = juegoView.getPanelCarga()::setStatus;
+        java.util.function.Consumer<String> statusUpdater = cargaPanel::setStatus;
         
         this.nivelWorker = nivelManager.crearSiguienteNivelWorker(statusUpdater);
+
         if (this.nivelWorker != null) {
             // le pasamos el worker para que actualice la pantalla de carga
             this.huboCambioNivel = true;
             System.out.println("poniendo panel de carga");
-            juegoView.ponerPanelCarga();
-            juegoView.setVisible(true);
+            //juegoView.ponerPanelCarga();
+            //juegoView.setVisible(true);
+
+            framePrincipal.mostrarCarga();
 
             setupNivelWorker();
 
@@ -139,36 +155,37 @@ public class GameController {
         }
     }
 
+    
     protected void setupNivelWorker () {
-        CargaPanel cargaPanel = juegoView.getPanelCarga();
+        //CargaPanel cargaPanel = juegoView.getPanelCarga();
+        
         nivelWorker.addPropertyChangeListener(evt -> { // escuchamos cuando cambia la propiedad del worker
-        switch (evt.getPropertyName()) {
-            case "progress" -> {
-                int progress = (Integer) evt.getNewValue();
-                // Actualizamos la barra de progreso
-                cargaPanel.getProgressBar().setIndeterminate(false);
-                cargaPanel.getProgressBar().setValue(progress);
-            }
-            case "state" -> {
-                if (evt.getNewValue() == SwingWorker.StateValue.DONE) {
-                    try {
-                        nivel = nivelWorker.get();
-                        System.out.println("poniendo panel juego");
-                        this.juegoView.ponerPanelJuego();
-                        terminarCompletarNivel();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        JOptionPane.showMessageDialog(juegoView, "Error al cargar nivel: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                        salirAlMenuPrincipal();
-                    } finally {
-                        juegoView.setContenedor(juegoView.getJuegoPanel());
+            switch (evt.getPropertyName()) {
+                case "progress" -> {
+                    int progress = (Integer) evt.getNewValue();
+                    // Actualizamos la barra de progreso
+                    cargaPanel.getProgressBar().setIndeterminate(false);
+                    cargaPanel.getProgressBar().setValue(progress);
+                }
+                case "state" -> {
+                    if (evt.getNewValue() == SwingWorker.StateValue.DONE) {
+                        try {
+                            nivel = nivelWorker.get();
+                            System.out.println("poniendo panel juego");
+                            framePrincipal.mostrarJuego();
+                            terminarCompletarNivel();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            salirAlMenuPrincipal();
+                        } 
                     }
                 }
             }
-        }
-    });
-        
+        });
     }
+        
+         
+    
 
 
     // en un método separado pq se llama solo cuando terminó el worker
@@ -176,7 +193,7 @@ public class GameController {
         aSetter.resetearPosicionesUsadas();
         obj.clear();
         setupJuego();
-        this.juegoView.setNivel(nivel);
+        juegoPanel.setNivel(nivel);
         
 
         
@@ -187,27 +204,25 @@ public class GameController {
         }
 
         
-        if (this.juegoView != null) {
-        this.juegoView.pintarPanel();
+        //this.juegoView.pintarPanel();
 
-            jugador.setTieneLlave(false);
-            jugador.setPosicionPersonaje(nivel.getPosDefaultX(), nivel.getPosDefaultY());
+        jugador.setTieneLlave(false);
+        jugador.setPosicionPersonaje(nivel.getPosDefaultX(), nivel.getPosDefaultY());
 
-            if (inicioJuego) {
-                inicioJuego = false;
-                terminarCompletarNivel();
+        if (inicioJuego) {
+            inicioJuego = false;
+            terminarCompletarNivel();
 
-                juegoView.setVisible(true);
-                juegoView.añadirKeyListener(keyH);
-                jugador.setScreenXY(juegoView.getWidth(), juegoView.getHeight());
-                juegoView.getJuegoPanel().getBtnPausa().addActionListener(e -> pausarJuego());
-                iniciarGameLoop();
-                juegoView.setearLuzInicial();
-            }
-            stopwatch.iniciar();
+            //juegoView.setVisible(true);
+            juegoPanel.addKeyListener(keyH);
+            jugador.setScreenXY(framePrincipal.getWidth(), framePrincipal.getHeight());
+            framePrincipal.getJuegoPanel().getBtnPausa().addActionListener(e -> pausarJuego());
+            iniciarGameLoop();
+            juegoPanel.setRadioLuz(juegoPanel.getRadioDefault());
         }
-        // iniciarGameLoop();
+        stopwatch.iniciar();
     }
+
 
     public void actualizarMovimiento() {
 
@@ -365,7 +380,8 @@ public class GameController {
 
         gameTimer = new Timer(delay, e -> {
             update();
-            juegoView.pintarPanel();
+            //juegoView.pintarPanel();
+            juegoPanel.repaint();
         });
 
         gameTimer.start();
@@ -383,6 +399,8 @@ public class GameController {
 
     // NUEVO
     public void iniciarJuego(String usuario) {
+        //this.stopwatch = new Stopwatch(() -> juegoPanel.repaint());
+        System.out.println("llamando a iniciar juego");
         iniciarNivel();
     }
 
@@ -415,7 +433,7 @@ public class GameController {
         if (cambioLuz){
             System.out.println("cambiando luz en " + aumentoLuz);
             cambioLuz = false;
-            juegoView.setRadioLuz(juegoView.getRadioDefault() + aumentoLuz);
+            juegoPanel.setRadioLuz(juegoPanel.getRadioDefault() + aumentoLuz);
         }
 
         if (keyH.escPressed) { //si se presiona la tecla esc 
@@ -563,55 +581,53 @@ public class GameController {
 
 
     private void mostrarDialogoPausa() {
-    JuegoPausa Pausa = new JuegoPausa(juegoView);
+        JuegoPausa pausa = new JuegoPausa(framePrincipal);
         
 
         // cuando se presiona continuar se reanuda el juego y se cierra el dialogo
-        Pausa.getbtnContinuar().addActionListener(e -> {
-            Pausa.dispose(); //cierra el dialogo
+        pausa.getbtnContinuar().addActionListener(e -> {
+            pausa.dispose(); //cierra el dialogo
             reanudarJuego(); //llama a reanudar juego
             
         });
 
         // cuando se presiona reiniciar se cierra el dialogo y se reinicia el juego desde cero
-        Pausa.getBtnReiniciar().addActionListener(e -> {
-        Pausa.dispose(); // cierra el dialogo 
+        pausa.getBtnReiniciar().addActionListener(e -> {
+        pausa.dispose(); // cierra el dialogo 
         reiniciarJuego(); // se reinicia todo el estado del juego
         });
 
         // cuando se presiona salir vuelve al menu principal
-        Pausa.getbtnSalir().addActionListener(e -> salirAlMenuPrincipal());
+        pausa.getbtnSalir().addActionListener(e -> salirAlMenuPrincipal());
 
         // se muestra la ventana de pausa y se bloquea hasta que se cierre
-        Pausa.setVisible(true); 
+        pausa.setVisible(true); 
     }
+    
 
     // metodo que reanuda el juego tras haber estado pausado
     public void reanudarJuego() {
         if (juegoPausado) {  //solo reanuda si realmente estaba pausado
-            juegoPausado = false; //cambia el estado a no pausado
+                juegoPausado = false; //cambia el estado a no pausado
 
-            reanudarGameLoop();
-            
-            if (stopwatch != null) stopwatch.iniciar(); // reanuda el cronometro 
+                reanudarGameLoop();
+                
+                if (stopwatch != null) stopwatch.iniciar(); // reanuda el cronometro 
 
 
-            //Cuando se muestra un JDialog modal (como JuegoPausa con super(parent, "Pausa", true)), Swing bloquea todos los eventos del hilo de la interfaz (EDT) hasta que el dialogo se cierra
-            //aunque el Timer corre en el EDT también, cuando el dialogo modal se cierra, a veces el foco no vuelve al JPanel del juego, y entonces:
-            //no detecta teclas (ni KeyHandler),
-            //y en algunos casos no vuelve a repintar aunque se actualice internamente.
-           
+                //Cuando se muestra un JDialog modal (como JuegoPausa con super(parent, "Pausa", true)), Swing bloquea todos los eventos del hilo de la interfaz (EDT) hasta que el dialogo se cierra
+                //aunque el Timer corre en el EDT también, cuando el dialogo modal se cierra, a veces el foco no vuelve al JPanel del juego, y entonces:
+                //no detecta teclas (ni KeyHandler),
+                //y en algunos casos no vuelve a repintar aunque se actualice internamente.
+                
 
-            // Recuperar foco del teclado y redibujar panel, esto no me dejaba que luego de tocar continuar en la pausa del boton del panel se repinte el panel pense que era problema del timer
-            if (juegoView != null && juegoView.getJuegoPanel() != null) {
-            juegoView.getJuegoPanel().requestFocusInWindow();
-            juegoView.pintarPanel(); // fuerza repintado inmediato
+                // Recuperar foco del teclado y redibujar panel, esto no me dejaba que luego de tocar continuar en la pausa del boton del panel se repinte el panel pense que era problema del timer
+                juegoPanel.requestFocusInWindow();
+                juegoPanel.repaint(); // fuerza repintado inmediato
             }
 
             System.out.println("Juego reanudado");
 
-
-         }
     }
 
     //metodo que reinicia completamente el juego
@@ -653,11 +669,11 @@ public class GameController {
     jugador.ultimaDireccion = "down";
 
     keyH.resetearTeclas();
-    juegoView.añadirKeyListener(keyH); //se vuelve a escuchar el teclado
+    juegoPanel.addKeyListener(keyH); //se vuelve a escuchar el teclado
 
 
     // Se conecta nuevamente el listener del boton pausa esto no dejaba abrir la pausa del boton del panel del juego porque solo estaba en iniciarjuego() 
-    juegoView.getJuegoPanel().getBtnPausa().addActionListener(e -> pausarJuego());
+    juegoPanel.getBtnPausa().addActionListener(e -> pausarJuego());
 
     // Reinicia loop y cronometro
     iniciarGameLoop();
@@ -673,14 +689,10 @@ public class GameController {
     if (gameTimer != null) gameTimer.stop();
     if (stopwatch != null) stopwatch.detener();
 
-    // se cierra la ventana del juego si esta abierta
-    if (juegoView != null) {
-        juegoView.dispose();
-    }
 
     // se vuelve a abrir el menu principal
-    new controller.menu.MenuController();
-
+    framePrincipal.mostrarMenu();
+    
 }
 
 protected void procesarMovimiento(){ //Metodo generado para realizar un override en el tutorial y que el jugador no se mueva cuando queramos
@@ -689,14 +701,10 @@ protected void procesarMovimiento(){ //Metodo generado para realizar un override
 
 protected void iniciarNivel() { //Como se debe cargar un nivel para el tutorial y el juego normal
 
+    System.out.println("llamando a iniciar nivel");
     inicioJuego = true;
-    // Cierra la ventana
-    for (java.awt.Window window : java.awt.Window.getWindows()) {
-        if (window.isShowing()) window.dispose();
-    }
     //carga la nueva ventana
-    this.juegoView = new JuegoView(this);
-    jugador.registrarObservador(juegoView.getJuegoPanel());
+    jugador.registrarObservador(juegoPanel);
 
     cambiarNivel();
 

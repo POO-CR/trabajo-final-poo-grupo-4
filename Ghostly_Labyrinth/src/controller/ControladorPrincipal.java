@@ -29,7 +29,7 @@ public class ControladorPrincipal {
     public void pasarATutorial(){
         tutoC = new TutorialController(framePrincipal);
         tutoC.iniciarTutorial();
-        framePrincipal.mostrarJuego(new KeyHandler());
+        // framePrincipal.mostrarJuego(new KeyHandler());
     }
 
     public void pasarAMenu(){

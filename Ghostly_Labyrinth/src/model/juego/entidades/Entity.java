@@ -25,7 +25,7 @@ public abstract class Entity {
     public int areaColisionDefaultX, areaColisionDefaultY;
     public boolean colisionOn = false;
 
-    public abstract boolean getTieneLlave();
+    public abstract void tieneAcceso(Tile tile);
 
     public int getMundoX() {
         return mundoX;

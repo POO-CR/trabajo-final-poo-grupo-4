@@ -4,8 +4,8 @@ import java.awt.Rectangle;
 
 import controller.juego.GameController;
 import model.juego.tile.Tile;
-import model.observadores.Observador;
-import model.observadores.Sujeto;
+import model.juego.Observador;
+import model.juego.Sujeto;
 import model.juego.objetos.efectos.PowerUpEffect;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,11 +49,11 @@ public class Player extends Entity implements Sujeto {
     // ancho = 11x2x1.5 = 33
     // alto = 7x2x1.5 = 21
 
-    public Player (GameController gc) {
+    public Player (GameController gc, int screenAncho, int screenAlto) {
 
         super();
         this.gc = gc;
-        setValoresDefault();
+        setValoresDefault(screenAncho, screenAlto);
 
         anchoPersonaje = (int)(gc.getAnchoBloque()*escalaPersonaje);
         altoPersonaje = (int)(gc.getAltoBloque()*escalaPersonaje);
@@ -82,6 +82,11 @@ public class Player extends Entity implements Sujeto {
     }
 
     public void agregarEfecto(PowerUpEffect efecto) {
+        for (PowerUpEffect efectosactuales : efectosActivos)
+        if (efectosactuales.getClass().equals(efecto.getClass())){
+            efectosactuales.reiniciarPoder();
+            return;
+        }
         efectosActivos.add(efecto);
     }
 
@@ -93,30 +98,31 @@ public class Player extends Entity implements Sujeto {
         return efectosActivos;
     }
 
-    public void setValoresDefault () {
-        //setScreenXY(screenAncho, screenAlto);
+    public void setValoresDefault (int screenAncho, int screenAlto) {
+        // posicion del player en el mundo (NO POSICION EN PANTALLA)
+        // ES EL PUNTO DE PARTIDA EN LA MATRIZ DEL LABERINTO
+        setScreenXY(screenAncho, screenAlto);
         setMovimiento(10); // en pixeles
         direccion = "down";
         ultimaDireccion = "down";
     }
 
     public void setScreenXY (int screenAncho, int screenAlto){
-        screenX = screenAncho / 2 - (anchoPersonaje / 2) ; //centrado en pantalla
-        screenY = screenAlto / 2 - (altoPersonaje / 2) ; //centrado en pantalla
+        screenX = screenAncho / 2 - (anchoPersonaje / 2) -55; //centrado en pantalla
+        screenY = screenAlto / 2 - (altoPersonaje / 2) - 55; //centrado en pantalla
     }
 
     public void setPosicionDefault(){
-        super.setMundoX(3 * gc.getAnchoBloque()); 
+        super.setMundoX(3 * gc.getAnchoBloque()); // 3 tiles desde la izquierda
         super.setMundoY(3 *gc.getAltoBloque());  // 3 tiles desde arriba
     }
 
     public void setPosicionPersonaje(int x, int y){
-        super.setMundoX(x * gc.getAnchoBloque() -10); // 3 tiles desde la izquierda. menos dos pixeles pq spawneaba medio corrido
-        super.setMundoY(y *gc.getAltoBloque() +5);
+        super.setMundoX(x * gc.getAnchoBloque()); 
+        super.setMundoY(y *gc.getAltoBloque());
     }
 
 
-    @Override
     public boolean getTieneLlave(){
         return tieneLlave;
     }
@@ -129,6 +135,58 @@ public class Player extends Entity implements Sujeto {
         this.direccion = direccion;
     }
 
+    public String getDireccion(){
+        return direccion;
+    }
+
+    public int getVida() {
+        return vida;
+    }
+
+    public int getVidaTope() {
+        return vidaTope;
+    }
+
+    public boolean estaVivo(){
+        return vida > 0;
+    }
+
+    @Override
+    public void tieneAcceso (Tile tile) {
+        if (tile instanceof model.juego.tile.Puerta && tieneLlave) {
+            model.juego.tile.Puerta puerta = (model.juego.tile.Puerta) tile;
+            puerta.abrir(); 
+        }
+    }
+
+    public int getScreenX() {
+        return screenX;
+    }
+
+    public int getScreenY() {
+        return screenY;
+    }
+
+    //para el LightView
+    public int getCentroX() {
+        return mundoX + anchoPersonaje / 2;
+    }
+
+    public int getCentroY() {
+        return mundoY + altoPersonaje / 2;
+    }
+
+    public int getAnchoPersonaje() {
+    return anchoPersonaje;
+}
+
+    public int getAltoPersonaje() {
+        return altoPersonaje;
+    }
+
+    public boolean esInmune(){
+        return System.currentTimeMillis() < finInmune;
+    }
 
     public void recibirDanio(int danio){
         long ahora = System.currentTimeMillis();
@@ -172,51 +230,6 @@ public class Player extends Entity implements Sujeto {
         for (Observador o : observadores) {
             o.actualizar(evento);
         }
-    }
-
-        public String getDireccion(){
-        return direccion;
-    }
-
-    public int getVida() {
-        return vida;
-    }
-
-    public int getVidaTope() {
-        return vidaTope;
-    }
-
-    public boolean estaVivo(){
-        return vida > 0;
-    }
-
-    public int getScreenX() {
-        return screenX;
-    }
-
-    public int getScreenY() {
-        return screenY;
-    }
-
-    //para el LightView
-    public int getCentroX() {
-        return mundoX + anchoPersonaje / 2;
-    }
-
-    public int getCentroY() {
-        return mundoY + altoPersonaje / 2;
-    }
-
-    public int getAnchoPersonaje() {
-    return anchoPersonaje;
-}
-
-    public int getAltoPersonaje() {
-        return altoPersonaje;
-    }
-
-    public boolean esInmune(){
-        return System.currentTimeMillis() < finInmune;
     }
 
 }

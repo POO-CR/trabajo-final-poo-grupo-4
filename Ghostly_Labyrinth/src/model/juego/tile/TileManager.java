@@ -44,11 +44,7 @@ public class TileManager {
                 case 5: {t = new Tile();
                     t.setSprite(ImageIO.read(getClass().getResourceAsStream("/assets/img/laberinto/pisoSolo.png")));
                     break;}
-                case 6: {t = new Tile();
-                    t.setSprite(ImageIO.read(getClass().getResourceAsStream("/assets/img/laberinto/escaleraDecorativa.png")));
-                    t.colision = true;
-                    break;}
-                case 9: {t = new TileEspecial();
+                case 9: {t = new Tile();
                     t.setSprite(ImageIO.read(getClass().getResourceAsStream("/assets/img/laberinto/escaleraSola.png")));
                     break;}
                 default: t = new Tile();
@@ -66,4 +62,7 @@ public class TileManager {
         return tile[i];
     }
 
+    public int getTileESpecial(){
+        return 9;
+    }
 }

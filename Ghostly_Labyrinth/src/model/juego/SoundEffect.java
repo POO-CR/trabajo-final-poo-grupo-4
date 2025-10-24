@@ -1,4 +1,4 @@
-package model.observadores;
+package model.juego;
 
 import javax.sound.sampled.*;
 import java.io.IOException;

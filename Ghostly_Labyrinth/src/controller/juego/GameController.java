@@ -1,6 +1,7 @@
 package controller.juego;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Toolkit; //SE MODIFICO 01:25
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -14,15 +15,16 @@ import model.juego.AssetSetter;
 import model.juego.ColisionChecker;
 import model.juego.KeyHandler;
 import model.juego.Message;
+import model.juego.SonidoGameOver;
+import model.juego.SonidoGolpe;
+import model.juego.SonidoObjeto;
+import model.juego.SonidoPasos;
 import model.juego.Stopwatch;
 import model.juego.entidades.*;
 import model.juego.laberinto.*;
 import model.juego.objetos.*;
 import model.juego.objetos.efectos.PowerUpEffect;
-import model.observadores.SonidoGameOver;
-import model.observadores.SonidoGolpe;
-import model.observadores.SonidoObjeto;
-import model.observadores.SonidoPasos;
+import model.juego.tile.TileManager;
 import view.juego.JuegoPausa;
 import view.juego.JuegoView;
 import view.juego.CargaPanel;
@@ -40,6 +42,7 @@ public class GameController {
     private String tituloJuego;
     protected NivelManager nivelManager;
     private Nivel nivel;
+    private TileManager tm;
     protected Boolean inicioJuego;
 
     private boolean juegoPausado = false; //para saber el estado del juego
@@ -62,6 +65,8 @@ public class GameController {
     private final int anchoBloque = tileSize;
     private final int altoBloque = tileSize;
 
+    private final int screenW;
+    private final int screenH;
     int indiceprueba = 0;
 
     protected JuegoView juegoView;
@@ -78,11 +83,16 @@ public class GameController {
         this.nivelManager = new NivelManager();
         this.aSetter = new AssetSetter(this);
 
+
+        this.tm = new TileManager();
+
         this.tituloJuego = "Ghostly Labyrinth";
 
         // obtener tamaño pantalla
+        screenW = Toolkit.getDefaultToolkit().getScreenSize().width;
+        screenH = Toolkit.getDefaultToolkit().getScreenSize().height;
 
-        this.jugador = new Player(this);
+        this.jugador = new Player(this, screenW, screenH);
 
         SonidoPasos sonidoPasos = new SonidoPasos();
         jugador.registrarObservador(sonidoPasos);
@@ -114,6 +124,7 @@ public class GameController {
 
     public void cambiarNivel(){
         // detenerGameLoop(); //por alguna razón con el detener e iniciar va más rápido el personaje (capaz algo de las actualizaciones por segundo?)
+        this.huboCambioNivel = true;
         keyH.resetearTeclas();
         // para pasar la etiqueta de estado al panel
         // es un consumidor que le setea el status al panel según el paso de carga en el que 
@@ -123,7 +134,6 @@ public class GameController {
         this.nivelWorker = nivelManager.crearSiguienteNivelWorker(statusUpdater);
         if (this.nivelWorker != null) {
             // le pasamos el worker para que actualice la pantalla de carga
-            this.huboCambioNivel = true;
             System.out.println("poniendo panel de carga");
             juegoView.ponerPanelCarga();
             juegoView.setVisible(true);
@@ -145,7 +155,7 @@ public class GameController {
         switch (evt.getPropertyName()) {
             case "progress" -> {
                 int progress = (Integer) evt.getNewValue();
-                // Actualizamos la barra de progreso
+                // Actualizamos la barra de progress
                 cargaPanel.getProgressBar().setIndeterminate(false);
                 cargaPanel.getProgressBar().setValue(progress);
             }
@@ -174,6 +184,7 @@ public class GameController {
     // en un método separado pq se llama solo cuando terminó el worker
     private void terminarCompletarNivel(){
         aSetter.resetearPosicionesUsadas();
+        jugador.setScreenXY(screenW, screenH);
         obj.clear();
         setupJuego();
         this.juegoView.setNivel(nivel);
@@ -199,10 +210,8 @@ public class GameController {
 
                 juegoView.setVisible(true);
                 juegoView.añadirKeyListener(keyH);
-                jugador.setScreenXY(juegoView.getWidth(), juegoView.getHeight());
                 juegoView.getJuegoPanel().getBtnPausa().addActionListener(e -> pausarJuego());
                 iniciarGameLoop();
-                juegoView.setearLuzInicial();
             }
             stopwatch.iniciar();
         }
@@ -440,6 +449,9 @@ public class GameController {
         return this.fantasmas;
     }
 
+    public int getTileEspecial(){
+        return tm.getTileESpecial();
+    }
 
     public int getAnchoNivel () {
         return nivel.getAncho();
@@ -521,7 +533,6 @@ public class GameController {
     public int getAltoJugador () {
         return jugador.getAltoPersonaje();
     }
-
 
     public void mostrarMensaje(String texto, int milisegundos){ 
         mensaje.mostrar(texto, milisegundos);
@@ -633,6 +644,7 @@ public class GameController {
     nivelManager.reiniciar(); // se vacia y vuelve a generar los niveles disponibles
 
 
+    //TODO: arreglar cuando ande la carga
     cambiarNivel();
     
     if (nivel == null) {
@@ -652,6 +664,13 @@ public class GameController {
     jugador.direccion = "down"; //direccion inicial
     jugador.ultimaDireccion = "down";
 
+    // Reiniciar vista 
+    // if (juegoView != null) {
+    //     juegoView.dispose(); //se cierra la ventana actual
+    // }
+    // juegoView = new JuegoView(this); //se crea una nueva vista
+    // juegoView.setNivel(nivel); //se asigna el nivel actual
+    // juegoView.setVisible(true); //muestra la ventana
     keyH.resetearTeclas();
     juegoView.añadirKeyListener(keyH); //se vuelve a escuchar el teclado
 
@@ -696,7 +715,6 @@ protected void iniciarNivel() { //Como se debe cargar un nivel para el tutorial 
     }
     //carga la nueva ventana
     this.juegoView = new JuegoView(this);
-    jugador.registrarObservador(juegoView.getJuegoPanel());
 
     cambiarNivel();
 

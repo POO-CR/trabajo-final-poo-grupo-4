@@ -2,9 +2,6 @@ package model.juego.tile;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
-import model.juego.entidades.*;
-import model.juego.ColisionChecker;
-
 public class Tile {
     
     protected int num;
@@ -25,7 +22,6 @@ public class Tile {
     }
 
 
-
     private void generarSprite () {
     //TODO: hacer un tileSize global al juego para no necesitar una instancia de laberinto
         sprite = ((BufferedImage)tileSet).getSubimage(
@@ -37,11 +33,6 @@ public class Tile {
 
     public void setSprite (BufferedImage sprite) {
         this.sprite = sprite;
-    }
-
-    // si es tile, devuelve la colisión simplemente(es para la puerta más que nada)
-    public boolean tieneAcceso(ColisionChecker cs, Entity entidad) {
-        return colision;
     }
 
     public BufferedImage getSprite (){

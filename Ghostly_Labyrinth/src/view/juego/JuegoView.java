@@ -1,6 +1,7 @@
 package view.juego;
 
 import java.awt.BorderLayout;
+import java.awt.Toolkit;
 import javax.swing.*;
 
 import controller.juego.GameController;
@@ -14,12 +15,16 @@ public class JuegoView extends JFrame {
     private final JuegoPanel jp;
     private final CargaPanel cargaPanel;
 
+    private JPanel contenedor;
+
+
 
 
     public JuegoView (GameController controlador) {
 
         setTitle("Ghostly Labyrinth");
-         // quita la barra de titulo y bordes
+
+        setUndecorated(true); // quita la barra de titulo y bordes
         setExtendedState(JFrame.MAXIMIZED_BOTH); // ocupa toda la pantalla
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -28,8 +33,10 @@ public class JuegoView extends JFrame {
         jp = new JuegoPanel(controlador);
         cargaPanel = new CargaPanel();
 
-        setLayout(new BorderLayout());
-        setUndecorated(true);
+        contenedor = new JPanel();
+        contenedor.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
+        add(contenedor);
+        setContentPane(contenedor);
 
 
         // add(jp);
@@ -52,10 +59,6 @@ public class JuegoView extends JFrame {
         jp.addKeyListener(kh);
     }
 
-    public void setearLuzInicial(){
-        jp.setRadioLuz(jp.getRadioDefault());
-    }
-
     public JuegoPanel getJuegoPanel() {
     return this.jp;
     }
@@ -73,10 +76,10 @@ public class JuegoView extends JFrame {
     }
 
     public void setContenedor(JPanel panel){
-        getContentPane().removeAll();
-        getContentPane().add(panel, BorderLayout.CENTER);
-        revalidate();
-        repaint();
+        contenedor.removeAll();
+        contenedor.add(panel, BorderLayout.CENTER);
+        contenedor.revalidate();
+        contenedor.repaint();
         javax.swing.SwingUtilities.invokeLater(() -> {
             panel.requestFocusInWindow();
         });

@@ -2,7 +2,6 @@ package view.juego;
 
 import model.juego.Stopwatch;
 import model.juego.objetos.*;
-import model.observadores.Observador;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -26,7 +25,7 @@ import javax.tools.Tool;
 import controller.juego.GameController;
 
 
-public class JuegoPanel extends JPanel implements Observador{
+public class JuegoPanel extends JPanel{
 
     final private GameController controlador;
     private JButton btnPausa;
@@ -35,9 +34,9 @@ public class JuegoPanel extends JPanel implements Observador{
     private Font fuenteJuego; //SE MODIFICO 01:25
     private Image imagenVida; //SE MODIFICO 01:25
      private Image imagenVidaPerdida; 
-    private Image imagenDibujar; //Guarda la imagen del corazon que hay que mostrar en pantalla
-    // posis del jugador según la cámara
-    private Graphics2D g2;
+    private Graphics2D g2;    // posis del jugador según la cámara
+    private int vidasMaximas;
+    private Font fuentetime;
 
     private Nivel nivel; // acá
 
@@ -51,8 +50,8 @@ public class JuegoPanel extends JPanel implements Observador{
     //Caracteristicas de la foto vida
     final private int x0 = 10; //inicio del x
     final private int y0 = 10;
-    final private int anchofoto = 45;
-    final private int altofoto = 45;
+    final private int anchofoto = 60;
+    final private int altofoto = 60;
     final private int distancia = 10;
 
     //características del lab
@@ -72,27 +71,34 @@ public class JuegoPanel extends JPanel implements Observador{
         new Color(0, 0, 0, 0)     // borde transparente
     };
 
-    private int offsetXLuz;
-    private int offsetYLuz;
-    private int cx;
-    private int cy;
+    private final int offsetXLuz;
+    private final int offsetYLuz;
+    private final int cx;
+    private final int cy;
 
     private RadialGradientPaint grad;
     private Point centroLuz;
     private BufferedImage layer; 
 
-    private boolean pasoGolpe;
-    private long ultimoGolpe;
-
 
     public JuegoPanel (GameController controlador) {
         this.controlador = controlador;
+        this.vidasMaximas = controlador.vidaTope();
+        fuenteJuego = cargarFuente(); //SE MODIFICO 01:25
+        super.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize()); 
         super.setBackground(Color.black);
         super.setDoubleBuffered(true); // guarda 2 buffer en memoria para que no carguen en tiempo real en pan                         // igual según internet no es necesario(?
         super.setFocusable(true); // el setfocusable es para que se "concentre" en los eventos del teclado    
 
+        //inicializamos datos de la luz
+        offsetXLuz = -10;
+        offsetYLuz = -10;
+        cx = controlador.getScreenXJugador() + controlador.getAnchoJugador() / 2 + offsetXLuz;
+        cy = controlador.getScreenYJugador() + controlador.getAltoJugador() / 2 + offsetYLuz;
+        this.centroLuz = new Point(cx, cy);
         // para que no salte el overridable method call in constructor
         init();
+        setRadioLuz(radioLuz);
     }
 
     private void init() {
@@ -144,11 +150,12 @@ public class JuegoPanel extends JPanel implements Observador{
         this.objetos = controlador.getObjArray();
     }
     
-    public Font cargarFuente(){
+    private Font cargarFuente(){
     try{
         //Carga la fuente del texto
         fuenteJuego = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/assets/font/gaspi.otf"));
         fuenteJuego = fuenteJuego.deriveFont(Font.PLAIN,28f);
+        fuentetime = fuenteJuego.deriveFont(Font.PLAIN,32); //instancia la fuente del tiempo
         //System.out.println("Fuente cargada");
         } catch (FontFormatException | IOException e) {
             fuenteJuego = new Font("Arial", Font.PLAIN, 24);
@@ -166,7 +173,7 @@ public class JuegoPanel extends JPanel implements Observador{
         return imagenVida; 
     }
 
-    public Image cargarImagenVidaPerdida(){ 
+    private Image cargarImagenVidaPerdida(){ 
     try{
         //Carga la foto de vida
         imagenVidaPerdida = ImageIO.read(getClass().getResourceAsStream("/assets/img/VidaPerdida.png"));
@@ -174,10 +181,6 @@ public class JuegoPanel extends JPanel implements Observador{
             e.printStackTrace();
         }
         return imagenVidaPerdida;        
-    }
-
-    public void cargarImagenLlave(){
-
     }
 
     // -------- JUGADOR --------
@@ -263,13 +266,18 @@ public class JuegoPanel extends JPanel implements Observador{
         }
     } 
 
-    public void paintVida(Graphics grafico, int vida){
-        
-        for (int i = 0; i < vida; i++) {
-            int x = x0 + i * (anchofoto + distancia);
-            grafico.drawImage(imagenVida, (x + distancia), y0, anchofoto, altofoto, null);
-        } 
+public void paintVida(Graphics grafico, int vidaActual) {
+    for (int i = 0; i < vidaActual; i++) {
+        int x = x0 + i * (anchofoto + distancia);
+        grafico.drawImage(imagenVida, (x + distancia), y0, anchofoto, altofoto, null);
     }
+    if (vidaActual < vidasMaximas) {
+        for (int i = vidaActual; i < vidasMaximas; i++) {
+            int x = x0 + i * (anchofoto + distancia);
+            grafico.drawImage(imagenVidaPerdida, (x + distancia), y0, anchofoto, altofoto, null);
+        }
+    }
+}
 
     public void paintLaberinto (Graphics2D grafico){
         //filas
@@ -284,17 +292,12 @@ public class JuegoPanel extends JPanel implements Observador{
 
 
     public void setRadioLuz(int radio){
-        //inicializamos datos de la luz
-        offsetXLuz = -10;
-        offsetYLuz = -10;
-        cx = controlador.getScreenXJugador() + controlador.getAnchoJugador() / 2 ;
-        cy = controlador.getScreenYJugador() + controlador.getAltoJugador() / 2 ;
-        this.centroLuz = new Point(cx, cy);
         this.radioLuz = radio;
         this.grad = new RadialGradientPaint(centroLuz, radioLuz, dist, cols);
-
         int anchoPanel = getWidth();
         int altoPanel = getHeight();
+        if (anchoPanel <= 0) anchoPanel = Toolkit.getDefaultToolkit().getScreenSize().width;
+        if (altoPanel <= 0) altoPanel = Toolkit.getDefaultToolkit().getScreenSize().height;
 
         // Capa temporal del tamaño del panel con transparencia
         layer = new BufferedImage(anchoPanel, altoPanel, BufferedImage.TYPE_INT_ARGB);
@@ -319,21 +322,6 @@ public class JuegoPanel extends JPanel implements Observador{
         if (g == null || controlador == null) return;
         // Dibuja la capa sobre la pantalla
         g.drawImage(layer, 0, 0, null);
-    }
-
-
-    @Override
-    public void actualizar(String evento){
-        if (evento.equals("GOLPE")){
-            pasoGolpe=true;
-            ultimoGolpe = System.currentTimeMillis();
-        }
-    }
-
-    public void paintGolpe(Graphics2D g2){
-        g2.setColor(new Color(100, 0, 20, 100));
-        g2.fillRect(0, 0, getWidth(), getHeight());
-        g2.dispose();
     }
 
 
@@ -372,7 +360,7 @@ public class JuegoPanel extends JPanel implements Observador{
             int pantallaX = ghost.getMundoX();
             int pantallaY = ghost.getMundoY();
 
-            g2.drawImage(spriteFantasma, pantallaX, pantallaY, ghost.getAnchoFantasma(), ghost.getAltoFantasma(), null);
+            g2.drawImage(spriteFantasma, pantallaX, pantallaY, controlador.getAnchoBloque(), controlador.getAltoBloque(), null);
         }
         
         // SE DIBUJA JUGADOR EN EL PANEL 
@@ -380,15 +368,9 @@ public class JuegoPanel extends JPanel implements Observador{
 
         //Se dibuja la luz en el panel 
         paintLuz((Graphics2D) g);
-
-        if (pasoGolpe){
-            if (ultimoGolpe + 300 > System.currentTimeMillis()){
-                paintGolpe((Graphics2D) g);
-            }
-        }
         
         //Se dibuja el mensaje en el panel ////////////////////////
-        drawMensaje((Graphics2D) (g), getWidth(), getHeight()); //SE MODIFICO 01:25
+        drawMensaje((Graphics2D) g, getWidth(), getHeight()); //SE MODIFICO 01:25
 
 
         //Se dibujan las vidas en el panel 
@@ -398,9 +380,8 @@ public class JuegoPanel extends JPanel implements Observador{
 
         //para dibujar el cronometro tanto el estilo como la posicion
         Stopwatch stopwatch = controlador.getStopwatch(); //SE MODIFICO 01:25
-        fuenteJuego = cargarFuente(); //SE MODIFICO 01:25
         
-        g.setFont(fuenteJuego); //usa la fuente cargada en el constructor de panel juego
+        g.setFont(fuentetime); //usa la fuente cargada en el constructor de panel juego
         String textoTiempo = "Time: " + stopwatch.formatoTiempo(stopwatch.getSegundos()); //texto que se mostrara en pantalla
 
         FontMetrics metrics = g.getFontMetrics(fuenteJuego); //FontMetrics da informacion sobre la fuente y g.getFontMetrics le pide al objeto graphics que devuelva las metricas(ancho,alto,espaciado) de la fuente fuenteJuego 

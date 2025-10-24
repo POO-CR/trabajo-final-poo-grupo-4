@@ -181,9 +181,9 @@ public class NivelWorker extends SwingWorker<Nivel, String>{
     private static Posicion getPosicionDefaultMapa(int nivel) {
         return switch (nivel) {
             case -1 -> new Posicion (1, 2);
-            case 0 -> new Posicion (8, 1);
-            case 1 -> new Posicion (19, 1); 
-            case 2 -> new Posicion (35, 3);
+            case 0 -> new Posicion (2, 5);
+            case 1 -> new Posicion (19, 3); 
+            case 2 -> new Posicion (37, 5);
             default -> new Posicion (3, 3);
         };
     }

@@ -1,3 +1,4 @@
+package model.juego;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -32,7 +33,7 @@ public class DatabaseManager {
     }
 
     // Método Singleton para obtener la única instancia
-    public static synchronized DatabaseManager getInstance() {
+    public static DatabaseManager getInstance() {
         if (instancia == null) {
             instancia = new DatabaseManager();
         }
@@ -40,17 +41,20 @@ public class DatabaseManager {
     }
 
     public Connection getConnection() {
-        // Verificar si la conexión es válida antes de devolverla
         try {
-            if (this.conexion != null && !this.conexion.isClosed()) {
-                return this.conexion;
-            }
-        } catch (SQLException e) {
-            System.err.println("Error al verificar la conexión: " + e.getMessage());
+        // Verificación de conexión: Si es null O si está cerrada, ¡reabrila!
+        if (conexion == null || conexion.isClosed()) { 
+            // 1. Lógica para establecer la conexión (DriverManager.getConnection...)
+            // 2. Asignar la nueva conexión a 'this.connection'
+            // ... código de reconexión ...
+            System.out.println("DEBUG: Reconexión exitosa a la BD.");
         }
-        // Si la conexión falló inicialmente o se cerró, intenta reconectar (opcional) o devuelve null
-        return null; 
+    } catch (SQLException e) {
+        System.err.println("Error al verificar/reabrir la conexión: " + e.getMessage());
+        return null; // Devuelve null si falla la reconexión
     }
+    return conexion;
+}
 
     private void inicializarBaseDeDatos() {
         // La tabla contendra ID, Nombre, Tiempo (en segundos) y Fecha.

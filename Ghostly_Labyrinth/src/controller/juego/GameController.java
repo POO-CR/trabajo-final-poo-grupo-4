@@ -14,17 +14,24 @@ import model.juego.AssetSetter;
 import model.juego.ColisionChecker;
 import model.juego.KeyHandler;
 import model.juego.Message;
+import model.juego.RecordDAO;
 import model.juego.Stopwatch;
 import model.juego.entidades.*;
 import model.juego.laberinto.*;
 import model.juego.objetos.*;
 import model.juego.objetos.efectos.PowerUpEffect;
 import model.juego.tile.TileManager;
+import model.juego.RecordDAOImpl;
+import model.juego.RegisterStartmodel;
 import view.juego.JuegoPausa;
 import view.juego.JuegoView;
+import view.juego.MenuRegisterStart;
 
 //public class GameController implements Runnable{ (VIEJO)
 public class GameController {
+
+    private RecordDAO recordDAO; //Se inicializa el DAO
+
     protected Player jugador;
 
     final private int FPS = 60;
@@ -69,41 +76,9 @@ public class GameController {
     private Boolean cambioLuz = false;
     private int aumentoLuz = 0;
 
-
-    public GameController(Connection dbConnection) {
-
-        this.nivelManager = new NivelManager();
-        this.aSetter = new AssetSetter(this);
-
-
-        this.tm = new TileManager();
-
-        this.tituloJuego = "Ghostly Labyrinth";
-
-        // obtener tamaño pantalla
-        screenW = Toolkit.getDefaultToolkit().getScreenSize().width;
-        screenH = Toolkit.getDefaultToolkit().getScreenSize().height;
-
-        this.jugador = new Player(this, screenW, screenH);
-
-        //this.fantasma = new Ghost(this, 100, 100);
-        
-        // seteamos objetos en el mapa
-        this.obj = new ArrayList<>();
-
-        this.mensaje = new Message(obj);
-        
-        this.cChecker = new ColisionChecker(this);
-
-        this.keyH = new KeyHandler();
-
-        this.stopwatch = new Stopwatch(() -> {
-        // Esto se ejecuta cada segundo sin frenar el juego
-        if (juegoView != null) juegoView.pintarPanel();
-        });
-    }
-
     public GameController() {
+
+        this.recordDAO = new RecordDAOImpl();
 
         this.nivelManager = new NivelManager();
         this.aSetter = new AssetSetter(this);
@@ -186,14 +161,46 @@ public class GameController {
                 juegoView.dispose();
             }
 
-            //abrir ventana de ingreso de apodo 
-            javax.swing.SwingUtilities.invokeLater(() -> {
-            view.juego.MenuRegisterStart menuGanador = new view.juego.MenuRegisterStart(null, this);
-            menuGanador.setVisible(true);
-        });
+            javax.swing.SwingUtilities.invokeLater(() -> {            
+                
+                mostrarDialogoApodo();
 
-        }
+            });
+            
+
+            
+
+
+
+        };
+
     }
+    
+
+    public void guardarRecordFinal(String nombreJugador) {
+    
+    if (stopwatch == null) {
+        System.err.println("Error: El cronómetro no está disponible.");
+        return;
+    }
+    
+    // 1. Obtener el tiempo final en milisegundos
+    long tiempoMs = stopwatch.getSegundos(); 
+
+    // 2. Crear el objeto Record (asume que existe la clase model.juego.Record)
+    model.juego.Record nuevoRecord = new model.juego.Record(nombreJugador.trim(), tiempoMs);
+
+    // 3. Llamar al DAO para la persistencia
+    if (this.recordDAO != null) {
+        recordDAO.save(nuevoRecord);
+        System.out.println("✅ Récord guardado de " + nombreJugador + " en la BD.");
+    } else {
+        System.err.println("❌ ADVERTENCIA: RecordDAO no inicializado.");
+    }
+    
+    // 4. Volver al menú principal una vez finalizado el guardado
+    salirAlMenuPrincipal(); 
+}
 
     public void actualizarMovimiento() {
 
@@ -388,6 +395,13 @@ public class GameController {
 
 
     public void update(){
+
+        //Proteger el update si el nivel es nulo (juego terminado)
+        if (this.nivel == null) {
+        // Si el nivel es nulo, no hay mapa ni entidades para actualizar.
+        // Salir inmediatamente para evitar la NullPointerException.
+        return; 
+        }
         
         if (huboCambioNivel) {
             huboCambioNivel = false;
@@ -413,10 +427,15 @@ public class GameController {
         procesarMovimiento();
         mensaje.updateMsj();
 
+        // *** REFINED PROTECTION HERE ***
+    // Ensure the entire ghost/collision logic is skipped if the level is null (game over)
+    if (this.nivel != null) {
         for (Ghost f: fantasmas) {
-            actualizarMovimientoFantasma(f);
+            actualizarMovimientoFantasma(f); // This line leads to the NullPointerException if nivel is null
             verificarColisionJugadorFantasma(f);
         }
+    }
+    // ******************************
     }
 
     public List<Ghost> getFantasmas() {
@@ -546,6 +565,46 @@ public class GameController {
         mostrarDialogoPausa();
     }
 
+    private void mostrarDialogoApodo(){
+    MenuRegisterStart menuGanador = new MenuRegisterStart(juegoView, this);
+
+        
+
+        // cuando se toca guardar se guarda el usuario tiempo y fecha en la base de datos 
+        menuGanador.getCrearButton().addActionListener(e -> {
+            String apodo = menuGanador.getUsuario().trim(); // Obtiene el texto del JTextField (puede tener espacios o el placeholder)
+        
+        // 1. Validar la entrada usando la clase de Modelo/Utilidad
+        String mensajeError = RegisterStartmodel.validarApodo(apodo);
+        
+        if (mensajeError != null) {
+            // 2. Si hay error, mostrarlo en la Vista (JDialog)
+            menuGanador.setResultado(mensajeError, false); // false para color ROJO
+        } else {
+            // 3. Si es válido, llamar al método de lógica de negocio para guardar
+            guardarRecordFinal(apodo.trim());
+            
+            // 4. Cerrar el diálogo y volver al menú principal (la transición es manejada 
+            //    por el método guardarRecordFinal que llama a salirAlMenuPrincipal)
+            menuGanador.dispose(); 
+        }
+        });
+
+
+        // cuando se presiona volver vuelve al menu principal
+        menuGanador.getVolverButton().addActionListener(e -> {
+            menuGanador.dispose();
+            salirAlMenuPrincipal();
+        });
+
+        menuGanador.setVisible(true);
+    
+    }
+
+
+
+
+
 
     private void mostrarDialogoPausa() {
     JuegoPausa Pausa = new JuegoPausa(juegoView);
@@ -669,7 +728,7 @@ public class GameController {
     }
 
     // se vuelve a abrir el menu principal
-    new controller.menu.MenuController(this);
+    new controller.menu.MenuController();
 
 }
 

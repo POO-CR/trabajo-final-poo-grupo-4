@@ -157,7 +157,7 @@ public class MenuRegisterStart extends JDialog{
 
 
             try {
-            // carga desde recursos dentro del proyecto /assets/font/shloprg.otf
+            // carga desde recursos dentro del proyecto /assets/font/gaspi.otf
             fuenteTerror = Font.createFont(Font.TRUETYPE_FONT,
                             getClass().getResourceAsStream("/assets/font/gaspi.otf"));
             fuenteTerror = fuenteTerror.deriveFont(Font.PLAIN, 25f);
@@ -183,7 +183,7 @@ public class MenuRegisterStart extends JDialog{
 
             // Abre nuevamente el menú principal con el GameController existente
             javax.swing.SwingUtilities.invokeLater(() -> {
-                new controller.menu.MenuController(gameController);
+                new controller.menu.MenuController();
             });
         });
 
@@ -229,8 +229,9 @@ public class MenuRegisterStart extends JDialog{
         }
         
         public JButton getVolverButton() {
-            return Volver; 
-        } 
+            return Volver;
+
+        }
 
 }
 

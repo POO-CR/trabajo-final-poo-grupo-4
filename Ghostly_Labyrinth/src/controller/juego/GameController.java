@@ -26,7 +26,6 @@ import model.observadores.SonidoGolpe;
 import model.observadores.SonidoObjeto;
 import model.observadores.SonidoPasos;
 import view.juego.JuegoPausa;
-import view.juego.JuegoView;
 import view.FramePrincipal;
 import view.juego.CargaPanel;
 import view.juego.JuegoPanel;
@@ -86,6 +85,7 @@ public class GameController {
 
         this.framePrincipal = framePrincipal;
         this.juegoPanel = framePrincipal.getJuegoPanel();
+        this.jugador = new Player(this);
         juegoPanel.setGameController(this);
         this.cargaPanel = framePrincipal.getCargaPanel();
 
@@ -96,7 +96,7 @@ public class GameController {
 
         // obtener tamaño pantalla
 
-        this.jugador = new Player(this);
+        
 
         SonidoPasos sonidoPasos = new SonidoPasos();
         jugador.registrarObservador(sonidoPasos);

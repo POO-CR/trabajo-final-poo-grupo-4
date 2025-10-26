@@ -82,6 +82,11 @@ public class Player extends Entity implements Sujeto {
     }
 
     public void agregarEfecto(PowerUpEffect efecto) {
+        for (PowerUpEffect efectosactuales : efectosActivos)
+        if (efectosactuales.getClass().equals(efecto.getClass())){
+            efectosactuales.reiniciarPoder();
+            return;
+        }
         efectosActivos.add(efecto);
     }
 

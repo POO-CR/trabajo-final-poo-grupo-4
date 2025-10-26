@@ -5,7 +5,7 @@ import model.juego.entidades.Player;
 // clase abstracta de comando para los powerups
 public abstract class PowerUpEffect {
 
-    private final long tiempoInicio;
+    private long tiempoInicio;
     private final int duracionMs;
 
     //al crear el efecto le damos los segundos de duración y el t de inicio
@@ -19,5 +19,9 @@ public abstract class PowerUpEffect {
     }
 
     public abstract void remover(Player jugador);
+
+        public void reiniciarPoder(){
+        this.tiempoInicio = System.currentTimeMillis();
+    }
     
 }

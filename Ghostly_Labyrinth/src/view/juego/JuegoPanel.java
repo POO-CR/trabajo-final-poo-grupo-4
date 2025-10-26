@@ -39,6 +39,8 @@ public class JuegoPanel extends JPanel implements Observador{
     private Image imagenDibujar; //Guarda la imagen del corazon que hay que mostrar en pantalla
     // posis del jugador según la cámara
     private Graphics2D g2;
+    private int vidasMaximas;
+    private Font fuentetime;
 
     private Nivel nivel; // acá
 
@@ -98,6 +100,7 @@ public class JuegoPanel extends JPanel implements Observador{
 
     public void setGameController(GameController controlador){
         this.controlador = controlador;
+        this.vidasMaximas = controlador.vidaTope();
     }
 
     private void init() {
@@ -155,6 +158,7 @@ public class JuegoPanel extends JPanel implements Observador{
         fuenteJuego = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/assets/font/gaspi.otf"));
         fuenteJuego = fuenteJuego.deriveFont(Font.PLAIN,28f);
         //System.out.println("Fuente cargada");
+         fuentetime = fuenteJuego.deriveFont(Font.PLAIN,35); //instancia la fuente del tiempo
         } catch (FontFormatException | IOException e) {
             fuenteJuego = new Font("Arial", Font.PLAIN, 24);
             //System.out.println("Fuente no pudo ser cargada");
@@ -268,13 +272,18 @@ public class JuegoPanel extends JPanel implements Observador{
         }
     } 
 
-    public void paintVida(Graphics grafico, int vida){
-        
-        for (int i = 0; i < vida; i++) {
-            int x = x0 + i * (anchofoto + distancia);
-            grafico.drawImage(imagenVida, (x + distancia), y0, anchofoto, altofoto, null);
-        } 
+public void paintVida(Graphics grafico, int vidaActual) {
+    for (int i = 0; i < vidaActual; i++) {
+        int x = x0 + i * (anchofoto + distancia);
+        grafico.drawImage(imagenVida, (x + distancia), y0, anchofoto, altofoto, null);
     }
+    if (vidaActual < vidasMaximas) {
+        for (int i = vidaActual; i < vidasMaximas; i++) {
+            int x = x0 + i * (anchofoto + distancia);
+            grafico.drawImage(imagenVidaPerdida, (x + distancia), y0, anchofoto, altofoto, null);
+        }
+    }
+}
 
     public void paintLaberinto (Graphics2D grafico){
         //filas
@@ -342,6 +351,7 @@ public class JuegoPanel extends JPanel implements Observador{
     }
 
 
+
     //metodo para poder dibujar en el JPanel, tanto el jugador laberinto fantasmas
     //el override hace referencia a que es un metodo heredado de JPanel
     @Override
@@ -407,7 +417,7 @@ public class JuegoPanel extends JPanel implements Observador{
         Stopwatch stopwatch = controlador.getStopwatch(); //SE MODIFICO 01:25
         fuenteJuego = cargarFuente(); //SE MODIFICO 01:25
         
-        g.setFont(fuenteJuego); //usa la fuente cargada en el constructor de panel juego
+        g.setFont(fuentetime); //usa la fuente cargada en el constructor de panel juego
         String textoTiempo = "Time: " + stopwatch.formatoTiempo(stopwatch.getSegundos()); //texto que se mostrara en pantalla
 
         FontMetrics metrics = g.getFontMetrics(fuenteJuego); //FontMetrics da informacion sobre la fuente y g.getFontMetrics le pide al objeto graphics que devuelva las metricas(ancho,alto,espaciado) de la fuente fuenteJuego 

@@ -2,8 +2,6 @@ package view.juego;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent; //para el observer
-import javax.swing.event.ChangeListener; //para el observer
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -62,13 +60,6 @@ public class CargaPanel extends JPanel {
         progressBar.setPreferredSize(new Dimension((Toolkit.getDefaultToolkit().getScreenSize().width)/3, (Toolkit.getDefaultToolkit().getScreenSize().height)/20));
         // panelProgreso.add(progressBar);
         progressBar.setForeground(new Color(0, 74, 173));
-
-        progressBar.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                repaint();
-            }
-        });
 
         gbc.gridx = 0;
         gbc.gridy = 0;

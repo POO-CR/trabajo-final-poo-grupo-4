@@ -5,7 +5,8 @@
     
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "c:\\Users\\Lucas\\Documents\\GitHub\\ultimomain\\trabajo-final-poo-grupo-4\\Ghostly_Labyrinth\\lib\\postgresql-42.7.8.jar"
+        "c:\\Users\\Lucas\\Documents\\GitHub\\ultimomain\\trabajo-final-poo-grupo-4\\Ghostly_Labyrinth\\lib\\postgresql-42.7.8.jar",
+        "c:\\Users\\matia\\Downloads\\postgresql-42.7.8.jar"
     ],
     "java.debug.settings.onBuildFailureProceed": true,
 

@@ -22,7 +22,7 @@ import model.juego.laberinto.*;
 import model.juego.objetos.*;
 import model.juego.objetos.efectos.PowerUpEffect;
 import model.menu.RegisterStartmodel;
-import model.observadores.SonidoGameOver;
+
 import model.observadores.SonidoGolpe;
 import model.observadores.SonidoObjeto;
 import model.observadores.SonidoPasos;
@@ -111,8 +111,8 @@ public class GameController {
         jugador.registrarObservador(sonidoPasos);
         SonidoGolpe sonidoGolpe = new SonidoGolpe();
         jugador.registrarObservador(sonidoGolpe);
-        SonidoGameOver sonidoGameOver = new SonidoGameOver();
-        jugador.registrarObservador(sonidoGameOver);
+        
+        
         SonidoObjeto sonidoObjeto = new SonidoObjeto();
         jugador.registrarObservador(sonidoObjeto);
 
@@ -189,6 +189,7 @@ public class GameController {
                     // Actualizamos la barra de progreso
                     cargaPanel.getProgressBar().setIndeterminate(false);
                     cargaPanel.getProgressBar().setValue(progress);
+                    cargaPanel.repaint();
                 }
                 case "state" -> {
                     if (evt.getNewValue() == SwingWorker.StateValue.DONE) {

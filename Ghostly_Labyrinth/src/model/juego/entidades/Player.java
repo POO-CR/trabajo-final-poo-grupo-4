@@ -146,7 +146,6 @@ public class Player extends Entity implements Sujeto {
         }
         if (vida == 0){
             System.out.println("GAME OVER");
-            notificarObservadores("GAME_OVER");
         }}
 
     public void aumentarVida(){

@@ -21,6 +21,7 @@ import model.juego.entidades.*;
 import model.juego.laberinto.*;
 import model.juego.objetos.*;
 import model.juego.objetos.efectos.PowerUpEffect;
+import model.menu.RegisterStartmodel;
 import model.observadores.SonidoGameOver;
 import model.observadores.SonidoGolpe;
 import model.observadores.SonidoObjeto;
@@ -29,9 +30,14 @@ import view.juego.JuegoPausa;
 import view.FramePrincipal;
 import view.juego.CargaPanel;
 import view.juego.JuegoPanel;
+import model.dao.RecordDAO;
+import model.dao.RecordDAOImpl;
+import view.juego.MenuRegisterStart;
 
 //public class GameController implements Runnable{ (VIEJO)
 public class GameController {
+
+    private RecordDAO recordDAO;
     
     protected Player jugador;
 
@@ -82,6 +88,9 @@ public class GameController {
 
     public GameController(FramePrincipal framePrincipal) {
         System.out.println("se creo gamecontroller");
+
+        this.recordDAO = new RecordDAOImpl();
+
 
         this.framePrincipal = framePrincipal;
         this.juegoPanel = framePrincipal.getJuegoPanel();
@@ -153,6 +162,23 @@ public class GameController {
         }
         else {
             System.out.println("GANASTE !!! (acá iría la pantalla de ganar)"); //TODO: pantalla de ganar
+
+            //se detiene el juego 
+            detenerGameLoop();
+            if (stopwatch != null) {
+                stopwatch.detener();
+            }
+
+            //se cierra la ventana del juego 
+            if (framePrincipal != null) {
+                framePrincipal.dispose();
+            }
+
+            javax.swing.SwingUtilities.invokeLater(() -> {            
+                
+                mostrarDialogoApodo();
+
+            });
         }
     }
 
@@ -711,7 +737,69 @@ protected void iniciarNivel() { //Como se debe cargar un nivel para el tutorial 
 
 }
 
- 
+public void guardarRecordFinal(String nombreJugador) {
+    
+    if (stopwatch == null) {
+        System.err.println("Error: El cronómetro no está disponible.");
+        return;
+    }
+    
+    // 1. Obtener el tiempo final en milisegundos
+    long tiempoMs = stopwatch.getSegundos(); 
+
+    // 2. Crear el objeto Record (asume que existe la clase model.juego.Record)
+    model.dao.Record nuevoRecord = new model.dao.Record(nombreJugador.trim(), tiempoMs);
+
+    // 3. Llamar al DAO para la persistencia
+    if (this.recordDAO != null) {
+        recordDAO.save(nuevoRecord);
+        System.out.println("Récord guardado de " + nombreJugador + " en la BD.");
+    } else {
+        System.err.println("ADVERTENCIA: RecordDAO no inicializado.");
+    }
+    
+    // 4. Volver al menú principal una vez finalizado el guardado
+    salirAlMenuPrincipal(); 
+}
+
+
+private void mostrarDialogoApodo(){
+    MenuRegisterStart menuGanador = new MenuRegisterStart(framePrincipal, this);
+
+        
+
+        // cuando se toca guardar se guarda el usuario tiempo y fecha en la base de datos 
+        menuGanador.getCrearButton().addActionListener(e -> {
+            String apodo = menuGanador.getUsuario().trim(); // Obtiene el texto del JTextField (puede tener espacios o el placeholder)
+        
+        //Validar la entrada usando la clase de Modelo/Utilidad
+        String mensajeError = RegisterStartmodel.validarApodo(apodo);
+        
+        if (mensajeError != null) {
+            
+            menuGanador.setResultado(mensajeError, false); // false para color ROJO
+        } else {
+            
+            //Si es válido, llamar al método de lógica de negocio para guardar
+            guardarRecordFinal(apodo.trim());
+            
+            // Cerrar el panel y volver al menú principal (la transición es manejada 
+            // por el método guardarRecordFinal que llama a salirAlMenuPrincipal)
+            menuGanador.dispose(); 
+        }
+        });
+
+
+        // cuando se presiona volver vuelve al menu principal
+        menuGanador.getVolverButton().addActionListener(e -> {
+            menuGanador.dispose();
+            salirAlMenuPrincipal();
+        });
+
+        menuGanador.setVisible(true);
+    
+    }
+        
 
 
 }

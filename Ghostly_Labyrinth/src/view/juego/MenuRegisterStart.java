@@ -1,4 +1,4 @@
-package view.menu;
+package view.juego;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -16,34 +16,33 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+
+import view.menu.MenuBackground;
 
 public class MenuRegisterStart extends JDialog{
 
     private JButton Volver;
     private JButton Crear;
     private JTextField Usuario; 
-    private JTextField Contraseña;
-    private JTextField Email;
-    private JLabel User;
-    private JLabel Key;
-    private JLabel Correo;
+    
     private JLabel Resultado;
     
     private MenuBackground backgroundRegisterStart;
 
+    private controller.juego.GameController gameController;
 
-    public MenuRegisterStart(JFrame parent) {
+    public MenuRegisterStart(JFrame parent, controller.juego.GameController gameController) {
         super(parent, "Login", true);
+        setUndecorated(true); //borra la barra blanca de la ventana que decia login
         setSize(500, 400);
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); //para cerrar bien con la X de la ventana
 
         // se carga el fondo  
-        backgroundRegisterStart = new MenuBackground("/assets/img/backgroundlogin.png");
+        backgroundRegisterStart = new MenuBackground("/assets/img/backgroundPausa.png");
         backgroundRegisterStart.setLayout(new BorderLayout());
         setContentPane(backgroundRegisterStart);
 
@@ -95,25 +94,11 @@ public class MenuRegisterStart extends JDialog{
             //Primera fila 
             JPanel fila1 = new JPanel(new FlowLayout(FlowLayout.CENTER)); //el flowlayout se ubica en la zona centrañ
             fila1.setOpaque(false); // transparencia para ver fondo
-            fila1.add(User = new JLabel("Usuario:")); //se agrega el jlabel user a el panel fila1
-            fila1.add(Usuario = new JTextField("Ingrese Usuario",13)); //se agrega el jtextfield usuario a el panel fila1
+            fila1.add(Usuario = new JTextField("Ingresa tu apodo")); //se agrega el jtextfield usuario a el panel fila1
+            Usuario.setHorizontalAlignment(SwingConstants.CENTER); //centra texto del jfield 
+            Usuario.setPreferredSize(new java.awt.Dimension(250, 35));
+            Usuario.setBorder(javax.swing.BorderFactory.createLineBorder(Color.WHITE, 2));
             panelCentral.add(fila1); //se agrega el panel fila1 al panelcentral
-
-            
-            //Segunda fila 
-            JPanel fila2 = new JPanel(new FlowLayout(FlowLayout.CENTER)); //el flowlayout se ubica en la zona centrañ
-            fila2.setOpaque(false); // transparencia para ver fondo
-            fila2.add(Key = new JLabel("Contraseña:")); //se agrega el jlabel key a el panel fila2
-            fila2.add(Contraseña = new JTextField("Ingrese Contraseña",13)); //se agrega el jtextfield contraseña a el panel fila2
-            panelCentral.add(fila2); //se agrega el panel fila2 al panelcentral
-
-            
-            //Tercera fila 
-            JPanel fila3 = new JPanel(new FlowLayout(FlowLayout.CENTER)); //el flowlayout se ubica en la zona centrañ
-            fila3.setOpaque(false); // transparencia para ver fondo
-            fila3.add(Correo = new JLabel("Email:")); //se agrega el jlabel correo a el panel fila3
-            fila3.add(Email = new JTextField("Ingrese Email",13)); //se agrega el jtextfield email a el panel fila3
-            panelCentral.add(fila3); //se agrega el panel fila3 al panelcentral
 
 
             panelPrincipal.add(panelCentral, BorderLayout.CENTER); //se agrega el panelcentral que contiene los paneles fila1,2,3 al panel principal
@@ -123,18 +108,19 @@ public class MenuRegisterStart extends JDialog{
             //se crea un panel inferior donde estaran los FlowLayout
             JPanel panelInferior = new JPanel(new FlowLayout()); //se crea el panel inferior donde estaran los botones 
             panelInferior.setOpaque(false); // transparencia para ver fondo
+            panelInferior.setBorder(javax.swing.BorderFactory.createEmptyBorder(40, 0, 0,0));
             Crear = new JButton("Crear Usuario"); //se instancia el jbutton crear
             Volver = new JButton("Volver"); //se instancia el jbutton volver
 
             // cargar imagenes
             //BOTON CREAR USUARIO
-            ImageIcon originalCrearIcon = new ImageIcon(getClass().getResource("/assets/img/CreateUserButton.png"));
-            ImageIcon originalHoverCrearIcon = new ImageIcon(getClass().getResource("/assets/img/CreateUserButtonHover.png"));
+            ImageIcon originalCrearIcon = new ImageIcon(getClass().getResource("/assets/img/botones/SaveButton.png"));
+            ImageIcon originalHoverCrearIcon = new ImageIcon(getClass().getResource("/assets/img/botones/SaveButtonHover.png"));
 
-            Image newImg = originalCrearIcon.getImage().getScaledInstance(125, 40, Image.SCALE_SMOOTH);
+            Image newImg = originalCrearIcon.getImage().getScaledInstance(100, 40, Image.SCALE_SMOOTH);
             ImageIcon nuevoiconcreate = new ImageIcon(newImg);
 
-            Image newHoverImg = originalHoverCrearIcon.getImage().getScaledInstance(125, 40, Image.SCALE_SMOOTH);
+            Image newHoverImg = originalHoverCrearIcon.getImage().getScaledInstance(100, 40, Image.SCALE_SMOOTH);
             ImageIcon nuevoHoverIconCrear = new ImageIcon(newHoverImg); 
 
             Crear = new JButton(nuevoiconcreate);
@@ -168,78 +154,61 @@ public class MenuRegisterStart extends JDialog{
 
             //cargar fuente desde archivo
             Font fuenteTerror = null;
-            Font fuenteTerror2 = null;
+
 
             try {
-            // carga desde recursos dentro del proyecto /assets/font/shloprg.otf
+            // carga desde recursos dentro del proyecto /assets/font/gaspi.otf
             fuenteTerror = Font.createFont(Font.TRUETYPE_FONT,
-                            getClass().getResourceAsStream("/assets/font/shloprg.otf"));
-            fuenteTerror2 = fuenteTerror.deriveFont(Font.PLAIN, 35f);
-            fuenteTerror = fuenteTerror.deriveFont(Font.PLAIN, 15f);
+                            getClass().getResourceAsStream("/assets/font/gaspi.otf"));
+            fuenteTerror = fuenteTerror.deriveFont(Font.PLAIN, 25f);
             } catch (Exception e) {
                 e.printStackTrace();
                 // derivar tamaño y estilo 
                 fuenteTerror = new Font("Arial", Font.PLAIN, 15);
-                fuenteTerror2 = new Font("Arial", Font.PLAIN, 35);
             }
-
-
-            //cambiar fuente a los Jlabel
-            User.setFont(fuenteTerror2);
-            Key.setFont(fuenteTerror2);
-            Correo.setFont(fuenteTerror2);
-            //cambiar color a los Jlabel
-            User.setForeground(Color.RED);
-            Key.setForeground(Color.RED);    
-            Correo.setForeground(Color.RED);
 
             //cambiar fondo a textfields
             Usuario.setBackground(Color.BLACK);
-            Usuario.setForeground(Color.BLUE);
+            Usuario.setForeground(Color.WHITE);
             Usuario.setFont(fuenteTerror);
 
-            Contraseña.setBackground(Color.BLACK);  
-            Contraseña.setForeground(Color.BLUE);
-            Contraseña.setFont(fuenteTerror);
-
-            Email.setBackground(Color.BLACK);
-            Email.setForeground(Color.BLUE);
-            Email.setFont(fuenteTerror);
-
             // Placeholder: borra texto al hacer foco se define debajo 
-            addPlaceholder(Usuario, "Ingrese Usuario");
-            addPlaceholder(Contraseña, "Ingrese Contraseña");
-            addPlaceholder(Email, "Ingrese Email"); 
-
+            addPlaceholder(Usuario, "Ingresa tu apodo");
             
-            //se llama el metodo esta definido abajo para que es pero no lo use
-            //addPasswordPlaceholder(Contraseña, "Ingrese Contraseña"); 
-            
-
-
             //.trim devuelve la cadena sin espaciado al comienzo
 
-        
+            Volver.addActionListener(e -> {
+             // Cierra el diálogo actual
+            SwingUtilities.getWindowAncestor(Volver).dispose();
+        });
+
         }
 
         //Placeholder
         private void addPlaceholder(JTextField campo, String placeholder) {
-        campo.addFocusListener(new java.awt.event.FocusAdapter() {
+            campo.setText(placeholder);
+            campo.setForeground(Color.WHITE);
+
+            campo.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent e) {
-                if (campo.getText().equals(placeholder)) {
-                    campo.setText("");
-                }
+            if (campo.getText().equals(placeholder)) {
+                campo.setText("");
+                campo.setForeground(Color.WHITE); // color del texto real
             }
+            }
+
+            @Override
             public void focusLost(java.awt.event.FocusEvent e) {
-                if (campo.getText().isEmpty()) {
-                    campo.setText(placeholder);
-                }
+            if (campo.getText().isEmpty()) {
+                campo.setText(placeholder);
+                campo.setForeground(Color.WHITE);
             }
-        
+            }
         });
+
     }}
         
-
         // getter para poder acceder al texto desde afuera y los botones
         public String getUsuario() {
             return Usuario.getText();
@@ -247,15 +216,7 @@ public class MenuRegisterStart extends JDialog{
 
         public void setResultado(String msg, boolean ok) {
             Resultado.setText(msg);
-            Resultado.setForeground(ok ? Color.GREEN : Color.RED);
-        }
-
-        public JTextField getContraseña() {
-            return Contraseña;
-        }
-
-        public String getEmail() {
-            return Email.getText();
+            Resultado.setForeground(ok ? Color.WHITE : Color.RED);
         }
 
         public JButton getCrearButton() {
@@ -263,39 +224,9 @@ public class MenuRegisterStart extends JDialog{
         }
         
         public JButton getVolverButton() {
-            return Volver; 
-        } 
-        
-        /* ESTO ESTA COMENTADO PORQUE BUSQUE HACER QUE AL POSICIONARSE SOBRE EL JPASSWORD Y SE ESCRIBA EL TEXTO NO SEA VISUAL
-        PERO NO ENCONTRE LA FORMA DE HACER QUE FUNCIONE PORQUE EL TEXTO MOSTRADO AL COMIENZO ESTA OCULTO TAMBIEN
-        LO DEJE COMO UN JTEXTFIELD NOMAS
-        private void addPasswordPlaceholder(JPasswordField campo, String placeholder) {
-        // Guardamos el echoChar original (ej: '*')
-        final char echoCharDefault = campo.getEchoChar();
+            return Volver;
 
-        // Estado inicial: placeholder visible
-        campo.setEchoChar((char) 0); // muestra texto plano
-        campo.setText(placeholder);
-        campo.setForeground(Color.BLUE);
-
-        campo.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent e) {
-                if (new String(campo.getPassword()).equals(placeholder)) {
-                    campo.setText("");
-                    campo.setEchoChar(echoCharDefault); // vuelve a ocultar
-                    campo.setForeground(Color.BLUE);
-                }
-            }
-               public void focusLost(java.awt.event.FocusEvent e) {
-                if (campo.getPassword().length == 0) {
-                    campo.setEchoChar((char) 0); // muestra texto plano
-                    campo.setText(placeholder);
-                    campo.setForeground(Color.BLUE);
-               }
-            }
-        });
-        } */
-        //
+        }
 
 }
 

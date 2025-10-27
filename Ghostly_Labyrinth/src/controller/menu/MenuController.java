@@ -65,7 +65,11 @@ public class MenuController {
             
          // boton Score
         this.view.getBttnScore().addActionListener((ActionEvent e) -> {
-            JOptionPane.showMessageDialog(view,"Mostrar puntajes");        
+            if (music != null) music.pausar();
+
+            this.view.setVisible(false);
+
+            controladorPrincipal.pasarAScore();       
         });
     
 
@@ -103,5 +107,11 @@ public class MenuController {
 
 
 
+    }
+
+    public void iniciarMusica() {
+        if (music != null && !music.isReproduciendo() && sonidoActivado) {
+            music.reproducirLoop();
+        }
     }
 }

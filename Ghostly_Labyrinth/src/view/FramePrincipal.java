@@ -6,6 +6,7 @@ import model.juego.KeyHandler;
 import view.juego.CargaPanel;
 import view.juego.JuegoPanel;
 import view.menu.MenuPanel;
+import view.menu.ScorePanel;
 
 import java.awt.*;
 
@@ -28,13 +29,15 @@ public class FramePrincipal extends JFrame {
     private JuegoPanel juegoPanel;
     private CargaPanel cargaPanel;
     private MenuPanel menuPanel;
-
+    private ScorePanel scorePanel;
+    
     private CardLayout cardLayout;
-
+    
     private static final String PANEL_CARGA = "carga";
     private static final String PANEL_JUEGO = "juego";
     private static final String PANEL_MENU = "menu";
-
+    private static final String PANEL_SCORE = "score";
+    
 
     
         
@@ -50,11 +53,13 @@ public class FramePrincipal extends JFrame {
         this.menuPanel = new MenuPanel();
         this.cargaPanel = new CargaPanel();
         this.juegoPanel = new JuegoPanel();
+        this.scorePanel = new ScorePanel();
         
         
         mainPanel.add(menuPanel, PANEL_MENU);
         mainPanel.add(cargaPanel, PANEL_CARGA);
         mainPanel.add(juegoPanel, PANEL_JUEGO);
+        mainPanel.add(scorePanel, PANEL_SCORE);
 
         mainPanel.setOpaque(true);
 
@@ -101,6 +106,17 @@ public class FramePrincipal extends JFrame {
     public void mostrarJuego(KeyHandler keyH) {
         cardLayout.show(mainPanel, PANEL_JUEGO);
         añadirJuegoListener(keyH);
+
+        
+    }
+
+    public void mostrarScore() {
+        cardLayout.show(mainPanel, PANEL_SCORE);
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            mainPanel.validate();
+            mainPanel.repaint();
+            mainPanel.requestFocusInWindow();
+    });
     }
 
     public void añadirJuegoListener(KeyHandler keyH){
@@ -131,6 +147,10 @@ public class FramePrincipal extends JFrame {
 
     public CargaPanel getCargaPanel(){
         return this.cargaPanel;
+    }
+
+    public ScorePanel getScorePanel() {
+        return this.scorePanel;
     }
 
 

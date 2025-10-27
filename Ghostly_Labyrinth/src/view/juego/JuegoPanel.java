@@ -113,15 +113,15 @@ public class JuegoPanel extends JPanel implements Observador{
     }
 
     private void crearBotonPausa() {
-        ImageIcon iconoOriginal = new ImageIcon(getClass().getResource("/assets/img/botones/EscButton.png"));
-        ImageIcon iconoOriginalHover = new ImageIcon(getClass().getResource("/assets/img/botones/EscButtonHover.png"));
+        ImageIcon iconoOriginal = new ImageIcon(getClass().getResource("/assets/img/botones/PauseButton.png"));
+        ImageIcon iconoOriginalHover = new ImageIcon(getClass().getResource("/assets/img/botones/PauseButtonHover.png"));
 
         // Escalar imagen a 80x50
-        Image imgEscalada = iconoOriginal.getImage().getScaledInstance(80, 50, Image.SCALE_SMOOTH);
+        Image imgEscalada = iconoOriginal.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         ImageIcon icono = new ImageIcon(imgEscalada);
 
         // Escalar imagen hover a 80x50
-        Image imgEscaladaHover = iconoOriginalHover.getImage().getScaledInstance(80, 50, Image.SCALE_SMOOTH);
+        Image imgEscaladaHover = iconoOriginalHover.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         ImageIcon iconohover = new ImageIcon(imgEscaladaHover);
 
 

@@ -418,12 +418,12 @@ public void paintVida(Graphics grafico, int vidaActual) {
         fuenteJuego = cargarFuente(); //SE MODIFICO 01:25
         
         g.setFont(fuentetime); //usa la fuente cargada en el constructor de panel juego
-        String textoTiempo = "Time: " + stopwatch.formatoTiempo(stopwatch.getSegundos()); //texto que se mostrara en pantalla
+        String textoTiempo = "Tiempo: " + stopwatch.formatoTiempo(stopwatch.getSegundos()); //texto que se mostrara en pantalla
 
         FontMetrics metrics = g.getFontMetrics(fuenteJuego); //FontMetrics da informacion sobre la fuente y g.getFontMetrics le pide al objeto graphics que devuelva las metricas(ancho,alto,espaciado) de la fuente fuenteJuego 
         int anchoTexto = metrics.stringWidth(textoTiempo); //calcula el ancho de pixeles de la cadena textoTiempo, anchoTexto va a contener un entero con la cantidad de pixeles que ocupa en x textoTiempo
 
-        int x = getWidth() - anchoTexto - 20; //se calcula y coloca la posicion x en el paneljuego (getWidth() da el ancho total del panel juego y se le resta el ancho de pixeles del texto y el -20 es un margen de separacion desde el borde derecho de la ventana para que no quede pegado al borde)
+        int x = getWidth() - anchoTexto - 60; //se calcula y coloca la posicion x en el paneljuego (getWidth() da el ancho total del panel juego y se le resta el ancho de pixeles del texto y el -20 es un margen de separacion desde el borde derecho de la ventana para que no quede pegado al borde)
         int y = 40; //se coloca en la posicion y en el paneljuego
 
         g.setColor(Color.WHITE); //se setea el color del texto en blanco

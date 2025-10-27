@@ -10,7 +10,7 @@ public class NivelManager {
     private Random rnd;
 
     public NivelManager() {
-        cantNiveles = 2;
+        cantNiveles = 0;
         nivelesDisponibles = new ArrayList<>();
         rnd = new Random(); //se inicializa el generador de numeros aleatorios
         reiniciar(); //llena la lista y deja todo en estado inicial

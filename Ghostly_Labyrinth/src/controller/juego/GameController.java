@@ -169,10 +169,6 @@ public class GameController {
                 stopwatch.detener();
             }
 
-            //se cierra la ventana del juego 
-            if (framePrincipal != null) {
-                framePrincipal.dispose();
-            }
 
             javax.swing.SwingUtilities.invokeLater(() -> {            
                 

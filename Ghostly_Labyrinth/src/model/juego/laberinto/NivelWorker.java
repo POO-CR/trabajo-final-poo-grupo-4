@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import javax.swing.SwingWorker;
 
+import controller.juego.GameController;
 import model.juego.tile.Tile;
 import model.juego.tile.TileManager;
 import model.juego.tile.TileSpriteSetter;
@@ -21,12 +22,12 @@ public class NivelWorker extends SwingWorker<Nivel, String>{
     private TileManager tm;
     private TileSpriteSetter tileSS;
     private int nivelNumero;
-    private final java.util.function.Consumer<String> statusUpdater;
     private Nivel nivel;
+    private GameController gc;
 
-    public NivelWorker(int nivelNumero, java.util.function.Consumer<String> statusUpdater){
+    public NivelWorker(int nivelNumero, GameController gc){
         this.nivelNumero = nivelNumero;
-        this.statusUpdater = statusUpdater;
+        this.gc= gc;
         tm = new TileManager();
     }
 
@@ -155,7 +156,7 @@ public class NivelWorker extends SwingWorker<Nivel, String>{
     protected void process(java.util.List<String> chunks) {
         // obtener el último mensaje publicado
         String mensaje = chunks.get(chunks.size() - 1);
-        statusUpdater.accept(mensaje);
+        gc.actualizarEtiqueta(mensaje);
     }
 
     @Override

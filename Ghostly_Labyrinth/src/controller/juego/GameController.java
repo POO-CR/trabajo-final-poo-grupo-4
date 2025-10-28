@@ -7,11 +7,9 @@ import java.util.Iterator;
 
 import java.util.List;
 
-import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
 
-import controller.ControladorPrincipal;
 import model.juego.AssetSetter;
 import model.juego.ColisionChecker;
 import model.juego.KeyHandler;
@@ -85,6 +83,7 @@ public class GameController {
     private JuegoPanel juegoPanel;
     private FramePrincipal framePrincipal;
     private CargaPanel cargaPanel;
+    private SonidoPasos sonidoPasos;
 
     public GameController(FramePrincipal framePrincipal) {
         System.out.println("se creo gamecontroller");
@@ -107,7 +106,7 @@ public class GameController {
 
         
 
-        SonidoPasos sonidoPasos = new SonidoPasos();
+        sonidoPasos = new SonidoPasos();
         jugador.registrarObservador(sonidoPasos);
         SonidoGolpe sonidoGolpe = new SonidoGolpe();
         jugador.registrarObservador(sonidoGolpe);
@@ -137,20 +136,16 @@ public class GameController {
         System.out.println("llamando a cambiarNivel");
         // detenerGameLoop(); //por alguna razón con el detener e iniciar va más rápido el personaje (capaz algo de las actualizaciones por segundo?)
         keyH.resetearTeclas();
-        cargaPanel.getProgressBar().setIndeterminate(true);
         // para pasar la etiqueta de estado al panel
         // es un consumidor que le setea el status al panel según el paso de carga en el que 
         // está el worker
-        java.util.function.Consumer<String> statusUpdater = cargaPanel::setStatus;
-        
-        this.nivelWorker = nivelManager.crearSiguienteNivelWorker(statusUpdater);
+        this.nivelWorker = nivelManager.crearSiguienteNivelWorker(this);
 
         if (this.nivelWorker != null) {
             // le pasamos el worker para que actualice la pantalla de carga
             this.huboCambioNivel = true;
             System.out.println("poniendo panel de carga");
-            //juegoView.ponerPanelCarga();
-            //juegoView.setVisible(true);
+            cargaPanel.getProgressBar().setValue(0);
 
             framePrincipal.mostrarCarga();
 
@@ -162,7 +157,9 @@ public class GameController {
         }
         else {
             System.out.println("GANASTE !!! (acá iría la pantalla de ganar)"); //TODO: pantalla de ganar
-
+            keyH.resetearTeclas();
+            
+            sonidoPasos.pararPasos();
             //se detiene el juego 
             detenerGameLoop();
             if (stopwatch != null) {
@@ -170,12 +167,18 @@ public class GameController {
             }
 
 
+
+
             javax.swing.SwingUtilities.invokeLater(() -> {            
                 
                 mostrarDialogoApodo();
-
+                keyH.resetearTeclas();
             });
         }
+    }
+
+    public void actualizarEtiqueta(String etiqueta){
+        cargaPanel.setStatus(etiqueta);
     }
 
     
@@ -392,6 +395,7 @@ public class GameController {
     public void rtaColisionObjeto (Objeto objeto) {
         PowerUpEffect efectoNuevo = objeto.interactuar(jugador); // interactuamos, y si el objeto tiene efecto, lo devuelve
         if (efectoNuevo != null) {
+            efectoNuevo.aplicar(jugador);
             jugador.agregarEfecto(efectoNuevo); //agregamos el efecto al array de efectos activos del jugador
         }
         obj.remove(objeto); //sacamos el objeto del array de objetos del nivel
@@ -657,65 +661,65 @@ public class GameController {
     //metodo que reinicia completamente el juego
     public void reiniciarJuego(){
 
-    // se detiene game loop
-    if (gameTimer != null) {
-        gameTimer.stop();
-        gameTimer = null;
-    }   
+        // se detiene game loop
+        if (gameTimer != null) {
+            gameTimer.stop();
+            gameTimer = null;
+        }   
 
-     // se detiene y reinicia cronometro
-    if (stopwatch != null) {
-        stopwatch.reiniciar();
-        stopwatch.detener();
+        // se detiene y reinicia cronometro
+        if (stopwatch != null) {
+            stopwatch.reiniciar();
+            stopwatch.detener();
+        }
+
+        // Reiniciar nivel y objetos
+        nivelManager.reiniciar(); // se vacia y vuelve a generar los niveles disponibles
+
+
+        cambiarNivel();
+        
+        if (nivel == null) {
+            System.out.println("Error: no hay niveles disponibles!");
+            return;
+        }
+        huboCambioNivel = true; //indica que se cargo un nuevo nivel
+
+        aSetter.resetearPosicionesUsadas();
+        obj.clear();
+        setupJuego();
+
+        // Reiniciar jugador
+        // jugador.setPosicionDefault(); //posicion inicial
+        // jugador.setTieneLlave(false);//elimina cualquier llave obtenida 
+        jugador.resetVida(); //restaura la vida 
+        jugador.direccion = "down"; //direccion inicial
+        jugador.ultimaDireccion = "down";
+
+        keyH.resetearTeclas();
+        juegoPanel.addKeyListener(keyH); //se vuelve a escuchar el teclado
+
+
+        // Se conecta nuevamente el listener del boton pausa esto no dejaba abrir la pausa del boton del panel del juego porque solo estaba en iniciarjuego() 
+        juegoPanel.getBtnPausa().addActionListener(e -> pausarJuego());
+
+        // Reinicia loop y cronometro
+        iniciarGameLoop();
+
+        System.out.println("Juego reiniciado correctamente.");
     }
 
-    // Reiniciar nivel y objetos
-    nivelManager.reiniciar(); // se vacia y vuelve a generar los niveles disponibles
+
+        // metodo que vuelve al menu principal desde el juego
+        public void salirAlMenuPrincipal() {
+
+        // se detiene el loop del juego y cronometro
+        if (gameTimer != null) gameTimer.stop();
+        if (stopwatch != null) stopwatch.detener();
 
 
-    cambiarNivel();
-    
-    if (nivel == null) {
-        System.out.println("Error: no hay niveles disponibles!");
-        return;
-    }
-    huboCambioNivel = true; //indica que se cargo un nuevo nivel
-
-    aSetter.resetearPosicionesUsadas();
-    obj.clear();
-    setupJuego();
-
-    // Reiniciar jugador
-    // jugador.setPosicionDefault(); //posicion inicial
-    // jugador.setTieneLlave(false);//elimina cualquier llave obtenida 
-    jugador.resetVida(); //restaura la vida 
-    jugador.direccion = "down"; //direccion inicial
-    jugador.ultimaDireccion = "down";
-
-    keyH.resetearTeclas();
-    juegoPanel.addKeyListener(keyH); //se vuelve a escuchar el teclado
-
-
-    // Se conecta nuevamente el listener del boton pausa esto no dejaba abrir la pausa del boton del panel del juego porque solo estaba en iniciarjuego() 
-    juegoPanel.getBtnPausa().addActionListener(e -> pausarJuego());
-
-    // Reinicia loop y cronometro
-    iniciarGameLoop();
-
-    System.out.println("Juego reiniciado correctamente.");
-}
-
-
-    // metodo que vuelve al menu principal desde el juego
-    public void salirAlMenuPrincipal() {
-
-    // se detiene el loop del juego y cronometro
-    if (gameTimer != null) gameTimer.stop();
-    if (stopwatch != null) stopwatch.detener();
-
-
-    // se vuelve a abrir el menu principal
-    framePrincipal.mostrarMenu();
+        // se vuelve a abrir el menu principal
+        framePrincipal.mostrarMenu();
     
 }
 

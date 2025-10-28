@@ -29,4 +29,8 @@ public class SonidoPasos implements Observador {
             clip.stop();
         }
     }
+
+    public void pararPasos(){
+        clip.stop();
+    }
 }

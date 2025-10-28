@@ -25,11 +25,9 @@ public class AmpliarVision extends Objeto{
 
     @Override
     public PowerUpEffect interactuar(Player jugador) {
-        if (jugador.getUltimaInteraccion() + 1000 < System.currentTimeMillis()){
-            jugador.cambiarLuz(aumentoRadio);   
-            jugador.setUltimaInteraccion(System.currentTimeMillis());
-        }
-        return new AmpliarVisionEffect(duracion);
+        AmpliarVisionEffect ampliarVisionE = new AmpliarVisionEffect(duracion);
+        ampliarVisionE.setAumentoRadio(aumentoRadio);
+        return ampliarVisionE;
     }
     
 }

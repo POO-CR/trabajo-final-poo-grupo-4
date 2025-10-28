@@ -20,7 +20,9 @@ public abstract class PowerUpEffect {
 
     public abstract void remover(Player jugador);
 
-        public void reiniciarPoder(){
+    public abstract void aplicar(Player jugador);
+
+    public void reiniciarPoder(){
         this.tiempoInicio = System.currentTimeMillis();
     }
     

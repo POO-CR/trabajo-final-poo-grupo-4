@@ -28,11 +28,9 @@ public class Rapidez extends Objeto{
 
     @Override
     public PowerUpEffect interactuar(Player jugador) {
-        if (jugador.getUltimaInteraccion() + 1000 < System.currentTimeMillis()){
-            jugador.setMultiplicadorVelocidad(multiplicador);
-            jugador.setUltimaInteraccion(System.currentTimeMillis());
-        }
-        return new RapidezEffect(duracion);
+        RapidezEffect rapidezE = new RapidezEffect(duracion);
+        rapidezE.setMultiplicador(multiplicador);
+        return rapidezE;
     }
 
 }

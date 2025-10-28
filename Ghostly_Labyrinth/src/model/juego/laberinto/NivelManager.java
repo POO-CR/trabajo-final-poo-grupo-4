@@ -3,36 +3,41 @@ package model.juego.laberinto;
 import java.util.ArrayList;
 import java.util.Random;
 
+import controller.juego.GameController;
+
 public class NivelManager {
 
-    private final int cantNiveles;
+    private final int cantNivelesAJugar;
     private final ArrayList<Integer> nivelesDisponibles;
     private Random rnd;
+    private final int cantMapas;
+    private int cantNivelesHechos;
 
     public NivelManager() {
-        cantNiveles = 0;
+        cantNivelesAJugar = 1;
+        cantMapas = 2;
         nivelesDisponibles = new ArrayList<>();
-        rnd = new Random(); //se inicializa el generador de numeros aleatorios
         reiniciar(); //llena la lista y deja todo en estado inicial
     }
 
-    public NivelWorker crearSiguienteNivelWorker (int nivel, java.util.function.Consumer<String> statusUpdater){
-        return new NivelWorker(nivel, statusUpdater);
+    public NivelWorker crearSiguienteNivelWorker (int nivel, GameController gc){
+        return new NivelWorker(nivel, gc);
     }
 
-    public NivelWorker crearSiguienteNivelWorker (java.util.function.Consumer<String> statusUpdater) {
+    public NivelWorker crearSiguienteNivelWorker (GameController gc) {
         rnd = new Random();
         int indiceTemp;
         int nuevoNivel;
         System.out.println("niveles disponibles: " + nivelesDisponibles);
-        if (nivelesDisponibles.size() > 0) {
+        if (nivelesDisponibles.size() > 0 & cantNivelesHechos < cantNivelesAJugar) {
             indiceTemp = rnd.nextInt(nivelesDisponibles.size());
             nuevoNivel = nivelesDisponibles.get(indiceTemp);
             nivelesDisponibles.remove(indiceTemp);
+            cantNivelesHechos++;
 
-            return new NivelWorker(nuevoNivel, statusUpdater);
+            return new NivelWorker(nuevoNivel, gc);
         }
-        System.out.println("devolviendo null pq no hay niveles");
+        System.out.println("devolviendo null pq se hicieron los" + cantNivelesAJugar);
 
         return null;
     }
@@ -40,8 +45,9 @@ public class NivelManager {
     // metodo para reiniciar el NivelManager(la lista de niveles vuelve a su estado inicial y los niveles se eligen aleatoriamente desde cero)
     public void reiniciar() {
         nivelesDisponibles.clear(); // se vacia la lista de niveles disponibles anterior
-        for (int i = 0; i <= cantNiveles; i++) {
-            nivelesDisponibles.add(i); // se reagregan todos los niveles del 0 al cantNiveles
+        cantNivelesHechos = 0;
+        for (int i = 0; i <= cantMapas; i++) {
+            nivelesDisponibles.add(i); // se reagregan todos los niveles del 0 al cantMapas
         }
         rnd = new Random(); //se reinicia el generador de numeros aleatorios
         System.out.println("NivelManager reiniciado. Niveles disponibles: " + nivelesDisponibles);

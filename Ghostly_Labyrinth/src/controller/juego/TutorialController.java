@@ -94,8 +94,7 @@ public class TutorialController extends GameController{
     public void iniciarTutorial() { //Metodo para que se inicie el nivel del tutorial
         int nivelTutorial = -1;
         JuegoPanel jp = framePrincipal.getJuegoPanel();
-        java.util.function.Consumer<String> statusUpdater = framePrincipal.getCargaPanel()::setStatus;
-        nivelWorker = new NivelWorker(nivelTutorial, statusUpdater);
+        nivelWorker = new NivelWorker(nivelTutorial, this);
         if (nivelWorker != null) {
             // le pasamos el worker para que actualice la pantalla de carga
             System.out.println("poniendo panel de carga");

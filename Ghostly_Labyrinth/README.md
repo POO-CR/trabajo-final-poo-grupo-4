@@ -83,12 +83,12 @@ Entregar un juego funcional y escalable, el cual permita experimentar las mecán
 ### Patrón de Diseño Adicional: Command
 - **Nombre del Patrón: Command (Comando)**
 - **Justificación:** Se utilizará este patrón para manejar los efectos de los PowerUps, ya que no todos los Objetos tienen efectos temporales. De esta manera **desacoplamos** cada uno de los Objetos de sus efectos, cómo se implementan, y cómo removerlos. 
-  El GameController interactúa únicamente con los Objetos y los PowerUpEffects, sin saber cuáles son, ni cómo se aplican ni remueven. Esto logra **encapsulamiento**.
+  El GameController interactúa únicamente con los Objetos y los PowerUpEffects, sin saber cuáles son, ni cómo se aplican ni remueven. Esto logra **encapsulamiento** y hace uso del **polimorfismo dinámico**.
 - **Elementos:**
-    - Clase Abstracta *Command*, en nuestro caso `PowerUpEffect`, que declara el contrato *execute()*, `void remover(Player)`, que se encargarán de pedirle al jugador de que los remueva.
-    - *Concrete Commands*, `AmpliarVisionEffect` y `RapidezEffect`, que implementan `void remover(Player)`
-    - *Receiver (Recibidor)*, en nuestro caso `Player`, que recibirá la solicitud pedida dentro del método `remover(Player)`, y la ejecutará como sea necesario.
-    - *Client (Cliente)*, cada uno de los `Objetos` que tienen `PowerUpEffects`, que son `Rapidez` y `AmpliarVision`, que se encargan de crear las instancias de los comandos concretos, los PowerUpEffects, y les pasa la instancia de Receiver, el`Player`
+    - Clase Abstracta *Command*, en nuestro caso `PowerUpEffect`, que declara el contrato *execute()* y *remove()*, `void aplicar(Player)` y `void remover(Player)`, que se encargarán de pedirle al jugador de que los aplique y remueva.
+    - *Concrete Commands*, `AmpliarVisionEffect` y `RapidezEffect`, que implementan `void aplicar(Player)` y `void remover(Player)`
+    - *Receiver (Recibidor)*, en nuestro caso `Player`, que recibirá la solicitud pedida dentro de los métodos `remover(Player)` y `aplicar(Player)`, y los ejecutará como sea necesario.
+    - *Client (Cliente)*, cada uno de los `Objetos` que tienen `PowerUpEffects`, que son `Rapidez` y `AmpliarVision`, que se encargan de crear las instancias de los comandos concretos, los PowerUpEffects, y les pasa la instancia de Receiver, el `Player`
     - *Invoker (Invocador)*, en nuestro caso `GameController`, que guarda las referencias a los efectos concretos e inicia las acciones según necesario.
 
 ### Patrón de Diseño Adicional: Patron Observer

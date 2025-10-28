@@ -14,7 +14,7 @@ public class NivelManager {
     private int cantNivelesHechos;
 
     public NivelManager() {
-        cantNivelesAJugar = 1;
+        cantNivelesAJugar = 3;
         cantMapas = 2;
         nivelesDisponibles = new ArrayList<>();
         reiniciar(); //llena la lista y deja todo en estado inicial

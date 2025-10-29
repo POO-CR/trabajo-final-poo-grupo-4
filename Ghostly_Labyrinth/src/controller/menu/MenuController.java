@@ -74,9 +74,9 @@ public class MenuController {
     
 
         // boton Opciones
-        this.view.getBttnOpciones().addActionListener((ActionEvent e) -> {
-            JOptionPane.showMessageDialog(view,"Mostrar el menu de opciones");        
-        });
+        //this.view.getBttnOpciones().addActionListener((ActionEvent e) -> {
+          //  JOptionPane.showMessageDialog(view,"Mostrar el menu de opciones");        
+        //});
     
 
         // boton Salir

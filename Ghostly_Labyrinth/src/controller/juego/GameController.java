@@ -24,6 +24,7 @@ import model.menu.RegisterStartmodel;
 import model.observadores.SonidoGolpe;
 import model.observadores.SonidoObjeto;
 import model.observadores.SonidoPasos;
+import model.observadores.Observador;
 import view.juego.JuegoPausa;
 import view.FramePrincipal;
 import view.juego.CargaPanel;
@@ -115,6 +116,9 @@ public class GameController {
         SonidoObjeto sonidoObjeto = new SonidoObjeto();
         jugador.registrarObservador(sonidoObjeto);
 
+        ObservadorPerder observadorPerder = new ObservadorPerder(this);
+        jugador.registrarObservador(observadorPerder);
+
         //this.fantasma = new Ghost(this, 100, 100);
         
         // seteamos objetos en el mapa
@@ -167,7 +171,7 @@ public class GameController {
             }
 
 
-
+            mostrarVictoria();
 
             javax.swing.SwingUtilities.invokeLater(() -> {            
                 
@@ -800,8 +804,17 @@ private void mostrarDialogoApodo(){
         menuGanador.setVisible(true);
     
     }
-        
 
+    public void mostrarDerrota(){
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            framePrincipal.mostrarDerrota();
+        });
+    }
+
+    public void mostrarVictoria(){
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            framePrincipal.mostrarVictoria();
+        });
+    }
 
 }
-    

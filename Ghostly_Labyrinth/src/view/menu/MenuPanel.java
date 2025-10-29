@@ -63,12 +63,12 @@ public class MenuPanel extends JPanel {
         styleMenuButton(bttnScore, botonSize, new ImageIcon(scaledScoreIconHover));
 
         // opciones
-        ImageIcon optionsIcon = new ImageIcon(getClass().getResource("/assets/img/OptionsButton.png"));
-        ImageIcon optionsIconHover = new ImageIcon(getClass().getResource("/assets/img/OptionsButtonHover.png"));
-        Image scaledOptionsIcon = optionsIcon.getImage().getScaledInstance(210, 70, Image.SCALE_SMOOTH);
-        Image scaledOptionsIconHover = optionsIconHover.getImage().getScaledInstance(210, 70, Image.SCALE_SMOOTH);
-        bttnOpciones = new JButton(new ImageIcon(scaledOptionsIcon));
-        styleMenuButton(bttnOpciones, botonSize, new ImageIcon(scaledOptionsIconHover));
+        //ImageIcon optionsIcon = new ImageIcon(getClass().getResource("/assets/img/OptionsButton.png"));
+        //ImageIcon optionsIconHover = new ImageIcon(getClass().getResource("/assets/img/OptionsButtonHover.png"));
+        //Image scaledOptionsIcon = optionsIcon.getImage().getScaledInstance(210, 70, Image.SCALE_SMOOTH);
+        //Image scaledOptionsIconHover = optionsIconHover.getImage().getScaledInstance(210, 70, Image.SCALE_SMOOTH);
+        //bttnOpciones = new JButton(new ImageIcon(scaledOptionsIcon));
+        //styleMenuButton(bttnOpciones, botonSize, new ImageIcon(scaledOptionsIconHover));
 
         // salir
         ImageIcon exitIcon = new ImageIcon(getClass().getResource("/assets/img/ExitButton.png"));
@@ -140,10 +140,10 @@ public class MenuPanel extends JPanel {
         gbc.gridy = 2;
         centerCol.add(bttnScore, gbc);
 
-        gbc.gridy = 3;
-        centerCol.add(bttnOpciones, gbc);
+        //gbc.gridy = 3;
+        //centerCol.add(bttnOpciones, gbc);
 
-        gbc.gridy = 4;
+        gbc.gridy = 3;
         centerCol.add(bttnSalir, gbc);
 
         // columna derecha (boton sonido + version)

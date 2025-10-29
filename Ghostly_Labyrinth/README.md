@@ -68,9 +68,9 @@ Entregar un juego funcional y escalable, el cual permita experimentar las mecán
 
 #### **Persistencia:**
     - Sistema de guardado y carga de los tiempos más bajos en completar los niveles (Records) en una base de datos.
+### Como el usuario puede iniciar la base de datos local ?
+- Para iniciar la base de datos es necesario dirigirse a la clase DatabaseManager y ubicar la línea 18. Allí, en la variable private static final String PASSWORD = "", se debe colocar la contraseña personal de PostgreSQL entre comillas. Además, es fundamental verificar que el proyecto incluya la librería correspondiente para que el programa pueda conectarse a PostgreSQL y asi hacer funcionar la base de datos.
 
-
----------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## 3. Arquitectura y Diseño 
 
@@ -78,7 +78,10 @@ Entregar un juego funcional y escalable, el cual permita experimentar las mecán
 - Nuestro proyecto usa MVC en el menú y en el juego por separado, y los une mediante un ControladorPrincipal que coordina todo desde el FramePrincipal. Esto permite mantener la lógica de cada parte independiente y cambiar entre pantallas sin abrir nuevas ventanas.
 
 ### Patrón Singleton
-- El Patrón Singleton es utilizado en la clase *DatabaseManager* para la conexion a la base de datos, con el objetivo de mantener una única instancia activa durante toda la ejecución de la aplicacion, garantizando un uso eficiente de los recursos, evitando la creación repetida de conexiones, reduciendo la sobrecarga y manteniendo la coherencia en el acceso a los datos. 
+- El Patrón Singleton es utilizado en la clase **DatabaseManager** para la conexion a la base de datos, con el objetivo de mantener una única instancia activa durante toda la ejecución de la aplicacion, garantizando un uso eficiente de los recursos, evitando la creación repetida de conexiones, reduciendo la sobrecarga y manteniendo la coherencia en el acceso a los datos. 
+
+### Patrón DAO 
+- Se utiliza el patrón DAO (Data Access Object) para gestionar de manera limpia la conexión a la base de datos PostgreSQL, las operaciones de guardado y lectura de récords. La clase **Record** actúa como el modelo de datos, refleja la estructura de una fila en la tabla récords de la base de datos (jugador y tiempo). La interfaz **RecordDAO** define las operaciones de acceso a datos relacionadas con los récords. La clase **RecordDAOImpl** es la implementacion concreta de la interfaz **RecordDAO**, su proposito es ejecutar las consultas SQL reales para satisfacer los métodos definidos en la interfaz **RecordDAO**, además utiliza la clase **DatabaseManager** a través del método `getConexion()` para obtener y usar la conexión única a la BD.
 
 ### Patrón de Diseño Adicional: Command
 - **Nombre del Patrón: Command (Comando)**
@@ -93,38 +96,68 @@ Entregar un juego funcional y escalable, el cual permita experimentar las mecán
 
 ### Patrón de Diseño Adicional: Patron Observer
 - **Nombre del Patrón:** **Observer**.
-- **Justificación:** Este patrón se utilizará para manejar los *efectos de sonido* del juego. El objetivo fue desacoplar la lógica del jugador (que genera los eventos) de los sonidos que se reproducen (los observadores).
+- **Justificación:** Este patrón se utilizará para manejar los *efectos de sonido y visuales* del juego. El objetivo fue desacoplar la lógica del jugador (que genera los eventos) de los efectos que se reproducen (los observadores).
 - **Elementos:**
     - Interfaz *Sujeto (Observable)*, es el que genera los eventos. *Player* implementa la interfaz Sujeto, porque es quien notifica cuando algo pasa. Los métodos principales del sujeto: `void registrarObservador(Observador o)` que permite agregar un observador, `void removerObservador(Observador o)` que remueve un cierto observador, y `void notificarObservadores(String evento)` que avisa a todos los observadores que algo ocurrió.
     - Interfaz *Observador (Observer)*, que define el método que reaccionará a las notificaciones. 
-    - Las clases *SonidoPasos, SonidoGolpe, SonidoObjeto* implementan la interfaz *Observador* y sobrescriben el método `void actualizar(String evento)`, que redefine que hacer al recibir una notificación (en nuestro caso, reproducir un sonido específico, dependiendo de el evento ocurrido).
+    - Las clases *SonidoPasos, SonidoGolpe, SonidoObjeto, ObservadorPerder* implementan la interfaz *Observador* y sobrescriben el método `void actualizar(String evento)`, que redefine que hacer al recibir una notificación (en nuestro caso, reproducir un sonido específico o mostrar la pantalla de perder, dependiendo de el evento ocurrido).
     - *Player* mantiene una lista de Observadores (List<Observador> observadores), y cuando el jugador hace algo (por ejemplo, moverse), llama a `notificarObservadores("MOVIENDOSE")` y todos los observadores reciben el mensaje y actúan según su tipo.
     - *Evento* --> Es el mensaje que el *Sujeto* envía a los *Observadores*. En nuestro caso, es un String, que indica que acción ocurrió. Por ejemplo, cuando en el `GameController` hay una colisión entre un objeto y el jugador, se llama a `jugador.notificarObservadores("AGARRAR_OBJETO")`.
     - El panel del juego también actúa como Observador, de manera tal que, Player lo notifica cuando ocurre un evento. Cuando esto pasa, el metodo `actualizar()` se ejecuta y si la String que ingresa es 'GOLPE' se cambia el estado de la flag pasoGolpe a true, y activa la animación.
+    -El ObservadorPerder instancia al gamecontroller. De esta manera, cuando el jugador notifica el evento "JUGADOR_PERDIO", el juego automáticamente frene el juego y muestra la pantalla de perder.
 
 
-### **Diagrama de Clases UML (Conceptual)**
+## **Diagrama de Clases UML (Conceptual)**
 
-#### HERENCIA
-Tenemos la clase abstracta **Entity**, que define las propiedades en comun (posiciones, direcciones, colisiones) de todas las entidades del juego (en nuestro caso *Player* y *Ghost*); tambien define el metodo abstracto tieneAcceso(), que despues sera redefinido por cada clase hija a su manera. Este metodo nos va a servir para actuar o no, dependiendo de si la entidad puede atravesar la puerta o no.
-`Ghost` y `Player` heredan de `Entity`. Comparten estructura de movimiento y colision, pero redefiniendo su comportamiento propio:
-- *Ghost* --> tiene logica de movimiento automatico. 
+### **Base de datos**
+![uml_BaseDeDatos](./fotosMD/UMLbasededatos.png)
+Este es el UML que corresponde a la base de datos
+
+### Observer
+![uml_patron_observer](./fotosMD/uml_patron_observer.png)
+Este es el UML que correspone al patron explicado arriba.
+
+### Niveles
+![uml_niveles](./fotosMD/UML-NIVELES.png)
+
+En este UML se puede observar como todo parte de una clase **Tile** que representa las baldosas, junto con sus sprites, colision, y un método *tieneAcceso()* que le pregunta a la baldosa si la entidad tiene acceso o no. De esta clase <heredan> **Puerta** y **TileEspecial**, quienes sobreescriben *tieneAcceso()* según lo necesitan para su correcto funcionamiento. 
+Luego, **TileManager** se encarga de instanciar cada objeto Tile según cómo le pida el **NivelWorker**, e iniciarlizarl su colisión.
+**TileSpriteSetter** setea las sprites de las tiles según distintos mecanismos, como por según las tiles vecinas que tiene.
+**Nivel** es el objeto que contiene la matriz de Tiles de cada mapa. También conoce sus propias dimensiones.
+**NivelWorker** es el SwingWorker encargado de instanciar y construir el nivel en otro hilo mientras se muestra una pantalla de carga. Recorre el .txt que tiene la matriz de números del mapa pidiendole a TileManager y TileSpriteSetter que creen y le pongan sprite a las tiles. Notar que ya no interactúa con las tiles individuales, su info y cómo se crean está <encapsulado>.
+**NivelManager** se encarga de pedirle el mapa correcto a NivelWorker, para que el jugador no juegue mapas repetidos. NivelManager ya no interactúa con el Nivel, simplemente devuelve una instancia de este.
+**GameController** le pide al NivelManager un nivel cuando lo necesita, ya sea por inicio del juego, reinicio, o cambio de nivel. GameController es totalmente ajeno a los mapas y los niveles, y el creación y manejo de ellos y las baldosas está totalmente <abstraído>. Ya que el nivel es una matriz de Tile, se hace uso del <polimorfismo dinámico> porque GameController en ningún momento sabe con qué Tile está tratando.
+
+### Objetos
+![uml_niveles](./fotosMD/UML-NIVELES.png)
+
+Estas son las clases que utilizan el patrón **Command**, pero acá nos enfocaremos en los 4 pilares de POO para explicar el esquema.
+Se parte de la clase abstracta **Objeto** que tiene el sprite y además establece que todas las clases hijas deben tener un *interactuar(Player)* que devuelve un PowerUpEffect. De esta clase <heredan> los distintos objetos agarrables en el mapa, **Llave, AñadirVida, Rapidez, AmpliarVision** que implementan el *interactuar(Player)*.
+Las clases **Rapidez** y **AmpliarVision** tienen efectos temporales, **RapidezEffect** y **AmpliarVisionEffect**, que implementan la clase abstracta **PowerUpEffect** y que se le aplican o remueven al **Player**.
+Finalmente el **GameController** solamente interactúa con la lista de Objetos en el mapa, y con la lista de efectos activos del jugador, por lo tanto se trabaja con <polimorfismo dinámico>, ya que se trabaja directamente sobre Objeto y PowerUpEffect. Cómo funcionan los efectos y objetos están <encapsulados>. Se logra <abstracción> ya que el GameController aplica y remueve efectos sin realmente saber cómo se realiza.
+
+### Entidades
+![uml_entidades](./fotosMD/uml_entidades.png)
+
+Tenemos la clase abstracta **Entity**, que define las propiedades en común (posiciones, direcciones, colisiones) de todas las entidades del juego (en nuestro caso *Player* y *Ghost*); también define el metodo abstracto tieneAcceso(), que después sera redefinido por cada clase hija a su manera. Este método nos va a servir para actuar o no, dependiendo de si la entidad puede atravesar las baldosas o no.
+`Ghost` y `Player` *heredan* de `Entity`. Comparten estructura de movimiento y colisión, pero redefiniendo su comportamiento propio:
+- *Ghost* --> tiene lógica de movimiento automático. 
 - *Player* --> tiene vida, puede acceder a la llave, puede recibir daño y puede interactuar con el entorno.
 
-#### POLIMORFISMO
-Aplicamos polimorfismo con los objetos del mapa. *GameController* solo conoce la referencia del tipo base *Objeto* y llama a `interactuar(jugador)`. Cada subclase redefine ese método para aplicar su propio efecto. Así podemos agregar nuevos ítems sin tener que tocar la lógica del controlador.
-
-#### ABSTRACCION
-Usamos abstracción para ocultar la lógica interna de ciertos comportamientos complejos. Por ejemplo, *Objeto* es abstracta y obliga a todas las subclases a implementar `interactuar(Player jugador)`, pero no expone los detalles internos de cada power-up. De esta manera, el resto del juego trabaja con el concepto general de "un objeto que se puede recoger", sin importar cómo funciona cada uno por dentro.
-
-#### ENCAPSULAMIENTO
-Encapsulamos el estado interno de las clases para proteger la lógica del juego. Un ejemplo de esto: *Objeto* tiene atributos privados como nombre y x,y, y solo se accede con getters/setters. En *Player*, la vida actual solo puede modificarse llamando a métodos como `recibirDanio()` o `resetVida()`, lo que evita que otras clases rompan las reglas del juego asignando valores inválidos.
+## Prototipos
+![prototipo laberinto](./fotosMD/prototipo_laberinto.png)
+![prototipo pantalla de ganar](./fotosMD/prototipo_pantalla_ganar.png)
+![prototipo pantalla de perder](./fotosMD/prototipo_pantalla_ganar.png)
+![prototipo de perspectiva de las paredes](./fotosMD/prototipo_perspectiva.png)
+![prototipo de laberinto con perspectiva](./fotosMD/prototipo_laberinto_perspectiva.png)
+![prototipo menu](./fotosMD/menu_prototipo.jpg)
 
 ## 4. Stack Tecnológico 
 
-- **Lenguaje:** Java 17
+- **Lenguaje:** Java 21.0.8 
 - **IDE:** Visual Studio Code
-- **Base de Datos:** Posgress 18.0 (para persistencia de High Scores)
+- **Base de Datos:** PostgreSQL 18.0 (Para guardar de forma local los 10 mejores tiempos en completar el juego)
 - **Framework de IGU:** Java Swing
 - **Control de Versiones:** Git y GitHub Classroom
+
 

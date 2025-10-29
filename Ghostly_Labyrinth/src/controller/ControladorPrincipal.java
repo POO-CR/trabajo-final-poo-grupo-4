@@ -62,6 +62,10 @@ public class ControladorPrincipal {
         }
     }
 
+    public void mostrarDerrota(){
+        framePrincipal.mostrarDerrota();
+    }
+
     
 
     

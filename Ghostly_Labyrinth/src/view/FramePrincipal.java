@@ -7,6 +7,8 @@ import view.juego.CargaPanel;
 import view.juego.JuegoPanel;
 import view.menu.MenuPanel;
 import view.menu.ScorePanel;
+import view.juego.PantallaVictoria;
+import view.juego.PantallaDerrota;
 
 import java.awt.*;
 
@@ -30,6 +32,8 @@ public class FramePrincipal extends JFrame {
     private CargaPanel cargaPanel;
     private MenuPanel menuPanel;
     private ScorePanel scorePanel;
+    private PantallaVictoria pantallaVictoria;
+    private PantallaDerrota pantallaDerrota;
     
     private CardLayout cardLayout;
     
@@ -37,6 +41,8 @@ public class FramePrincipal extends JFrame {
     private static final String PANEL_JUEGO = "juego";
     private static final String PANEL_MENU = "menu";
     private static final String PANEL_SCORE = "score";
+    private static final String PANEL_VICTORIA = "victoria";
+    private static final String PANEL_DERROTA = "derrota";
     
 
     
@@ -54,12 +60,16 @@ public class FramePrincipal extends JFrame {
         this.cargaPanel = new CargaPanel();
         this.juegoPanel = new JuegoPanel();
         this.scorePanel = new ScorePanel();
+        this.pantallaVictoria = new PantallaVictoria();
+        this.pantallaDerrota = new PantallaDerrota();
         
         
         mainPanel.add(menuPanel, PANEL_MENU);
         mainPanel.add(cargaPanel, PANEL_CARGA);
         mainPanel.add(juegoPanel, PANEL_JUEGO);
         mainPanel.add(scorePanel, PANEL_SCORE);
+        mainPanel.add(pantallaVictoria, PANEL_VICTORIA);
+        mainPanel.add(pantallaDerrota, PANEL_DERROTA);
 
         mainPanel.setOpaque(true);
 
@@ -137,6 +147,24 @@ public class FramePrincipal extends JFrame {
         });
     }
 
+    public void mostrarVictoria() {
+        cardLayout.show(mainPanel, PANEL_VICTORIA);
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            mainPanel.validate();
+            mainPanel.repaint();
+            mainPanel.requestFocusInWindow();
+        });
+    }
+
+    public void mostrarDerrota() {
+        cardLayout.show(mainPanel, PANEL_DERROTA);
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            mainPanel.validate();
+            mainPanel.repaint();
+            mainPanel.requestFocusInWindow();
+        });
+    }
+
     public MenuPanel getMenuPanel(){
         return this.menuPanel;
     }
@@ -153,6 +181,7 @@ public class FramePrincipal extends JFrame {
         return this.scorePanel;
     }
 
+    
 
         
 }

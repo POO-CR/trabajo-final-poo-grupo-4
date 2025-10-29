@@ -1,6 +1,7 @@
 {
     "java.project.sourcePaths": [
-        "Ghostly_Labyrinth\\src"
+        "Ghostly_Labyrinth/src",
+        "Ghostly_Mansion/src"
     ],
     
     "java.project.referencedLibraries": [

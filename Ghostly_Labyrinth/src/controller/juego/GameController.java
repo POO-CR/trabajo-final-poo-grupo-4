@@ -806,6 +806,13 @@ private void mostrarDialogoApodo(){
     }
 
     public void mostrarDerrota(){
+        keyH.resetearTeclas();        
+            sonidoPasos.pararPasos();
+            //se detiene el juego 
+            detenerGameLoop();
+            if (stopwatch != null) {
+                stopwatch.detener();
+            }
         javax.swing.SwingUtilities.invokeLater(() -> {
             framePrincipal.mostrarDerrota();
         });

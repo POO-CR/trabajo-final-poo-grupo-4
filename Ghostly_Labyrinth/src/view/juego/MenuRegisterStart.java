@@ -5,10 +5,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
 import java.io.FileInputStream;
-
-
-
-
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -37,14 +33,15 @@ public class MenuRegisterStart extends JDialog{
     public MenuRegisterStart(JFrame parent, controller.juego.GameController gameController) {
         super(parent, "Login", true);
         setUndecorated(true); //borra la barra blanca de la ventana que decia login
-        setSize(500, 400);
-        setLocationRelativeTo(parent);
+        setBackground(new java.awt.Color(0, 0, 0, 0)); //transparencia
+        setSize(550, 450);
+        setLocation(490, 480);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); //para cerrar bien con la X de la ventana
 
         // se carga el fondo  
-        backgroundRegisterStart = new MenuBackground("/assets/img/backgroundPausa.png");
-        backgroundRegisterStart.setLayout(new BorderLayout());
-        setContentPane(backgroundRegisterStart);
+        // backgroundRegisterStart = new MenuBackground("/assets/img/backgroundPausa.png");
+        // backgroundRegisterStart.setLayout(new BorderLayout());
+        // setContentPane(backgroundRegisterStart);
 
         //se agrega la lamina de texto 
         LaminaTexto milamina = new LaminaTexto(); //instancia de la lamina  
@@ -96,7 +93,7 @@ public class MenuRegisterStart extends JDialog{
             fila1.setOpaque(false); // transparencia para ver fondo
             fila1.add(Usuario = new JTextField("Ingresa tu apodo")); //se agrega el jtextfield usuario a el panel fila1
             Usuario.setHorizontalAlignment(SwingConstants.CENTER); //centra texto del jfield 
-            Usuario.setPreferredSize(new java.awt.Dimension(250, 35));
+            Usuario.setPreferredSize(new java.awt.Dimension(270, 50));
             Usuario.setBorder(javax.swing.BorderFactory.createLineBorder(Color.WHITE, 2));
             panelCentral.add(fila1); //se agrega el panel fila1 al panelcentral
 
@@ -108,19 +105,19 @@ public class MenuRegisterStart extends JDialog{
             //se crea un panel inferior donde estaran los FlowLayout
             JPanel panelInferior = new JPanel(new FlowLayout()); //se crea el panel inferior donde estaran los botones 
             panelInferior.setOpaque(false); // transparencia para ver fondo
-            panelInferior.setBorder(javax.swing.BorderFactory.createEmptyBorder(40, 0, 0,0));
+            panelInferior.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 0, 0,0));
             Crear = new JButton("Crear Usuario"); //se instancia el jbutton crear
             Volver = new JButton("Volver"); //se instancia el jbutton volver
 
             // cargar imagenes
             //BOTON CREAR USUARIO
-            ImageIcon originalCrearIcon = new ImageIcon(getClass().getResource("/assets/img/botones/SaveButton.png"));
-            ImageIcon originalHoverCrearIcon = new ImageIcon(getClass().getResource("/assets/img/botones/SaveButtonHover.png"));
+            ImageIcon originalCrearIcon = new ImageIcon(getClass().getResource("/assets/img/SaveButton.png"));
+            ImageIcon originalHoverCrearIcon = new ImageIcon(getClass().getResource("/assets/img/SaveButtonHover.png"));
 
-            Image newImg = originalCrearIcon.getImage().getScaledInstance(100, 40, Image.SCALE_SMOOTH);
+            Image newImg = originalCrearIcon.getImage().getScaledInstance(150, 40, Image.SCALE_SMOOTH);
             ImageIcon nuevoiconcreate = new ImageIcon(newImg);
 
-            Image newHoverImg = originalHoverCrearIcon.getImage().getScaledInstance(100, 40, Image.SCALE_SMOOTH);
+            Image newHoverImg = originalHoverCrearIcon.getImage().getScaledInstance(150, 40, Image.SCALE_SMOOTH);
             ImageIcon nuevoHoverIconCrear = new ImageIcon(newHoverImg); 
 
             Crear = new JButton(nuevoiconcreate);
@@ -130,13 +127,13 @@ public class MenuRegisterStart extends JDialog{
 
             //BOTON VOLVER
 
-            ImageIcon originalVolverIcon = new ImageIcon(getClass().getResource("/assets/img/BackButton.png"));
-            ImageIcon originalHoverVolverIcon = new ImageIcon(getClass().getResource("/assets/img/BackButtonHover.png"));
+            ImageIcon originalVolverIcon = new ImageIcon(getClass().getResource("/assets/img/BackButton_green.png"));
+            ImageIcon originalHoverVolverIcon = new ImageIcon(getClass().getResource("/assets/img/BackButtonHover_green.png"));
 
-            Image newImgvolver = originalVolverIcon.getImage().getScaledInstance(100, 40, Image.SCALE_SMOOTH);
+            Image newImgvolver = originalVolverIcon.getImage().getScaledInstance(150, 40, Image.SCALE_SMOOTH);
             ImageIcon nuevoiconvolver = new ImageIcon(newImgvolver);
 
-            Image newHoverImgvolver = originalHoverVolverIcon.getImage().getScaledInstance(100, 40, Image.SCALE_SMOOTH);
+            Image newHoverImgvolver = originalHoverVolverIcon.getImage().getScaledInstance(150, 40, Image.SCALE_SMOOTH);
             ImageIcon nuevoHoverIconVolver = new ImageIcon(newHoverImgvolver); 
 
             Volver = new JButton(nuevoiconvolver);

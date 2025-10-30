@@ -181,7 +181,9 @@ public class FramePrincipal extends JFrame {
         return this.scorePanel;
     }
 
-    
+    public PantallaDerrota getPantallaDerrota(){
+        return this.pantallaDerrota;
+    }
 
         
 }

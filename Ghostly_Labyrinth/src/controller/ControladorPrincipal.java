@@ -18,6 +18,7 @@ public class ControladorPrincipal {
     private MenuController mc;
     private TutorialController tutoC;
     private ScoreController scoC;
+    private ControladorDerrota cd;
 
 
     // ir cambiando ventanas usando métodos de FramePrincipal
@@ -25,6 +26,7 @@ public class ControladorPrincipal {
         framePrincipal = new FramePrincipal();
         this.recordDAO = new RecordDAOImpl();
         mc = new MenuController(this, framePrincipal);
+        cd = new ControladorDerrota(this, framePrincipal);
         framePrincipal.mostrarMenu();
         framePrincipal.setVisible(true);
     }
@@ -55,6 +57,13 @@ public class ControladorPrincipal {
     }
 
     public void pasarAMenu(){
+        if (gc != null){  //Limpia el gamecontroller si existe
+            gc.detenerGameLoop();
+            if (gc.getStopwatch() != null){
+                gc.getStopwatch().detener();
+            }
+            gc = null;
+        }
         framePrincipal.mostrarMenu();
 
         if (mc != null) {

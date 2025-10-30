@@ -137,7 +137,7 @@ public class Player extends Entity implements Sujeto {
 
     public void recibirDanio(int danio){
         long ahora = System.currentTimeMillis();
-        if(ahora < finInmune) 
+        if(ahora < finInmune || vida ==0) 
         return;
         if (vida > 0){
             vida--;

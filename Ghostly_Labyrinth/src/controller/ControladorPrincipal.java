@@ -9,6 +9,7 @@ import model.dao.RecordDAOImpl;
 import controller.juego.*;
 import controller.menu.*;
 import model.juego.KeyHandler;
+import view.juego.PanelFinJuego;
 
 public class ControladorPrincipal {
 
@@ -18,15 +19,15 @@ public class ControladorPrincipal {
     private MenuController mc;
     private TutorialController tutoC;
     private ScoreController scoC;
-    private ControladorDerrota cd;
+    private ControladorFinJuego cfj;
 
 
-    // ir cambiando ventanas usando métodos de FramePrincipal
+    
     public ControladorPrincipal (){
         framePrincipal = new FramePrincipal();
         this.recordDAO = new RecordDAOImpl();
         mc = new MenuController(this, framePrincipal);
-        cd = new ControladorDerrota(this, framePrincipal);
+        cfj = new ControladorFinJuego(framePrincipal.getPanelFinJuego(), this);
         framePrincipal.mostrarMenu();
         framePrincipal.setVisible(true);
     }
@@ -44,20 +45,13 @@ public class ControladorPrincipal {
     }
 
     public void pasarAScore(){
-        //Llamar al DAO a través de la instancia
         List<model.dao.Record> top10 = recordDAO.getTop10Records(); 
-        
-        // Crear el ScoreController y pasarle los datos
         scoC = new ScoreController(this, framePrincipal, top10);
-        
-        // La vista ScorePanel debe ser inicializada antes de mostrarse
-        // La inicialización del ScorePanel debería ocurrir en el constructor de FramePrincipal o ser llamada aquí.
-        // Si FramePrincipal maneja la creación de paneles, esto es suficiente:
         framePrincipal.mostrarScore(); 
     }
 
     public void pasarAMenu(){
-        if (gc != null){  //Limpia el gamecontroller si existe
+        if (gc != null){  
             gc.detenerGameLoop();
             if (gc.getStopwatch() != null){
                 gc.getStopwatch().detener();
@@ -71,8 +65,12 @@ public class ControladorPrincipal {
         }
     }
 
-    public void mostrarDerrota(){
-        framePrincipal.mostrarDerrota();
+    public void guardarRecord (String nombreJugador) {   
+        long tiempoMs = gc.getStopwatch().getSegundos(); 
+        model.dao.Record nuevoRecord = new model.dao.Record(nombreJugador.trim(), tiempoMs);
+        recordDAO.save(nuevoRecord);
+        System.out.println("Récord guardado de " + nombreJugador + " en la base de datos.");
+        pasarAMenu(); 
     }
 
     

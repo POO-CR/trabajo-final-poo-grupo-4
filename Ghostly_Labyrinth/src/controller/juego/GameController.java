@@ -31,7 +31,8 @@ import view.juego.CargaPanel;
 import view.juego.JuegoPanel;
 import model.dao.RecordDAO;
 import model.dao.RecordDAOImpl;
-import view.juego.MenuRegisterStart;
+import view.juego.PanelFinJuego;
+
 
 //public class GameController implements Runnable{ (VIEJO)
 public class GameController {
@@ -129,6 +130,7 @@ public class GameController {
         this.cChecker = new ColisionChecker(this);
 
         this.keyH = new KeyHandler();
+        framePrincipal.getJuegoPanel().getBtnPausa().addActionListener(e -> pausarJuego());
 
         
         // Esto se ejecuta cada segundo sin frenar el juego
@@ -170,14 +172,7 @@ public class GameController {
                 stopwatch.detener();
             }
 
-
-            mostrarVictoria();
-
-            javax.swing.SwingUtilities.invokeLater(() -> {            
-                
-                mostrarDialogoApodo();
-                keyH.resetearTeclas();
-            });
+            framePrincipal.mostrarFinJuego(view.juego.PanelFinJuego.TipoFin.Victoria);
         }
     }
 
@@ -185,6 +180,7 @@ public class GameController {
         cargaPanel.setStatus(etiqueta);
     }
 
+    
     
     protected void setupNivelWorker () {
         //CargaPanel cargaPanel = juegoView.getPanelCarga();
@@ -243,7 +239,6 @@ public class GameController {
             //juegoView.setVisible(true);
             System.out.println("poniendo panel juego");
             jugador.setScreenXY(framePrincipal.getWidth(), framePrincipal.getHeight());
-            framePrincipal.getJuegoPanel().getBtnPausa().addActionListener(e -> pausarJuego());
             this.stopwatch = new Stopwatch(() -> juegoPanel.repaint());
             System.out.println("CREANDO STOPWATCH " + stopwatch.toString());
             iniciarGameLoop();
@@ -323,7 +318,7 @@ public class GameController {
 
     }
 
-    // recibe parametro porque no tenemos 1 solo fantasma en el juego, tenemos una lista de fantasmas, tonces tiene que recibir cual fantasma actualizar
+    // recibe parametro porque no tenemos 1 solo fantasma en el juego, tenemos una lista de fantasmas, entonces tiene que recibir cual fantasma actualizar
     public void actualizarMovimientoFantasma(Ghost fantasma) {
 
         long ahora = System.currentTimeMillis(); // tiempo actual
@@ -429,7 +424,7 @@ public class GameController {
         if (gameTimer != null) gameTimer.start();
     }
 
-    // NUEVO
+    
     public void iniciarJuego(String usuario) {
         System.out.println("llamando a iniciar juego");
         this.inicioJuego = true;
@@ -703,10 +698,6 @@ public class GameController {
         keyH.resetearTeclas();
         juegoPanel.addKeyListener(keyH); //se vuelve a escuchar el teclado
 
-
-        // Se conecta nuevamente el listener del boton pausa esto no dejaba abrir la pausa del boton del panel del juego porque solo estaba en iniciarjuego() 
-        juegoPanel.getBtnPausa().addActionListener(e -> pausarJuego());
-
         // Reinicia loop y cronometro
         iniciarGameLoop();
 
@@ -727,101 +718,31 @@ public class GameController {
     
 }
 
-protected void procesarMovimiento(){ //Metodo generado para realizar un override en el tutorial y que el jugador no se mueva cuando queramos
-    actualizarMovimiento();
-}
-
-protected void iniciarNivel() { //Como se debe cargar un nivel para el tutorial y el juego normal
-
-    System.out.println("llamando a iniciar nivel");
-    //carga la nueva ventana
-    jugador.registrarObservador(juegoPanel);
-
-    cambiarNivel();
-
-
-}
-
-public void guardarRecordFinal(String nombreJugador) {
-    
-    if (stopwatch == null) {
-        System.err.println("Error: El cronómetro no está disponible.");
-        return;
-    }
-    
-    // 1. Obtener el tiempo final en milisegundos
-    long tiempoMs = stopwatch.getSegundos(); 
-
-    // 2. Crear el objeto Record (asume que existe la clase model.juego.Record)
-    model.dao.Record nuevoRecord = new model.dao.Record(nombreJugador.trim(), tiempoMs);
-
-    // 3. Llamar al DAO para la persistencia
-    if (this.recordDAO != null) {
-        recordDAO.save(nuevoRecord);
-        System.out.println("Récord guardado de " + nombreJugador + " en la BD.");
-    } else {
-        System.err.println("ADVERTENCIA: RecordDAO no inicializado.");
-    }
-    
-    // 4. Volver al menú principal una vez finalizado el guardado
-    salirAlMenuPrincipal(); 
-}
-
-
-private void mostrarDialogoApodo(){
-    MenuRegisterStart menuGanador = new MenuRegisterStart(framePrincipal, this);
-
-        
-
-        // cuando se toca guardar se guarda el usuario tiempo y fecha en la base de datos 
-        menuGanador.getCrearButton().addActionListener(e -> {
-            String apodo = menuGanador.getUsuario().trim(); // Obtiene el texto del JTextField (puede tener espacios o el placeholder)
-        
-        //Validar la entrada usando la clase de Modelo/Utilidad
-        String mensajeError = RegisterStartmodel.validarApodo(apodo);
-        
-        if (mensajeError != null) {
-            
-            menuGanador.setResultado(mensajeError, false); // false para color ROJO
-        } else {
-            
-            //Si es válido, llamar al método de lógica de negocio para guardar
-            guardarRecordFinal(apodo.trim());
-            
-            // Cerrar el panel y volver al menú principal (la transición es manejada 
-            // por el método guardarRecordFinal que llama a salirAlMenuPrincipal)
-            menuGanador.dispose(); 
-        }
-        });
-
-
-        // cuando se presiona volver vuelve al menu principal
-        menuGanador.getVolverButton().addActionListener(e -> {
-            menuGanador.dispose();
-            salirAlMenuPrincipal();
-        });
-
-        menuGanador.setVisible(true);
-    
+    protected void procesarMovimiento(){ //Metodo generado para realizar un override en el tutorial y que el jugador no se mueva cuando queramos
+        actualizarMovimiento();
     }
 
-    public void mostrarDerrota(){
+    protected void iniciarNivel() { //Como se debe cargar un nivel para el tutorial y el juego normal
+
+        System.out.println("llamando a iniciar nivel");
+        //carga la nueva ventana
+        jugador.registrarObservador(juegoPanel);
+
+        cambiarNivel();
+
+
+    }
+
+    
+    public void mostrarDerrota(){ //Finaliza el juego y muestra la pantalla de derrota
         keyH.resetearTeclas();        
-            sonidoPasos.pararPasos();
-            //se detiene el juego 
+            sonidoPasos.pararPasos(); 
             detenerGameLoop();
             if (stopwatch != null) {
                 stopwatch.detener();
             }
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            framePrincipal.mostrarDerrota();
-        });
+            framePrincipal.mostrarFinJuego(view.juego.PanelFinJuego.TipoFin.Derrota);
     }
 
-    public void mostrarVictoria(){
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            framePrincipal.mostrarVictoria();
-        });
-    }
-
+    
 }

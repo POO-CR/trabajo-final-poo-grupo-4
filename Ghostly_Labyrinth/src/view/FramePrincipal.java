@@ -7,9 +7,7 @@ import view.juego.CargaPanel;
 import view.juego.JuegoPanel;
 import view.menu.MenuPanel;
 import view.menu.ScorePanel;
-import view.juego.PantallaVictoria;
-import view.juego.PantallaDerrota;
-
+import view.juego.PanelFinJuego;
 import java.awt.*;
 
 public class FramePrincipal extends JFrame {
@@ -32,19 +30,15 @@ public class FramePrincipal extends JFrame {
     private CargaPanel cargaPanel;
     private MenuPanel menuPanel;
     private ScorePanel scorePanel;
-    private PantallaVictoria pantallaVictoria;
-    private PantallaDerrota pantallaDerrota;
-    
+    private PanelFinJuego panelFinJuego;
+
     private CardLayout cardLayout;
     
     private static final String PANEL_CARGA = "carga";
     private static final String PANEL_JUEGO = "juego";
     private static final String PANEL_MENU = "menu";
     private static final String PANEL_SCORE = "score";
-    private static final String PANEL_VICTORIA = "victoria";
-    private static final String PANEL_DERROTA = "derrota";
-    
-
+    private static final String PANEL_FIN = "fin";
     
         
     public FramePrincipal (){
@@ -60,16 +54,15 @@ public class FramePrincipal extends JFrame {
         this.cargaPanel = new CargaPanel();
         this.juegoPanel = new JuegoPanel();
         this.scorePanel = new ScorePanel();
-        this.pantallaVictoria = new PantallaVictoria();
-        this.pantallaDerrota = new PantallaDerrota();
-        
+        this.panelFinJuego = new PanelFinJuego();
+
+
         
         mainPanel.add(menuPanel, PANEL_MENU);
         mainPanel.add(cargaPanel, PANEL_CARGA);
         mainPanel.add(juegoPanel, PANEL_JUEGO);
         mainPanel.add(scorePanel, PANEL_SCORE);
-        mainPanel.add(pantallaVictoria, PANEL_VICTORIA);
-        mainPanel.add(pantallaDerrota, PANEL_DERROTA);
+        mainPanel.add(panelFinJuego, PANEL_FIN);
 
         mainPanel.setOpaque(true);
 
@@ -147,8 +140,9 @@ public class FramePrincipal extends JFrame {
         });
     }
 
-    public void mostrarVictoria() {
-        cardLayout.show(mainPanel, PANEL_VICTORIA);
+    public void mostrarFinJuego(PanelFinJuego.TipoFin tipoFin) {
+        panelFinJuego.mostrarFin(tipoFin);
+        cardLayout.show(mainPanel, PANEL_FIN);
         javax.swing.SwingUtilities.invokeLater(() -> {
             mainPanel.validate();
             mainPanel.repaint();
@@ -156,15 +150,7 @@ public class FramePrincipal extends JFrame {
         });
     }
 
-    public void mostrarDerrota() {
-        cardLayout.show(mainPanel, PANEL_DERROTA);
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            mainPanel.validate();
-            mainPanel.repaint();
-            mainPanel.requestFocusInWindow();
-        });
-    }
-
+    
     public MenuPanel getMenuPanel(){
         return this.menuPanel;
     }
@@ -181,9 +167,12 @@ public class FramePrincipal extends JFrame {
         return this.scorePanel;
     }
 
-    public PantallaDerrota getPantallaDerrota(){
-        return this.pantallaDerrota;
+    public PanelFinJuego getPanelFinJuego() {
+        return this.panelFinJuego;
     }
+
+    
+    
 
         
 }

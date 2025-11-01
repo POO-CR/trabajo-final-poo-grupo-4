@@ -438,4 +438,3 @@ public void paintVida(Graphics grafico, int vidaActual) {
 
 
 
-

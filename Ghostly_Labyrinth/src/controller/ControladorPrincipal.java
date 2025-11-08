@@ -20,26 +20,39 @@ public class ControladorPrincipal {
     private TutorialController tutoC;
     private ScoreController scoC;
     private ControladorFinJuego cfj;
+    private boolean musicaactivada = true;
 
 
     
     public ControladorPrincipal (){
         framePrincipal = new FramePrincipal();
         this.recordDAO = new RecordDAOImpl();
-        mc = new MenuController(this, framePrincipal);
+        mc = new MenuController(this, framePrincipal); //INFORMAR
         cfj = new ControladorFinJuego(framePrincipal.getPanelFinJuego(), this);
         framePrincipal.mostrarMenu();
         framePrincipal.setVisible(true);
     }
 
+    public boolean musicaActiva(){
+        return musicaactivada;
+    }
+
+    //Metodo para que el menu pueda controlar el audio
+    public void modificarEstadoMusica(){ //INFORMAR
+        this.musicaactivada = !this.musicaactivada;
+        if (mc != null){
+            mc.cambiarEstadoMusica();
+        }
+    }
+
     public void pasarAJuego(){
-        gc = new GameController(framePrincipal);
+        gc = new GameController(this,framePrincipal); //INFORMAR
         gc.iniciarJuego("usuario");
         //framePrincipal.mostrarJuego();
     }
 
     public void pasarATutorial(){
-        tutoC = new TutorialController(framePrincipal);
+        tutoC = new TutorialController(this,framePrincipal); //INFORMAR
         tutoC.iniciarTutorial();
         // framePrincipal.mostrarJuego(new KeyHandler());
     }

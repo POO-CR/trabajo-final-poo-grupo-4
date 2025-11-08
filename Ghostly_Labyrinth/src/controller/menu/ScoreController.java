@@ -31,5 +31,9 @@ public class ScoreController {
             scoreMusic.pausar();
             controladorPrincipal.pasarAMenu();
         });
+
+        if (!controladorPrincipal.musicaActiva()) { //INFORMAR
+            scoreMusic.pausar();
+        }
     }
 }

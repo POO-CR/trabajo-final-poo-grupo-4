@@ -51,7 +51,7 @@ public class NivelWorker extends SwingWorker<Nivel, String>{
                 while (ultimaActualizacion + 800 > System.currentTimeMillis()) {
                     // esperamos un toque para que no actualice tan rápido
                 }
-                publish ("Cargando laberinto fantasmal...");
+                publish ("Cargando laberinto...");
                 progreso++;
                 setProgress(progreso * 25);
                 ultimaActualizacion = System.currentTimeMillis();
@@ -93,6 +93,12 @@ public class NivelWorker extends SwingWorker<Nivel, String>{
 
                 // para agregar las posiciones de los fantasmas segun el nivelll
                 switch (nivelNumero) {
+                    case -1 -> {
+                        nivel.agregarFantasma(11, 24);
+                        nivel.agregarFantasma(11, 17);
+                        nivel.agregarFantasma(50, 5);
+                        nivel.agregarFantasma(67, 12);
+                    }
                     case 0 -> {
                         nivel.agregarFantasma(26, 3);
                         nivel.agregarFantasma(3, 3);
@@ -171,7 +177,7 @@ public class NivelWorker extends SwingWorker<Nivel, String>{
 
     private static Dimension getDimensionMapa(int nivel) {
         return switch (nivel) {
-            case -1 -> new Dimension(15, 15);
+            case -1 -> new Dimension(27, 79);
             case 0 -> new Dimension(20, 30);
             case 1 -> new Dimension(40, 40);
             case 2 -> new Dimension(40, 40);

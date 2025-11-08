@@ -396,8 +396,10 @@ public void paintVida(Graphics grafico, int vidaActual) {
         g.drawImage(getImagenJugador(), controlador.getScreenXJugador(), controlador.getScreenYJugador(), controlador.getAnchoJugador(), controlador.getAltoJugador(), null); // dibuja el jugador en pantalla
 
         //Se dibuja la luz en el panel 
+        if (controlador.getLuzActiva()){ //Informar
         paintLuz((Graphics2D) g);
-
+        }
+        
         if (pasoGolpe){
             if (ultimoGolpe + 300 > System.currentTimeMillis()){
                 paintGolpe((Graphics2D) g);

@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
 
+import controller.ControladorPrincipal;
 import model.juego.AssetSetter;
 import model.juego.ColisionChecker;
 import model.juego.KeyHandler;
@@ -19,6 +20,7 @@ import model.juego.entidades.*;
 import model.juego.laberinto.*;
 import model.juego.objetos.*;
 import model.juego.objetos.efectos.PowerUpEffect;
+import model.menu.Music;
 import model.menu.RegisterStartmodel;
 
 import model.observadores.SonidoGolpe;
@@ -32,6 +34,8 @@ import view.juego.JuegoPanel;
 import model.dao.RecordDAO;
 import model.dao.RecordDAOImpl;
 import view.juego.PanelFinJuego;
+import controller.ControladorPrincipal; //INFORMAR
+import model.menu.Music; //INFORMAR
 
 
 //public class GameController implements Runnable{ (VIEJO)
@@ -45,7 +49,7 @@ public class GameController {
     private Message mensaje;
 
     protected KeyHandler keyH;
-    private AssetSetter aSetter;
+    protected AssetSetter aSetter;
     private ColisionChecker cChecker;
     private String tituloJuego;
     protected NivelManager nivelManager;
@@ -56,11 +60,14 @@ public class GameController {
     private List<Ghost> fantasmas = new ArrayList<>(); // lista de los fantasmas, se recibe del nivel
 
     private Timer gameTimer; // NUEVO
+    private Music juegomusica;
 
     private ArrayList<Objeto> obj;
 
     //Thread gameThread; (VIEJO)
     private Stopwatch stopwatch;
+
+    private ControladorPrincipal cp; //INFORMAR
 
     //valores iniciales
     private final int originalTileSize = 20; // tamaño standard de tiles, dijimos de cambiarlo a 32x32
@@ -79,6 +86,7 @@ public class GameController {
     private Boolean huboCambioNivel = false;
     private Boolean cambioLuz = false;
     private int aumentoLuz = 0;
+    private boolean luzActiva = true; //Informar
 
     protected NivelWorker nivelWorker;
 
@@ -87,12 +95,12 @@ public class GameController {
     private CargaPanel cargaPanel;
     private SonidoPasos sonidoPasos;
 
-    public GameController(FramePrincipal framePrincipal) {
+    public GameController(ControladorPrincipal controladorPrincipal, FramePrincipal framePrincipal) {
         System.out.println("se creo gamecontroller");
 
         this.recordDAO = new RecordDAOImpl();
 
-
+        this.cp = controladorPrincipal; //INFORMAR
         this.framePrincipal = framePrincipal;
         this.juegoPanel = framePrincipal.getJuegoPanel();
         this.jugador = new Player(this);
@@ -105,6 +113,7 @@ public class GameController {
         this.tituloJuego = "Ghostly Labyrinth";
 
         // obtener tamaño pantalla
+        this.juegomusica = new Music("/assets/music/Sonido_juego.wav"); //INFORMAR
 
         
 
@@ -131,6 +140,7 @@ public class GameController {
 
         this.keyH = new KeyHandler();
         framePrincipal.getJuegoPanel().getBtnPausa().addActionListener(e -> pausarJuego());
+        iniciarMusica();
 
         
         // Esto se ejecuta cada segundo sin frenar el juego
@@ -170,6 +180,7 @@ public class GameController {
             detenerGameLoop();
             if (stopwatch != null) {
                 stopwatch.detener();
+                pausarMusica(); //INFORMAR
             }
 
             framePrincipal.mostrarFinJuego(view.juego.PanelFinJuego.TipoFin.Victoria);
@@ -246,6 +257,7 @@ public class GameController {
         }
         framePrincipal.mostrarJuego(keyH);
         stopwatch.iniciar();
+        iniciarMusica(); //INFORMAR
         
     }
 
@@ -481,6 +493,20 @@ public class GameController {
         }
     }
 
+    public void iniciarMusica(){  //INFORMAR
+     if (cp.musicaActiva()) {
+            juegomusica.reproducirLoop();
+        }
+    }
+
+    public void pausarMusica(){  //INFORMAR
+        if (cp.musicaActiva()) {
+            juegomusica.pausar();
+        }
+    }
+
+
+
     public List<Ghost> getFantasmas() {
         return this.fantasmas;
     }
@@ -517,6 +543,14 @@ public class GameController {
 
     public Nivel getNivel () {
         return this.nivel;
+    }
+
+    public boolean getLuzActiva() { //Informar
+        return this.luzActiva;
+    }
+
+    public void setLuzActiva (boolean estado) { //Informar
+        this.luzActiva = estado;
     }
     
     public void setObjeto (Objeto objeto) {
@@ -598,6 +632,7 @@ public class GameController {
     }
 
     public void pausarJuego() {
+        if (juegoPausado) return; 
         juegoPausado = true;
         detenerGameLoop();
         if (stopwatch != null) stopwatch.detener();
@@ -622,11 +657,12 @@ public class GameController {
         pausa.getBtnReiniciar().addActionListener(e -> {
         pausa.dispose(); // cierra el dialogo 
         reiniciarJuego();
+        pausarMusica();
         if (pausa != null) pausa.dispose(); // se reinicia todo el estado del juego
         });
 
         // cuando se presiona salir vuelve al menu principal
-        pausa.getbtnSalir().addActionListener(e -> {pausa.dispose(); salirAlMenuPrincipal(); if (pausa != null) pausa.dispose();});
+        pausa.getbtnSalir().addActionListener(e -> {pausa.dispose(); salirAlMenuPrincipal(); pausarMusica(); if (pausa != null) pausa.dispose();});
 
         // se muestra la ventana de pausa y se bloquea hasta que se cierre
         pausa.setVisible(true); 
@@ -670,6 +706,7 @@ public class GameController {
         if (stopwatch != null) {
             stopwatch.reiniciar();
             stopwatch.detener();
+            pausarMusica(); //INFORMAR
         }
 
         // Reiniciar nivel y objetos
@@ -740,6 +777,7 @@ public class GameController {
             detenerGameLoop();
             if (stopwatch != null) {
                 stopwatch.detener();
+                pausarMusica();
             }
             framePrincipal.mostrarFinJuego(view.juego.PanelFinJuego.TipoFin.Derrota);
     }

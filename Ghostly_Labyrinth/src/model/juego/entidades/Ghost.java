@@ -8,16 +8,16 @@ import controller.juego.GameController;
 public class Ghost extends Entity{
     
     private final GameController gc;
-    //private final Random random = new Random();
+   
     private long tiempoUltimoMovimiento = 0;
     private static final long MOVIMIENTO_INTERVALO = 80; //ms entre decisiones
-   // private final String[] direcciones = {"up", "down", "left", "right"};
-    //private int pasosRestantes = 0; // cuantos pasos faltan para completar 1 tile
-    //private final int pasosPorTile = 8; // cuantos mini pasos por tile
+   
 
     private final float escalaFantasma = 1.5f;
     private final int anchoFantasma;
     private final int altoFantasma;
+
+    private int pasosRestantes = 0;
 
 
     public Ghost (GameController gc, int xTile, int yTile) {
@@ -25,7 +25,7 @@ public class Ghost extends Entity{
         this.mundoX = xTile * gc.getAnchoBloque();
         this.mundoY = yTile * gc.getAltoBloque();
 
-        this.movimiento = 4; //vel de movimiento
+        this.movimiento = 7; //vel de movimiento
         this.direccion = "down";
 
         
@@ -70,4 +70,14 @@ public class Ghost extends Entity{
         return this.anchoFantasma;
     }
 
+    public int getPasosRestantes() {
+        return pasosRestantes;
+    }
+
+    public void setPasosRestantes(int pasosRestantes) {
+        this.pasosRestantes = pasosRestantes;
+    }
+
+
 }
+

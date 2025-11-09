@@ -49,7 +49,7 @@ public class NivelWorker extends SwingWorker<Nivel, String>{
                 int col = 0;
                 int fila = 0;
                 while (ultimaActualizacion + 800 > System.currentTimeMillis()) {
-                    // esperamos un toque para que no actualice tan rápido
+                    // esperamos un toque para que no actualice tan rapido
                 }
                 publish ("Cargando laberinto fantasmal...");
                 progreso++;
@@ -94,21 +94,26 @@ public class NivelWorker extends SwingWorker<Nivel, String>{
                 // para agregar las posiciones de los fantasmas segun el nivelll
                 switch (nivelNumero) {
                     case 0 -> {
-                        nivel.agregarFantasma(26, 3);
-                        nivel.agregarFantasma(3, 3);
-                        nivel.agregarFantasma(18, 4);
-                        nivel.agregarFantasma(10, 10);
-                        nivel.agregarFantasma(23, 12);
-                        nivel.agregarFantasma(6, 16);
-                        nivel.agregarFantasma(27, 7);
-                        
+                        //nivel.agregarFantasma(26, 3);
+                        //nivel.agregarFantasma(3, 3);
+                        //nivel.agregarFantasma(18, 4);
+                        //nivel.agregarFantasma(10, 10);
+                        //nivel.agregarFantasma(23, 12);
+                        //nivel.agregarFantasma(6, 16);
+                        //nivel.agregarFantasma(27, 7);
+                        nivel.agregarFantasma(10, 3);
+                        nivel.agregarFantasma(30, 8);
+                        nivel.agregarFantasma(27, 13);
+                        nivel.agregarFantasma(8, 21);
+                        nivel.agregarFantasma(9, 32);
+                        nivel.agregarFantasma(27, 28);
                     }
                     case 1 -> {
-                        nivel.agregarFantasma(3, 3);
-                        nivel.agregarFantasma(5, 2);
-                        nivel.agregarFantasma(33, 2);
+                        nivel.agregarFantasma(6, 11);
+                        nivel.agregarFantasma(1, 4);
+                        nivel.agregarFantasma(32, 2);
                         nivel.agregarFantasma(15, 7);
-                        //nivel.agregarFantasma(25, 10);
+                        nivel.agregarFantasma(24, 21);
                         //nivel.agregarFantasma(8, 14);
                         //nivel.agregarFantasma(36, 19);
                         //nivel.agregarFantasma(4, 20);
@@ -117,18 +122,13 @@ public class NivelWorker extends SwingWorker<Nivel, String>{
                     
                     }
                     case 2 -> {
-                        nivel.agregarFantasma(2, 2);
-                        nivel.agregarFantasma(7, 2);
-                        nivel.agregarFantasma(28, 3);
-                        //nivel.agregarFantasma(4, 7);
-                        //nivel.agregarFantasma(33, 9);
-                        //nivel.agregarFantasma(11, 13);
-                        //nivel.agregarFantasma(25, 17);
-                        //nivel.agregarFantasma(8, 22);
-                        //nivel.agregarFantasma(30, 27);
-                        //nivel.agregarFantasma(5, 33);
-                        //nivel.agregarFantasma(36, 41);
+                        nivel.agregarFantasma(15, 8);
+                        nivel.agregarFantasma(20, 25);
+                        nivel.agregarFantasma(29, 3);
+                        nivel.agregarFantasma(35, 21);
+                        nivel.agregarFantasma(5, 35);
                         nivel.agregarFantasma(4, 2);
+                        nivel.agregarFantasma(15, 19);
                         
                     }
                 }
@@ -172,17 +172,20 @@ public class NivelWorker extends SwingWorker<Nivel, String>{
     private static Dimension getDimensionMapa(int nivel) {
         return switch (nivel) {
             case -1 -> new Dimension(15, 15);
-            case 0 -> new Dimension(20, 30);
+            //case 0 -> new Dimension(20, 30);
+            case 0 -> new Dimension(40, 40);
             case 1 -> new Dimension(40, 40);
             case 2 -> new Dimension(40, 40);
-            default -> new Dimension(20, 30);
+            default -> new Dimension(40, 40);
+            //default -> new Dimension(20, 30);
         };
     }
 
     private static Posicion getPosicionDefaultMapa(int nivel) {
         return switch (nivel) {
             case -1 -> new Posicion (1, 2);
-            case 0 -> new Posicion (8, 1);
+            //case 0 -> new Posicion (8, 1);
+            case 0 -> new Posicion (2, 5);
             case 1 -> new Posicion (19, 1); 
             case 2 -> new Posicion (35, 3);
             default -> new Posicion (3, 3);

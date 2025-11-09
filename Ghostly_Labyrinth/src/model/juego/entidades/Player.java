@@ -3,7 +3,6 @@ package model.juego.entidades;
 import java.awt.Rectangle;
 
 import controller.juego.GameController;
-import model.juego.tile.Tile;
 import model.observadores.Observador;
 import model.observadores.Sujeto;
 import model.juego.objetos.efectos.PowerUpEffect;
@@ -23,18 +22,18 @@ public class Player extends Entity implements Sujeto {
     //variable que indica si el jugador agarro la llave
     private boolean tieneLlave = false;
 
-    public int screenX; // DONDE SE VA A DIBUJAR PLAYER EN PANTALLA
-    public int screenY;
+    private int screenX; // DONDE SE VA A DIBUJAR PLAYER EN PANTALLA
+    private int screenY;
 
      //Caracteristicas de la vida
     private final int vidaTope = 3;
     private int vida = vidaTope;
     //Caracteristicas al recibir danio
-    //TODO: esto y vidaTope probablemente debería estar en otro lado
+    
     private final long tiempoInmune = 2000;
     private long finInmune=0;
 
-    public float multiplicadorVelocidad;
+    //private float multiplicadorVelocidad;
 
     private long ultimaInteraccion;
 
@@ -163,7 +162,7 @@ public class Player extends Entity implements Sujeto {
     }
 
     @Override
-    public void registrarObservador(Observador o) {
+    public void registrarObservador(Observador o) { 
         observadores.add(o);
     }
 
@@ -173,9 +172,9 @@ public class Player extends Entity implements Sujeto {
     }
 
     @Override
-    public void notificarObservadores(String evento) {
+    public void notificarObservadores(String evento) { 
         for (Observador o : observadores) {
-            o.actualizar(evento);
+            o.actualizar(evento); // pasar el evento al observador
         }
     }
 

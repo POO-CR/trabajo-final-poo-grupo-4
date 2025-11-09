@@ -7,25 +7,23 @@ import model.juego.tile.Tile;
 
 public abstract class Entity {
     protected int mundoX, mundoY; // posicion en el mundo
-    //protected int x;
-    //protected int y;
     protected int movimiento;
     private float multiplicadorVelocidad = 1.0f;
     protected String nombre;
 
-    public BufferedImage up0, up1, up2, down0, down1, down2, 
+    protected BufferedImage up0, up1, up2, down0, down1, down2, 
     left0, left1, left2, right0, right1, right2;
-    public String direccion;
-    public String ultimaDireccion;
+    protected String direccion;
+    protected String ultimaDireccion;
     
-    public int spriteCounter = 0;
-    public int spriteNum = 1;
+    protected int spriteCounter = 0;
+    protected int spriteNum = 1;
 
-    public Rectangle areaColision;
-    public int areaColisionDefaultX, areaColisionDefaultY;
-    public boolean colisionOn = false;
+    protected Rectangle areaColision;
+    protected int areaColisionDefaultX, areaColisionDefaultY;
+    protected boolean colisionOn = false;
 
-    public abstract boolean getTieneLlave();
+    public abstract boolean getTieneLlave(); // para saber si la entidad tiene la llave, cada entidad lo implementa a su manera
 
     public int getMundoX() {
         return mundoX;
@@ -42,6 +40,58 @@ public abstract class Entity {
     public void setMundoY(int mundoY) {
         this.mundoY = mundoY;
     }
+
+    public int getSpriteCounter() {
+        return spriteCounter;
+    }
+
+    public void setSpriteCounter(int spriteCounter) {
+        this.spriteCounter = spriteCounter;
+    }
+
+    public int getAreaColisionDefaultX() {
+        return areaColisionDefaultX;
+    }
+
+    public int getAreaColisionDefaultY() {
+        return areaColisionDefaultY;
+    }
+
+    public int getAnchoColision() {
+        return areaColision.width;
+    }
+
+    public int getAltoColision() {
+        return areaColision.height;
+    }
+
+    public Rectangle getAreaColision() {
+        return areaColision;
+    }
+
+    public boolean getColisionOn() {
+        return colisionOn;
+    }
+
+    public boolean setColisionOn(boolean estado) {
+        this.colisionOn = estado;
+        return colisionOn;
+    }
+
+    public int getSpriteNum() {
+        return spriteNum;
+    }
+
+    public void setSpriteNum(int spriteNum) {
+        this.spriteNum = spriteNum;
+    }   
+
+    public String getUltimaDireccion() {
+        return ultimaDireccion;
+    }
+
+
+
 
     public int getMovimiento() {
         return (int) (multiplicadorVelocidad * movimiento);

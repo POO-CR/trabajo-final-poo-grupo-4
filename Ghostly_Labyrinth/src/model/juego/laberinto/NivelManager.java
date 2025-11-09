@@ -23,6 +23,7 @@ public class NivelManager {
     public NivelWorker crearSiguienteNivelWorker (int nivel, GameController gc){
         return new NivelWorker(nivel, gc);
     }
+    
 
     public NivelWorker crearSiguienteNivelWorker (GameController gc) {
         rnd = new Random();
@@ -52,6 +53,8 @@ public class NivelManager {
         rnd = new Random(); //se reinicia el generador de numeros aleatorios
         System.out.println("NivelManager reiniciado. Niveles disponibles: " + nivelesDisponibles);
     }
+
+    
 
 
     

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
@@ -19,19 +20,19 @@ import model.juego.entidades.*;
 import model.juego.laberinto.*;
 import model.juego.objetos.*;
 import model.juego.objetos.efectos.PowerUpEffect;
-import model.menu.RegisterStartmodel;
+
 
 import model.observadores.SonidoGolpe;
 import model.observadores.SonidoObjeto;
 import model.observadores.SonidoPasos;
-import model.observadores.Observador;
+
 import view.juego.JuegoPausa;
 import view.FramePrincipal;
 import view.juego.CargaPanel;
 import view.juego.JuegoPanel;
 import model.dao.RecordDAO;
 import model.dao.RecordDAOImpl;
-import view.juego.PanelFinJuego;
+
 
 
 //public class GameController implements Runnable{ (VIEJO)
@@ -64,7 +65,7 @@ public class GameController {
 
     //valores iniciales
     private final int originalTileSize = 20; // tamaño standard de tiles, dijimos de cambiarlo a 32x32
-    //final int escala = 2; // escala para agrandar los tiles
+    
     private final int escala = 4; // para que se vea mas de cerca todo
     private final int tileSize = originalTileSize * escala; 
 
@@ -285,7 +286,7 @@ public class GameController {
             jugador.notificarObservadores("QUIETO"); 
         }
 
-        jugador.colisionOn = false;
+        jugador.setColisionOn(false);
         cChecker.checkearTile(jugador);
 
         Objeto objetoColisionado = cChecker.checkearObjeto(jugador);
@@ -294,7 +295,7 @@ public class GameController {
             mensaje.InteraccionDeMensajes(objetoColisionado);
         }
 
-        if (jugador.colisionOn == false) {
+        if (jugador.getColisionOn() == false) {
             
             switch(jugador.getDireccion()) {
                 case "up" -> nuevaY -= movimiento;
@@ -306,79 +307,97 @@ public class GameController {
             jugador.setMundoY(nuevaY);
         }
 
-        jugador.spriteCounter++;
-        if (jugador.spriteCounter > 10) {
-            if (jugador.spriteNum == 1) {
-                jugador.spriteNum = 2;
-            } else if (jugador.spriteNum == 2) {
-                jugador.spriteNum = 1;
+        jugador.setSpriteCounter(jugador.getSpriteCounter() + 1);
+        if (jugador.getSpriteCounter() > 10) {
+            if (jugador.getSpriteNum() == 1) {
+                jugador.setSpriteNum(2);
+            } else if (jugador.getSpriteNum() == 2) {
+                jugador.setSpriteNum(1);
             }
-            jugador.spriteCounter = 0;
+            jugador.setSpriteCounter(0);
         }
 
     }
 
-    // recibe parametro porque no tenemos 1 solo fantasma en el juego, tenemos una lista de fantasmas, entonces tiene que recibir cual fantasma actualizar
-    public void actualizarMovimientoFantasma(Ghost fantasma) {
 
-        long ahora = System.currentTimeMillis(); // tiempo actual
+    private void setDireccionMovimiento(Ghost fantasma) {
+        Random random = new Random();
+        int i = random.nextInt(100) + 1; // genera numero entre 1 y 100
 
-        // esperar hasta el siguiente movimiento permitido
-        if (ahora - fantasma.getTiempoUltimoMovimiento() < Ghost.getMovimientoIntervalo()) { // 80ms // sirve para que no se mueva tan rapido
-          return;
+        if (i <= 25) {
+            fantasma.setDireccion("up");
+        } else if (i <= 50) {
+            fantasma.setDireccion("down");
+        } else if (i <= 75) {
+            fantasma.setDireccion("left");
+        } else {
+            fantasma.setDireccion("right");
         }
-
-        int pasos = getAnchoBloque() / 8; // se movera en 8 por tile 
-
-        // revisar colision antes de moverse
-        fantasma.colisionOn = false;
-        cChecker.checkearTile(fantasma);
-
-        if (fantasma.colisionOn) {
-            // si hay colison gira
-            String[] dirs = {"up", "down", "left", "right"};
-            String nuevaDir;
-            do {
-                nuevaDir = dirs[(int)(Math.random() * dirs.length)]; // elige una dir al azar
-            } while (nuevaDir.equals(fantasma.getDireccion())); // evita repetir la misma direccion
-            fantasma.setDireccion(nuevaDir);
-        } 
-        else {
-            // mover solo si no hay colision
-            switch (fantasma.getDireccion()) {
-                case "up" -> fantasma.setMundoY(fantasma.getMundoY() - pasos);
-                case "down" -> fantasma.setMundoY(fantasma.getMundoY() + pasos);
-                case "left" -> fantasma.setMundoX(fantasma.getMundoX() - pasos);
-                case "right" -> fantasma.setMundoX(fantasma.getMundoX() + pasos);
-            }
-        }
-
-        // animacion
-        fantasma.spriteCounter++;
-        if (fantasma.spriteCounter > 10) {
-            fantasma.spriteNum = (fantasma.spriteNum == 1) ? 2 : 1;
-            fantasma.spriteCounter = 0;
-        }
-
-        fantasma.setTiempoUltimoMovimiento(ahora);
     }
+
+    // recibe parametro porque no tenemos 1 solo fantasma en el juego, tenemos una lista de fantasmas,
+    // entonces tiene que recibir cual fantasma actualizar
+    public void actualizarMovimientoFantasma(Ghost f) {
+
+        int nuevaX = f.getMundoX();
+        int nuevaY = f.getMundoY();
+        int movimiento = f.getMovimiento();
+
+        // decide que direccion tomar si ya no le quedan pasos en la direccion actual
+        if (f.getPasosRestantes() <= 0) {
+            setDireccionMovimiento(f);       
+            f.setPasosRestantes(70);// mantiene direccion en 70 pasos (frames)
+        }
+
+        // revisa las colisiones
+        f.setColisionOn(false);
+        cChecker.checkearTile(f);
+
+        // si choca, cambia de direccion 
+        if (f.getColisionOn()) {
+            setDireccionMovimiento(f);
+            f.setPasosRestantes(70);
+            return; // no sigue moviendo en este frame
+        }
+
+        // movimiento segun la direccion
+        switch (f.getDireccion()) {
+            case "up" -> nuevaY -= movimiento;
+            case "down" -> nuevaY += movimiento;
+            case "left" -> nuevaX -= movimiento;
+            case "right" -> nuevaX += movimiento;
+        }
+
+        f.setMundoX(nuevaX);
+        f.setMundoY(nuevaY);
+        f.setPasosRestantes(f.getPasosRestantes() - 1);
+
+        // animacion fantasmas
+        f.setSpriteCounter(f.getSpriteCounter() + 1);
+        if (f.getSpriteCounter() > 10) {
+            if (f.getSpriteNum() == 1) {
+                f.setSpriteNum(2);
+            } else if (f.getSpriteNum() == 2) {
+                f.setSpriteNum(1);
+            }
+            f.setSpriteCounter(0);
+        }
+    }   
 
 
 
     private void verificarColisionJugadorFantasma(Ghost fantasma) {
         // hitboxes actuales del jugador y el fantasma
-        Rectangle hitJugador = new Rectangle(
-            jugador.getMundoX() + jugador.areaColisionDefaultX,
-            jugador.getMundoY() + jugador.areaColisionDefaultY,
-            jugador.areaColision.width,
-            jugador.areaColision.height
+        Rectangle hitJugador = new Rectangle(jugador.getMundoX() + jugador.getAreaColisionDefaultX(),
+            jugador.getMundoY() + jugador.getAreaColisionDefaultY(),
+            jugador.getAnchoColision(),
+            jugador.getAltoColision()
         );
 
-        Rectangle hitFantasma = new Rectangle(
-            fantasma.getMundoX() + fantasma.areaColisionDefaultX,
-            fantasma.getMundoY() + fantasma.areaColisionDefaultY,
-            fantasma.areaColision.width,
-            fantasma.areaColision.height
+        Rectangle hitFantasma = new Rectangle(fantasma.getMundoX() + fantasma.getAreaColisionDefaultX(),
+            fantasma.getMundoY() + fantasma.getAreaColisionDefaultY(),
+            fantasma.getAnchoColision(),
+            fantasma.getAltoColision()
         );
 
         // a ver si se intersectan 
@@ -532,15 +551,15 @@ public class GameController {
     }
 
     public String getDireccionJugador () {
-        return jugador.direccion;
+        return jugador.getDireccion();
     }
 
     public String getUltimaDireccionJugador () {
-        return jugador.ultimaDireccion;
+        return jugador.getUltimaDireccion();
     }
 
     public int getSpriteNumJugador () {
-        return jugador.spriteNum;
+        return jugador.getSpriteNum();
     }
 
     public int getScreenXJugador () {
@@ -692,8 +711,8 @@ public class GameController {
         // jugador.setPosicionDefault(); //posicion inicial
         // jugador.setTieneLlave(false);//elimina cualquier llave obtenida 
         jugador.resetVida(); //restaura la vida 
-        jugador.direccion = "down"; //direccion inicial
-        jugador.ultimaDireccion = "down";
+        jugador.setDireccion("down"); //direccion inicial
+        jugador.setUltimaDireccion("down");
 
         keyH.resetearTeclas();
         juegoPanel.addKeyListener(keyH); //se vuelve a escuchar el teclado
@@ -742,6 +761,33 @@ public class GameController {
                 stopwatch.detener();
             }
             framePrincipal.mostrarFinJuego(view.juego.PanelFinJuego.TipoFin.Derrota);
+    }
+
+    public int cantidadFantasmas() {
+        return fantasmas.size();
+    }
+
+    public BufferedImage getSpriteFantasma(int i) { // obtiene el sprite del fantasma i
+        Ghost f = fantasmas.get(i);
+        return juegoPanel.getImagenFantasma(f.getDireccion(), f.getSpriteNum());
+    }
+
+    public int getScreenXFantasma(int i) { // obtiene la posicion en pantalla del fantasma i
+        Ghost f = fantasmas.get(i);
+        return f.getMundoX();
+    }
+
+    public int getScreenYFantasma(int i) { 
+        Ghost f = fantasmas.get(i);
+        return f.getMundoY();
+    }
+
+    public int getAnchoFantasma(int i) { // obtiene el ancho del fantasma i
+        return fantasmas.get(i).getAnchoFantasma();
+    }
+
+    public int getAltoFantasma(int i) {
+        return fantasmas.get(i).getAltoFantasma();
     }
 
     

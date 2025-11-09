@@ -67,6 +67,7 @@ public class JuegoPanel extends JPanel implements Observador{
     //para la luz
     private int radioLuz = 280;
     private final int radioLuzDefault = 280;
+    
     // Gradiente de la linterna
     private final float[] dist = {0f, 0.65f, 1f};
     private final Color[] cols = {
@@ -310,7 +311,7 @@ public void paintVida(Graphics grafico, int vidaActual) {
         int anchoPanel = getWidth();
         int altoPanel = getHeight();
 
-        // Capa temporal del tamaño del panel con transparencia
+        // capa temporal del tamaño del panel con transparencia
         layer = new BufferedImage(anchoPanel, altoPanel, BufferedImage.TYPE_INT_ARGB);
         Graphics2D lg = layer.createGraphics();
 
@@ -382,16 +383,10 @@ public void paintVida(Graphics grafico, int vidaActual) {
         }
 
         // SE DIBUJAN LOS FANTASMAS EN EL PANEL 
-        // var es para declarar una variable sin definir el tipo, lo infiere solo
-        for (var ghost : controlador.getFantasmas()) {
-            BufferedImage spriteFantasma = getImagenFantasma(ghost.getDireccion(), ghost.spriteNum);
-
-            int pantallaX = ghost.getMundoX();
-            int pantallaY = ghost.getMundoY();
-
-            g2.drawImage(spriteFantasma, pantallaX, pantallaY, ghost.getAnchoFantasma(), ghost.getAltoFantasma(), null);
+        for (int i = 0; i < controlador.cantidadFantasmas(); i++) {
+            g2.drawImage(controlador.getSpriteFantasma(i), controlador.getScreenXFantasma(i), controlador.getScreenYFantasma(i),controlador.getAnchoFantasma(i), controlador.getAltoFantasma(i), null);
         }
-        
+
         // SE DIBUJA JUGADOR EN EL PANEL 
         g.drawImage(getImagenJugador(), controlador.getScreenXJugador(), controlador.getScreenYJugador(), controlador.getAnchoJugador(), controlador.getAltoJugador(), null); // dibuja el jugador en pantalla
 

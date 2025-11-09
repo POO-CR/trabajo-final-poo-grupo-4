@@ -15,7 +15,7 @@ public class DatabaseManager {
     // --- Parametros de Conexión para PostgreSQL ---
     private static final String URL = "jdbc:postgresql://localhost:5432/ghostly_mansion"; 
     private static final String USER = "postgres"; 
-    private static final String PASSWORD = "1234";
+    private static final String PASSWORD = "12345";
 
     // Constructor privado para el patron Singleton
     private DatabaseManager() {

@@ -161,7 +161,7 @@ public class GameController {
         // es un consumidor que le setea el status al panel según el paso de carga en el que 
         // está el worker
         this.nivelWorker = nivelManager.crearSiguienteNivelWorker(this);
-
+        jugador.resetVida();
         if (this.nivelWorker != null) {
             // le pasamos el worker para que actualice la pantalla de carga
             this.huboCambioNivel = true;

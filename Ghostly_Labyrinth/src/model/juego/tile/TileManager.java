@@ -6,7 +6,7 @@ import javax.imageio.ImageIO;
 public class TileManager {
     
     Tile[] tile;
-    final private int max = 4;
+    final private int max = 9;
 
     public TileManager() {
         tile = new Tile[max];

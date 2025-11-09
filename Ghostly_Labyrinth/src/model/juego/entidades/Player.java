@@ -142,6 +142,7 @@ public class Player extends Entity implements Sujeto {
             vida--;
             finInmune = ahora + tiempoInmune;
             notificarObservadores("GOLPE");
+            System.out.println("te lastimo un fantasmaaaa");
         }
         if (vida == 0){
             System.out.println("GAME OVER");

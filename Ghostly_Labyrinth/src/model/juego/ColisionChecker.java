@@ -17,10 +17,6 @@ public class ColisionChecker {
         this.gc = gc;
     }
 
-    public Boolean estaEnSpawn (Entity personaje){
-        this.nivel = gc.getNivel();
-        return (personaje.getMundoX() == nivel.getPosDefaultX()*gc.getAnchoBloque() && personaje.getMundoY() == nivel.getPosDefaultY()*gc.getAltoBloque());
-    }
 
     public void checkearTile(Entity entidad) {
         this.nivel = gc.getNivel();

@@ -67,13 +67,13 @@ public class TutorialController extends GameController{
                         mostrarMensaje("Tenés 2 tipos de habilidades", 3000);
                     });
                     ejecutarConRetraso(12050, ()->{
-                        mostrarMensaje("Vida: Añade una vida hasta que pases de nivel o un fantasma te la quite", 4500);
+                        mostrarMensaje("Vida: Añade una vida hasta que un fantasma te la quite", 3500);
                     });   
                     ejecutarConRetraso(17500, ()->{
                         mostrarMensaje("Velocidad: Aumenta tu velocidad por 5 segundos", 3500);
                     });                    
                     ejecutarConRetraso(22500, ()->{                      
-                    mostrarMensaje("Al repetir una habilidad temporal, su duración se reinicia", 5000);
+                    mostrarMensaje("Al repetir una habilidad temporal, su duración se reinicia", 3500);
                     });                  
                     ejecutarConRetraso(31500, ()->{
                         etapaTutorial = 4;

@@ -138,7 +138,7 @@ public class GameController {
         // seteamos objetos en el mapa
         this.obj = new ArrayList<>();
 
-        this.mensaje = new Message(obj);
+        this.mensaje = new Message();
         
         this.cChecker = new ColisionChecker(this);
 
@@ -161,7 +161,6 @@ public class GameController {
         // es un consumidor que le setea el status al panel según el paso de carga en el que 
         // está el worker
         this.nivelWorker = nivelManager.crearSiguienteNivelWorker(this);
-        jugador.resetVida();
         if (this.nivelWorker != null) {
             // le pasamos el worker para que actualice la pantalla de carga
             this.huboCambioNivel = true;
@@ -177,7 +176,7 @@ public class GameController {
 
         }
         else {
-            System.out.println("GANASTE !!! (acá iría la pantalla de ganar)"); //TODO: pantalla de ganar
+            System.out.println("GANASTE !!! (acá iría la pantalla de ganar)"); 
             keyH.resetearTeclas();
             sonidoPasos.pararPasos();
             //se detiene el juego 
@@ -353,7 +352,7 @@ public class GameController {
 
     // recibe parametro porque no tenemos 1 solo fantasma en el juego, tenemos una lista de fantasmas,
     // entonces tiene que recibir cual fantasma actualizar
-    public void actualizarMovimientoFantasma(Ghost f) {
+    public void actualizarMovimiento(Ghost f) {
 
         int nuevaX = f.getMundoX();
         int nuevaY = f.getMundoY();
@@ -511,7 +510,7 @@ public class GameController {
         mensaje.updateMsj();
 
         for (Ghost f: fantasmas) {
-            actualizarMovimientoFantasma(f);
+            actualizarMovimiento(f);
             verificarColisionJugadorFantasma(f);
         }
     }
@@ -526,132 +525,6 @@ public class GameController {
         if (cp.musicaActiva()) {
             juegomusica.pausar();
         }
-    }
-
-
-
-    public List<Ghost> getFantasmas() {
-        return this.fantasmas;
-    }
-
-
-    public int getAnchoNivel () {
-        return nivel.getAncho();
-    }
-
-    
-    public int getAltoNivel () {
-        return nivel.getAlto();
-    }
-
-    public BufferedImage getSprite (int fila, int columna) {
-        return nivel.getTile(columna, fila).getSprite();
-    }
-
-    public int getAnchoBloque () {
-        return this.anchoBloque;
-    }
-
-    public int getAltoBloque () {
-        return this.altoBloque;
-    }
-
-    public Boolean getIsVisible() {
-        return mensaje.getIsVisibleMsj();
-    }
-
-    public String getTexto() {
-        return mensaje.getTextoMsj();
-    }
-
-    public Nivel getNivel () {
-        return this.nivel;
-    }
-
-    public boolean getLuzActiva() {  
-        return this.luzActiva;
-    }
-
-    public void setLuzActiva (boolean estado) {  
-        this.luzActiva = estado;
-    }
-    
-    public void setObjeto (Objeto objeto) {
-        this.obj.add(objeto);
-    }
-
-    public ArrayList<Objeto> getObjArray () {
-        return this.obj;
-    }
-
-    public void setupJuego () {
-        aSetter.setearObjetosIniciales();
-    }
-
-    public String getDireccionJugador () {
-        return jugador.getDireccion();
-    }
-
-    public String getUltimaDireccionJugador () {
-        return jugador.getUltimaDireccion();
-    }
-
-    public int getSpriteNumJugador () {
-        return jugador.getSpriteNum();
-    }
-
-    public int getScreenXJugador () {
-        return jugador.getScreenX();
-    }
-
-    public int getScreenYJugador () {
-        return jugador.getScreenY();
-    }
-
-    public int getMundoXJugador () {
-        return jugador.getMundoX();
-    }
-
-    public int getMundoYJugador () {
-        return jugador.getMundoY();
-    }
-
-    public int getAnchoJugador () {
-        return jugador.getAnchoPersonaje();
-    }
-
-    public int getAltoJugador () {
-        return jugador.getAltoPersonaje();
-    }
-
-
-    public void mostrarMensaje(String texto, int milisegundos){ 
-        mensaje.mostrar(texto, milisegundos);
-    } 
-
-    public Player getJugador(){
-    return this.jugador;
-    }
-
-    public int vidaActual(){
-        return jugador.getVida();
-    }
-
-    public int vidaTope(){
-        return jugador.getVidaTope();
-    }
-
-    public int getCamX () {
-        return jugador.getMundoX() - jugador.getScreenX();
-    }
-
-    public int getCamY () {
-        return jugador.getMundoY() - jugador.getScreenY();
-    }
-
-    //metodo para cronometro
-    public Stopwatch getStopwatch() {
-    return this.stopwatch;
     }
 
     public void pausarJuego() {
@@ -835,5 +708,127 @@ public class GameController {
         return fantasmas.get(i).getAltoFantasma();
     }
 
+        public List<Ghost> getFantasmas() {
+        return this.fantasmas;
+    }
+
+
+    public int getAnchoNivel () {
+        return nivel.getAncho();
+    }
+
     
+    public int getAltoNivel () {
+        return nivel.getAlto();
+    }
+
+    public BufferedImage getSprite (int fila, int columna) {
+        return nivel.getTile(columna, fila).getSprite();
+    }
+
+    public int getAnchoBloque () {
+        return this.anchoBloque;
+    }
+
+    public int getAltoBloque () {
+        return this.altoBloque;
+    }
+
+    public Boolean getIsVisible() {
+        return mensaje.getIsVisibleMsj();
+    }
+
+    public String getTexto() {
+        return mensaje.getTextoMsj();
+    }
+
+    public Nivel getNivel () {
+        return this.nivel;
+    }
+
+    public boolean getLuzActiva() {  
+        return this.luzActiva;
+    }
+
+    public void setLuzActiva (boolean estado) {  
+        this.luzActiva = estado;
+    }
+    
+    public void setObjeto (Objeto objeto) {
+        this.obj.add(objeto);
+    }
+
+    public ArrayList<Objeto> getObjArray () {
+        return this.obj;
+    }
+
+    public void setupJuego () {
+        aSetter.setearObjetosIniciales();
+    }
+
+    public String getDireccionJugador () {
+        return jugador.getDireccion();
+    }
+
+    public String getUltimaDireccionJugador () {
+        return jugador.getUltimaDireccion();
+    }
+
+    public int getSpriteNumJugador () {
+        return jugador.getSpriteNum();
+    }
+
+    public int getScreenXJugador () {
+        return jugador.getScreenX();
+    }
+
+    public int getScreenYJugador () {
+        return jugador.getScreenY();
+    }
+
+    public int getMundoXJugador () {
+        return jugador.getMundoX();
+    }
+
+    public int getMundoYJugador () {
+        return jugador.getMundoY();
+    }
+
+    public int getAnchoJugador () {
+        return jugador.getAnchoPersonaje();
+    }
+
+    public int getAltoJugador () {
+        return jugador.getAltoPersonaje();
+    }
+
+
+    public void mostrarMensaje(String texto, int milisegundos){ 
+        mensaje.mostrar(texto, milisegundos);
+    } 
+
+    public Player getJugador(){
+    return this.jugador;
+    }
+
+    public int vidaActual(){
+        return jugador.getVida();
+    }
+
+    public int vidaTope(){
+        return jugador.getVidaTope();
+    }
+
+    public int getCamX () {
+        return jugador.getMundoX() - jugador.getScreenX();
+    }
+
+    public int getCamY () {
+        return jugador.getMundoY() - jugador.getScreenY();
+    }
+
+    //metodo para cronometro
+    public Stopwatch getStopwatch() {
+    return this.stopwatch;
+    }
 }

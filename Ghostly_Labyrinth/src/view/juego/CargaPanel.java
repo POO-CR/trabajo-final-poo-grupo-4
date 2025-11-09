@@ -76,8 +76,6 @@ public class CargaPanel extends JPanel {
         this.add(statusLabel, gbc);
     }
 
-
-    // ESTE SET STATUS ES EL QUE INVOCA EL CONSUMER STRING
     public void setStatus(String status) {
         SwingUtilities.invokeLater(() -> {
             statusLabel.setText(status);

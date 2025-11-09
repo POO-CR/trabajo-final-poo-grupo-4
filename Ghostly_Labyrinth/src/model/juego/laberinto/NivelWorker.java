@@ -3,19 +3,16 @@ package model.juego.laberinto;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 
 import javax.swing.SwingWorker;
 
 import controller.juego.GameController;
-import model.juego.tile.Tile;
 import model.juego.tile.TileManager;
 import model.juego.tile.TileSpriteSetter;
 
 // string para devolver mensajes de progreso
 public class NivelWorker extends SwingWorker<Nivel, String>{
 
-    ArrayList <Tile[][]> mapas = new ArrayList<>();
     private static record Dimension(int alto, int ancho) {}
     private static record Posicion(int x, int y) {}
     private Dimension dim;
@@ -94,7 +91,7 @@ public class NivelWorker extends SwingWorker<Nivel, String>{
                 // para agregar las posiciones de los fantasmas segun el nivelll
                 switch (nivelNumero) {
                     case -1 -> {
-                        nivel.agregarFantasma(11, 24);
+                        nivel.agregarFantasma(17, 24);
                         nivel.agregarFantasma(11, 17);
                         nivel.agregarFantasma(50, 5);
                         nivel.agregarFantasma(67, 12);

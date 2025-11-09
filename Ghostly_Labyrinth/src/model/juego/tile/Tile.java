@@ -27,7 +27,6 @@ public class Tile {
 
 
     private void generarSprite () {
-    //TODO: hacer un tileSize global al juego para no necesitar una instancia de laberinto
         sprite = ((BufferedImage)tileSet).getSubimage(
             ((tileIndex / (tileSet.getWidth(null) / 20))*20), 
             ((tileIndex % (tileSet.getWidth(null) / 20))*20), 

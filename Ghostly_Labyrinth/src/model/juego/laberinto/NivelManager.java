@@ -38,7 +38,7 @@ public class NivelManager {
 
             return new NivelWorker(nuevoNivel, gc);
         }
-        System.out.println("devolviendo null pq se hicieron los" + cantNivelesAJugar);
+        System.out.println("devolviendo null pq se hicieron los " + cantNivelesAJugar);
 
         return null;
     }

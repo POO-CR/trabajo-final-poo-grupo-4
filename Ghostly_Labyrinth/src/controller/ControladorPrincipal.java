@@ -27,7 +27,7 @@ public class ControladorPrincipal {
     public ControladorPrincipal (){
         framePrincipal = new FramePrincipal();
         this.recordDAO = new RecordDAOImpl();
-        mc = new MenuController(this, framePrincipal); //INFORMAR
+        mc = new MenuController(this, framePrincipal);  
         cfj = new ControladorFinJuego(framePrincipal.getPanelFinJuego(), this);
         framePrincipal.mostrarMenu();
         framePrincipal.setVisible(true);
@@ -38,7 +38,7 @@ public class ControladorPrincipal {
     }
 
     //Metodo para que el menu pueda controlar el audio
-    public void modificarEstadoMusica(){ //INFORMAR
+    public void modificarEstadoMusica(){  
         this.musicaactivada = !this.musicaactivada;
         if (mc != null){
             mc.cambiarEstadoMusica();
@@ -46,13 +46,13 @@ public class ControladorPrincipal {
     }
 
     public void pasarAJuego(){
-        gc = new GameController(this,framePrincipal); //INFORMAR
+        gc = new GameController(this,framePrincipal);  
         gc.iniciarJuego("usuario");
         //framePrincipal.mostrarJuego();
     }
 
     public void pasarATutorial(){
-        tutoC = new TutorialController(this,framePrincipal); //INFORMAR
+        tutoC = new TutorialController(this,framePrincipal);  
         tutoC.iniciarTutorial();
         // framePrincipal.mostrarJuego(new KeyHandler());
     }

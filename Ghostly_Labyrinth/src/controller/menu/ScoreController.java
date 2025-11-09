@@ -32,7 +32,7 @@ public class ScoreController {
             controladorPrincipal.pasarAMenu();
         });
 
-        if (!controladorPrincipal.musicaActiva()) { //INFORMAR
+        if (!controladorPrincipal.musicaActiva()) {  
             scoreMusic.pausar();
         }
     }

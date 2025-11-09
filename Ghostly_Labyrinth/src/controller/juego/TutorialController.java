@@ -10,7 +10,7 @@ import model.juego.objetos.Rapidez;
 import model.observadores.SoundEffect;
 import view.FramePrincipal;
 import view.juego.JuegoPanel;
-import controller.ControladorPrincipal; //INFORMAR
+import controller.ControladorPrincipal;  
 
 public class TutorialController extends GameController{
 
@@ -19,7 +19,7 @@ public class TutorialController extends GameController{
     private boolean tutorialcompleto =false;
     private SoundEffect visionLossSound;
     private FramePrincipal framePrincipal; 
-    private ControladorPrincipal controladorPrincipal; //INFORMAR
+    private ControladorPrincipal controladorPrincipal;  
 
     public TutorialController(ControladorPrincipal controladorPrincipal, FramePrincipal framePrincipal){
         super(controladorPrincipal, framePrincipal);
@@ -39,12 +39,15 @@ public class TutorialController extends GameController{
             case 0:
                 setLuzActiva(false);
                 mostrarMensaje("Para moverte utiliza las teclas WASD o las flechas", 3500);
+                juegoPanel.settutorialActivo(true);
                 etapaTutorial++;
+                
                 break;
 
             case 1:
                 if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
                     etapaTutorial++;
+                    juegoPanel.settutorialActivo(false);
                 }
                 break;
                 
@@ -164,5 +167,23 @@ public class TutorialController extends GameController{
         llave.setY(2 * getAltoBloque()); //Lo coloca en la fila 2
         setObjeto(llave);
 
+    }
+
+    @Override
+    public void reiniciarJuego(){
+        super.juegoPausado = false;
+        detenerGameLoop();
+        if (getStopwatch() != null){
+            getStopwatch().detener();
+            getStopwatch().reiniciar();
+        }
+        keyH.resetearTeclas();
+        sonidoPasos.pararPasos();
+        pausarMusica();
+        this.etapaTutorial = 0;
+        this.tutorialcompleto = false;
+        this.quieto = false;
+
+        iniciarTutorial();
     }
 }

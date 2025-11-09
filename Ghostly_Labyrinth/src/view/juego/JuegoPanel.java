@@ -22,6 +22,8 @@ import javax.imageio.ImageIO;
 import model.juego.laberinto.Nivel; // acá
 import javax.swing.*;
 import javax.tools.Tool;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 import controller.juego.GameController;
 
@@ -87,6 +89,13 @@ public class JuegoPanel extends JPanel implements Observador{
     private boolean pasoGolpe;
     private long ultimoGolpe;
 
+    //Para el gif del boton
+    private Timer tiempoTutorial;
+    private BufferedImage[] imagenWASD;
+    private int imagenTutotActual = 0;
+    private boolean tutorialActivo = false;
+
+
 
     public JuegoPanel () {
         
@@ -110,6 +119,19 @@ public class JuegoPanel extends JPanel implements Observador{
         cargarImagenVidaPerdida();
         cargarSpritesFantasma(); 
         crearBotonPausa();
+        cargarImagenTutorial();
+
+        //Timer para el gif del tutorial
+        tiempoTutorial = new Timer(500, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                imagenTutotActual++;
+                if (imagenTutotActual >= 3) {
+                    imagenTutotActual = 0;
+                }
+                repaint(); 
+            }
+        });
     }
 
     private void crearBotonPausa() {
@@ -185,8 +207,20 @@ public class JuegoPanel extends JPanel implements Observador{
         return imagenVidaPerdida;        
     }
 
-    public void cargarImagenLlave(){
+    // public void cargarImagenLlave(){
 
+    // }
+
+    private void cargarImagenTutorial() {
+        imagenWASD = new BufferedImage[3];
+        try {
+            imagenWASD[0] = ImageIO.read(getClass().getResourceAsStream("/assets/img/tutorial/wasd_0.png"));
+            imagenWASD[1] = ImageIO.read(getClass().getResourceAsStream("/assets/img/tutorial/wasd_1.png"));
+            imagenWASD[2] = ImageIO.read(getClass().getResourceAsStream("/assets/img/tutorial/wasd_2.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.print("Error al cargar las imágenes del tutorial.");
+        }
     }
 
     // -------- JUGADOR --------
@@ -295,7 +329,18 @@ public void paintVida(Graphics grafico, int vidaActual) {
                 }     
             }
         }
+    
+    public void reproducirgifTutorial(){
+        this.tutorialActivo = true;
+        this.imagenTutotActual =0;
+        this.tiempoTutorial.start();
+    }
 
+    public void detenergifTutorial(){
+        this.tutorialActivo = false;
+        this.tiempoTutorial.stop();
+        repaint(); 
+    }
 
     public void setRadioLuz(int radio){
         //inicializamos datos de la luz
@@ -336,6 +381,8 @@ public void paintVida(Graphics grafico, int vidaActual) {
     }
 
 
+
+
     @Override
     public void actualizar(String evento){
         if (evento.equals("GOLPE")){
@@ -348,6 +395,17 @@ public void paintVida(Graphics grafico, int vidaActual) {
         g2.setColor(new Color(100, 0, 20, 100));
         g2.fillRect(0, 0, getWidth(), getHeight());
         g2.dispose();
+    }
+
+    public void settutorialActivo(boolean estado){
+        this.tutorialActivo = estado;
+        if (estado){
+            this.imagenTutotActual =0;
+            this.tiempoTutorial.start();
+        } else {
+            this.tiempoTutorial.stop();
+            repaint();
+        }
     }
 
 
@@ -396,7 +454,7 @@ public void paintVida(Graphics grafico, int vidaActual) {
         g.drawImage(getImagenJugador(), controlador.getScreenXJugador(), controlador.getScreenYJugador(), controlador.getAnchoJugador(), controlador.getAltoJugador(), null); // dibuja el jugador en pantalla
 
         //Se dibuja la luz en el panel 
-        if (controlador.getLuzActiva()){ //Informar
+        if (controlador.getLuzActiva()){  
         paintLuz((Graphics2D) g);
         }
         
@@ -413,6 +471,12 @@ public void paintVida(Graphics grafico, int vidaActual) {
         //Se dibujan las vidas en el panel 
         paintVida(g,controlador.vidaActual());//SE MODIFICO 01:25
 
+        if (tutorialActivo) {
+            BufferedImage imagenActual = imagenWASD[imagenTutotActual];
+            int x = (getWidth() - (imagenActual.getWidth())/3) / 2;
+            int y = getHeight() - (imagenActual.getHeight()/3) - 150; 
+            g.drawImage(imagenActual, x, y, imagenActual.getWidth()/3, imagenActual.getHeight()/3, null);
+        }
 
 
         //para dibujar el cronometro tanto el estilo como la posicion

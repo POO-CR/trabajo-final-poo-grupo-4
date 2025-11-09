@@ -9,8 +9,8 @@ import controller.juego.TutorialController;
 import model.menu.Music;
 import view.FramePrincipal;
 import view.menu.MenuPanel;
-import java.awt.event.ComponentAdapter; //INFORMAR
-import java.awt.event.ComponentEvent; //INFORMAR
+import java.awt.event.ComponentAdapter;  
+import java.awt.event.ComponentEvent;  
 
 public class MenuController {
 
@@ -22,7 +22,7 @@ public class MenuController {
 
     private ControladorPrincipal controladorPrincipal;
     private FramePrincipal framePrincipal;
-    private boolean estadoMusica; //INFORMAR
+    private boolean estadoMusica;  
 
     public MenuController(ControladorPrincipal controladorPrincipal, FramePrincipal framePrincipal) {
         //this.model = new MenuModel();
@@ -32,7 +32,7 @@ public class MenuController {
         this.view = framePrincipal.getMenuPanel();
         this.actions();
         this.view.setVisible(true);
-        estadoMusica =controladorPrincipal.musicaActiva(); //INFORMAR
+        estadoMusica =controladorPrincipal.musicaActiva();  
         
         
         if (music == null) {
@@ -41,7 +41,7 @@ public class MenuController {
 
         iniciarMusica();
 
-        this.view.addComponentListener(new ComponentAdapter() { //INFORMAR componentAdapter es un conjunto de metodos vacios para escuchar eventos de componentes
+        this.view.addComponentListener(new ComponentAdapter() {   //componentAdapter es un conjunto de metodos vacios para escuchar eventos de componentes
             @Override
             public void componentShown(ComponentEvent e) { //Este listener actua cuando ocurre en evento de mostrar el panel
                 iniciarMusica();
@@ -118,12 +118,12 @@ public class MenuController {
     }
 
     public void iniciarMusica() {
-        if (music != null && !music.isReproduciendo() && estadoMusica) { //INFORMAR
+        if (music != null && !music.isReproduciendo() && estadoMusica) {  
             music.reproducirLoop();
         }
     }
 
-    public void cambiarEstadoMusica() { //INFORMAR
+    public void cambiarEstadoMusica() {  
         estadoMusica = !estadoMusica;
         if (estadoMusica) {
             music.reproducirLoop();

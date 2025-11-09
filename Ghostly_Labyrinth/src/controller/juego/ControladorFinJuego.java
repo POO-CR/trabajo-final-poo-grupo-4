@@ -5,6 +5,7 @@ import model.menu.RegisterStartmodel;
 import view.juego.PanelFinJuego;
 import java.awt.event.ActionEvent;
 
+
 public class ControladorFinJuego {
     private PanelFinJuego view;
     private ControladorPrincipal controladorPrincipal;

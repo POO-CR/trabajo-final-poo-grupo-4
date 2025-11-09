@@ -9,6 +9,8 @@ import controller.juego.TutorialController;
 import model.menu.Music;
 import view.FramePrincipal;
 import view.menu.MenuPanel;
+import java.awt.event.ComponentAdapter;  
+import java.awt.event.ComponentEvent;  
 
 public class MenuController {
 
@@ -20,22 +22,31 @@ public class MenuController {
 
     private ControladorPrincipal controladorPrincipal;
     private FramePrincipal framePrincipal;
+    private boolean estadoMusica;  
 
     public MenuController(ControladorPrincipal controladorPrincipal, FramePrincipal framePrincipal) {
         //this.model = new MenuModel();
         System.out.println("arrancó mc");
+        this.controladorPrincipal = controladorPrincipal;
         this.framePrincipal = framePrincipal;
         this.view = framePrincipal.getMenuPanel();
         this.actions();
         this.view.setVisible(true);
-        this.controladorPrincipal = controladorPrincipal;
+        estadoMusica =controladorPrincipal.musicaActiva();  
+        
         
         if (music == null) {
             music = new Music("/assets/music/FireboyAndWatergirlSoundtrack.wav");
         }
-        if (!music.isReproduciendo()) {
-            music.reproducirLoop();
-        }
+
+        iniciarMusica();
+
+        this.view.addComponentListener(new ComponentAdapter() {   //componentAdapter es un conjunto de metodos vacios para escuchar eventos de componentes
+            @Override
+            public void componentShown(ComponentEvent e) { //Este listener actua cuando ocurre en evento de mostrar el panel
+                iniciarMusica();
+            }
+        });
     }
 
     private void actions() {
@@ -86,18 +97,15 @@ public class MenuController {
 
         // boton Sonido off/on
         this.view.getBttnSonido().addActionListener((ActionEvent e) -> {
-            if (sonidoActivado) {
-                // Apagamos musica y sonidos
-                music.pausar();
-                sonidoActivado = false;
+            controladorPrincipal.modificarEstadoMusica();
+            estadoMusica = controladorPrincipal.musicaActiva();
+            if (!estadoMusica) {
                 view.getBttnSonido().setIcon(view.getMusicOffIcon());
                 view.getBttnSonido().setText("");
                 
                 
             } else {
                 // La prendemos
-                music.reproducirLoop();
-                sonidoActivado = true;
                 view.getBttnSonido().setIcon(view.getMusicOnIcon());
                 view.getBttnSonido().setText("");
                 
@@ -110,8 +118,17 @@ public class MenuController {
     }
 
     public void iniciarMusica() {
-        if (music != null && !music.isReproduciendo() && sonidoActivado) {
+        if (music != null && !music.isReproduciendo() && estadoMusica) {  
             music.reproducirLoop();
+        }
+    }
+
+    public void cambiarEstadoMusica() {  
+        estadoMusica = !estadoMusica;
+        if (estadoMusica) {
+            music.reproducirLoop();
+        } else {
+            music.pausar();
         }
     }
 }

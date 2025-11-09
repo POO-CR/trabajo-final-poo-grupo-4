@@ -24,6 +24,12 @@ public class PanelFinJuego extends JPanel {
     private final int Alto_Derrota = 60;
     private final int Ancho_Victoria = 200;
     private final int Alto_Victoria = 60;
+    private final int Ancho_Resultado = 450;
+    private final int Alto_Resultado = 60;
+    private final int Ancho_Usuario = 400;
+    private final int Alto_Usuario = 60;
+
+    private final double DESIGN_HEIGHT = 1080.0; // Altura de diseño de pantalla del programador
 
     public PanelFinJuego(){
         setOpaque(false);
@@ -69,7 +75,7 @@ public class PanelFinJuego extends JPanel {
         Usuario.setBackground(Color.BLACK); //Fondo del campo de texto
         Usuario.setForeground(Color.WHITE);//Color del texto
         Usuario.setFont(fuenteTerror);
-        Usuario.setBounds(565, 625 ,400, 60); 
+        // Usuario.setBounds(565, 625 ,400, 60); 
         addPlaceholder(Usuario,"Ingresa tu apodo");
         add(Usuario);
 
@@ -82,10 +88,10 @@ public class PanelFinJuego extends JPanel {
             ImageIcon nuevoHoverIconCrear = new ImageIcon(newHoverImg); 
             
             Crear = new JButton(nuevoiconcreate);
-            Crear.setRolloverIcon(nuevoHoverIconCrear);
-            Crear.setContentAreaFilled(false);
-            Crear.setBorderPainted(false);
-            Crear.setBounds(558, 715, 200, 60);
+            // Crear.setRolloverIcon(nuevoHoverIconCrear);
+            // Crear.setContentAreaFilled(false);
+            // Crear.setBorderPainted(false);
+            // Crear.setBounds(558, 715, 200, 60);
             add(Crear);
 
 
@@ -98,11 +104,11 @@ public class PanelFinJuego extends JPanel {
         ImageIcon nuevoHoverIconReiniciar = new ImageIcon(newHoverImgreiniciar); 
 
         botonReiniciar = new JButton(nuevoiconcreateReiniciar);
-        botonReiniciar.setRolloverIcon(nuevoHoverIconReiniciar);
-        botonReiniciar.setContentAreaFilled(false);
-        botonReiniciar.setBorderPainted(false);
+        // botonReiniciar.setRolloverIcon(nuevoHoverIconReiniciar);
+        // botonReiniciar.setContentAreaFilled(false);
+        // botonReiniciar.setBorderPainted(false);
 
-        botonReiniciar.setBounds(640, 635, Ancho__Derrota, Alto_Derrota);
+        // botonReiniciar.setBounds(640, 635, Ancho__Derrota, Alto_Derrota);
         this.add(botonReiniciar);     
 
 
@@ -115,9 +121,9 @@ public class PanelFinJuego extends JPanel {
             ImageIcon nuevoHoverIconVolver = new ImageIcon(newHoverImgvolver); 
 
             Volver = new JButton(nuevoiconvolver);
-            Volver.setRolloverIcon(nuevoHoverIconVolver);
-            Volver.setContentAreaFilled(false);
-            Volver.setBorderPainted(false);
+            // Volver.setRolloverIcon(nuevoHoverIconVolver);
+            // Volver.setContentAreaFilled(false);
+            // Volver.setBorderPainted(false);
             add(Volver); 
 
             //Se ocultan todos los botones y el JLabel 
@@ -129,25 +135,47 @@ public class PanelFinJuego extends JPanel {
         }   
 
         public void mostrarFin(TipoFin tipo){ //Segun como haya terminado el juego, se mostrara la pantalla correspondiente
+            int actualHeight = getHeight();
+            int actualWidth = getWidth();
+
+            int centroX = actualWidth / 2;
+            double scaleY = actualHeight / DESIGN_HEIGHT;
+
             if (tipo == TipoFin.Victoria){
                 fondoActual = fondoVictoria;
+
+                Resultado.setBounds( 
+                    centroX - (Ancho_Resultado / 2), (int)(700 * scaleY),  
+                    Ancho_Resultado, Alto_Resultado 
+                );
+                Usuario.setBounds( centroX - (Ancho_Usuario / 2), (int)(815 * scaleY), Ancho_Usuario, Alto_Usuario );
+
+                configurarBoton(Crear, "/assets/img/SaveButton.png", "/assets/img/SaveButtonHover.png", Ancho_Victoria, Alto_Victoria);
+                Crear.setBounds( centroX - Ancho_Victoria - 10, (int)(905 * scaleY), Ancho_Victoria, Alto_Victoria );
+
+                configurarBoton(Volver, "/assets/img/BackButton_green.png", "/assets/img/BackButtonHover_green.png", Ancho_Victoria, Alto_Victoria);
+                Volver.setBounds( centroX + 10, (int)(905 * scaleY), Ancho_Victoria, Alto_Victoria );
+
                 Resultado.setVisible(true);
                 Usuario.setVisible(true);
                 Crear.setVisible(true);
-
-                configurarBoton(Volver, "/assets/img/BackButton_green.png", "/assets/img/BackButtonHover_green.png", Ancho_Victoria, Alto_Victoria); 
-                Volver.setBounds(772,715, Ancho_Victoria, Alto_Victoria);
                 Volver.setVisible(true);
+                botonReiniciar.setVisible(false);
                 Usuario.setText("Ingresa tu apodo");
                 Resultado.setText("");
-                botonReiniciar.setVisible(false);
+
             } else {
                 fondoActual = FondoDerrota;
+
+                configurarBoton(botonReiniciar, "/assets/img/ReiniciarPartida.png", "/assets/img/ReiniciarPartidaHover.png", Ancho__Derrota, Alto_Derrota);
+                botonReiniciar.setBounds(centroX - (Ancho__Derrota / 2), (int) (785 * scaleY),Ancho__Derrota, Alto_Derrota );
+
+                configurarBoton(Volver, "/assets/img/VolverAlMenu.png", "/assets/img/VolverAlMenuHover.png", Ancho__Derrota, Alto_Derrota);
+                Volver.setBounds(centroX - (Ancho__Derrota / 2), (int)(900 * scaleY), Ancho__Derrota, Alto_Derrota);
+
                 Resultado.setVisible(false);
                 Usuario.setVisible(false);
                 Crear.setVisible(false);
-                configurarBoton(Volver, "/assets/img/VolverAlMenu.png", "/assets/img/VolverAlMenuHover.png", Ancho__Derrota, Alto_Derrota);
-                Volver.setBounds(640,735,Ancho__Derrota,Alto_Derrota);
                 Volver.setVisible(true);
                 botonReiniciar.setVisible(true);
             }
@@ -222,6 +250,7 @@ public class PanelFinJuego extends JPanel {
         Resultado.setText(msg);
         Resultado.setForeground(Color.RED);
     }
+
     
 
 }

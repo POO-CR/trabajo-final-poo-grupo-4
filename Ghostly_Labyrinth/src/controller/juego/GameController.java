@@ -11,6 +11,7 @@ import java.util.Random;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
 
+import controller.ControladorPrincipal;
 import model.juego.AssetSetter;
 import model.juego.ColisionChecker;
 import model.juego.KeyHandler;
@@ -20,19 +21,24 @@ import model.juego.entidades.*;
 import model.juego.laberinto.*;
 import model.juego.objetos.*;
 import model.juego.objetos.efectos.PowerUpEffect;
-
+import model.menu.Music;
+import model.menu.RegisterStartmodel;
 
 import model.observadores.SonidoGolpe;
 import model.observadores.SonidoObjeto;
 import model.observadores.SonidoPasos;
-
+import model.observadores.SoundEffect;
+import model.observadores.Observador;
+import model.observadores.ObservadorPerder;
 import view.juego.JuegoPausa;
 import view.FramePrincipal;
 import view.juego.CargaPanel;
 import view.juego.JuegoPanel;
 import model.dao.RecordDAO;
 import model.dao.RecordDAOImpl;
-
+import view.juego.PanelFinJuego;
+import controller.ControladorPrincipal;  
+import model.menu.Music;  
 
 
 //public class GameController implements Runnable{ (VIEJO)
@@ -46,22 +52,25 @@ public class GameController {
     private Message mensaje;
 
     protected KeyHandler keyH;
-    private AssetSetter aSetter;
+    protected AssetSetter aSetter;
     private ColisionChecker cChecker;
     private String tituloJuego;
     protected NivelManager nivelManager;
     private Nivel nivel;
     protected Boolean inicioJuego;
 
-    private boolean juegoPausado = false; //para saber el estado del juego
+    protected boolean juegoPausado = false; //para saber el estado del juego
     private List<Ghost> fantasmas = new ArrayList<>(); // lista de los fantasmas, se recibe del nivel
 
     private Timer gameTimer; // NUEVO
+    private Music juegomusica;
 
     private ArrayList<Objeto> obj;
 
     //Thread gameThread; (VIEJO)
     private Stopwatch stopwatch;
+
+    private ControladorPrincipal cp;  
 
     //valores iniciales
     private final int originalTileSize = 20; // tamaño standard de tiles, dijimos de cambiarlo a 32x32
@@ -80,20 +89,22 @@ public class GameController {
     private Boolean huboCambioNivel = false;
     private Boolean cambioLuz = false;
     private int aumentoLuz = 0;
+    private boolean luzActiva = true;  
 
     protected NivelWorker nivelWorker;
 
-    private JuegoPanel juegoPanel;
+    protected JuegoPanel juegoPanel;
     private FramePrincipal framePrincipal;
     private CargaPanel cargaPanel;
-    private SonidoPasos sonidoPasos;
+    protected SonidoPasos sonidoPasos;
+    private SoundEffect sonidoGanar;
 
-    public GameController(FramePrincipal framePrincipal) {
+    public GameController(ControladorPrincipal controladorPrincipal, FramePrincipal framePrincipal) {
         System.out.println("se creo gamecontroller");
 
         this.recordDAO = new RecordDAOImpl();
 
-
+        this.cp = controladorPrincipal;  
         this.framePrincipal = framePrincipal;
         this.juegoPanel = framePrincipal.getJuegoPanel();
         this.jugador = new Player(this);
@@ -105,7 +116,8 @@ public class GameController {
 
         this.tituloJuego = "Ghostly Labyrinth";
 
-        // obtener tamaño pantalla
+    
+        this.juegomusica = new Music("/assets/music/Sonido_juego.wav");  
 
         
 
@@ -120,7 +132,7 @@ public class GameController {
 
         ObservadorPerder observadorPerder = new ObservadorPerder(this);
         jugador.registrarObservador(observadorPerder);
-
+        this.sonidoGanar = new SoundEffect("/assets/music/gano.wav");
         //this.fantasma = new Ghost(this, 100, 100);
         
         // seteamos objetos en el mapa
@@ -132,6 +144,7 @@ public class GameController {
 
         this.keyH = new KeyHandler();
         framePrincipal.getJuegoPanel().getBtnPausa().addActionListener(e -> pausarJuego());
+        iniciarMusica();
 
         
         // Esto se ejecuta cada segundo sin frenar el juego
@@ -143,6 +156,7 @@ public class GameController {
         System.out.println("llamando a cambiarNivel");
         // detenerGameLoop(); //por alguna razón con el detener e iniciar va más rápido el personaje (capaz algo de las actualizaciones por segundo?)
         keyH.resetearTeclas();
+        sonidoPasos.pararPasos();
         // para pasar la etiqueta de estado al panel
         // es un consumidor que le setea el status al panel según el paso de carga en el que 
         // está el worker
@@ -165,13 +179,14 @@ public class GameController {
         else {
             System.out.println("GANASTE !!! (acá iría la pantalla de ganar)"); //TODO: pantalla de ganar
             keyH.resetearTeclas();
-            
             sonidoPasos.pararPasos();
             //se detiene el juego 
             detenerGameLoop();
             if (stopwatch != null) {
                 stopwatch.detener();
+                pausarMusica();  
             }
+            sonidoGanar.play();
 
             framePrincipal.mostrarFinJuego(view.juego.PanelFinJuego.TipoFin.Victoria);
         }
@@ -247,6 +262,7 @@ public class GameController {
         }
         framePrincipal.mostrarJuego(keyH);
         stopwatch.iniciar();
+        iniciarMusica();  
         
     }
 
@@ -500,6 +516,20 @@ public class GameController {
         }
     }
 
+    public void iniciarMusica(){   
+     if (cp.musicaActiva()) {
+            juegomusica.reproducirLoop();
+        }
+    }
+
+    public void pausarMusica(){   
+        if (cp.musicaActiva()) {
+            juegomusica.pausar();
+        }
+    }
+
+
+
     public List<Ghost> getFantasmas() {
         return this.fantasmas;
     }
@@ -536,6 +566,14 @@ public class GameController {
 
     public Nivel getNivel () {
         return this.nivel;
+    }
+
+    public boolean getLuzActiva() {  
+        return this.luzActiva;
+    }
+
+    public void setLuzActiva (boolean estado) {  
+        this.luzActiva = estado;
     }
     
     public void setObjeto (Objeto objeto) {
@@ -617,10 +655,12 @@ public class GameController {
     }
 
     public void pausarJuego() {
+        keyH.resetearTeclas();
+        sonidoPasos.pararPasos();
+        if (juegoPausado) return; 
         juegoPausado = true;
         detenerGameLoop();
         if (stopwatch != null) stopwatch.detener();
-
         // Mostrar ventana de pausa
         mostrarDialogoPausa();
     }
@@ -641,11 +681,12 @@ public class GameController {
         pausa.getBtnReiniciar().addActionListener(e -> {
         pausa.dispose(); // cierra el dialogo 
         reiniciarJuego();
+        pausarMusica();
         if (pausa != null) pausa.dispose(); // se reinicia todo el estado del juego
         });
 
         // cuando se presiona salir vuelve al menu principal
-        pausa.getbtnSalir().addActionListener(e -> {pausa.dispose(); salirAlMenuPrincipal(); if (pausa != null) pausa.dispose();});
+        pausa.getbtnSalir().addActionListener(e -> {pausa.dispose(); salirAlMenuPrincipal(); pausarMusica(); if (pausa != null) pausa.dispose();});
 
         // se muestra la ventana de pausa y se bloquea hasta que se cierre
         pausa.setVisible(true); 
@@ -689,8 +730,10 @@ public class GameController {
         if (stopwatch != null) {
             stopwatch.reiniciar();
             stopwatch.detener();
+            pausarMusica();  
         }
 
+        keyH.resetearTeclas();
         // Reiniciar nivel y objetos
         nivelManager.reiniciar(); // se vacia y vuelve a generar los niveles disponibles
 
@@ -714,7 +757,6 @@ public class GameController {
         jugador.setDireccion("down"); //direccion inicial
         jugador.setUltimaDireccion("down");
 
-        keyH.resetearTeclas();
         juegoPanel.addKeyListener(keyH); //se vuelve a escuchar el teclado
 
         // Reinicia loop y cronometro
@@ -731,7 +773,8 @@ public class GameController {
         if (gameTimer != null) gameTimer.stop();
         if (stopwatch != null) stopwatch.detener();
 
-
+        keyH.resetearTeclas();
+        sonidoPasos.pararPasos();
         // se vuelve a abrir el menu principal
         framePrincipal.mostrarMenu();
     
@@ -754,11 +797,13 @@ public class GameController {
 
     
     public void mostrarDerrota(){ //Finaliza el juego y muestra la pantalla de derrota
-        keyH.resetearTeclas();        
+        keyH.resetearTeclas();    
+        sonidoPasos.pararPasos();    
             sonidoPasos.pararPasos(); 
             detenerGameLoop();
             if (stopwatch != null) {
                 stopwatch.detener();
+                pausarMusica();
             }
             framePrincipal.mostrarFinJuego(view.juego.PanelFinJuego.TipoFin.Derrota);
     }

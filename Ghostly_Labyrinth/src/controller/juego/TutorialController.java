@@ -26,6 +26,7 @@ public class TutorialController extends GameController{
         this.framePrincipal = framePrincipal;
         this.controladorPrincipal = controladorPrincipal;
         this.visionLossSound = new SoundEffect("/assets/music/Vision_perdida.wav");
+        
     }
      private void ejecutarConRetraso(int delayMillis, Runnable accion) { //Metodo para generar Delay en el tutorial
         Timer timer = new Timer(delayMillis, e -> accion.run());
@@ -131,7 +132,7 @@ public class TutorialController extends GameController{
     public void iniciarTutorial() { //Metodo para que se inicie el nivel del tutorial
         int nivelTutorial = -1;
         JuegoPanel jp = framePrincipal.getJuegoPanel();
-        nivelWorker = new NivelWorker(nivelTutorial, this);
+        nivelWorker = nivelManager.crearSiguienteNivelWorker(nivelTutorial, this);
         if (nivelWorker != null) {
             // le pasamos el worker para que actualice la pantalla de carga
             System.out.println("poniendo panel de carga");
@@ -183,7 +184,8 @@ public class TutorialController extends GameController{
         this.etapaTutorial = 0;
         this.tutorialcompleto = false;
         this.quieto = false;
-
+        juegoPanel.detenergifTutorial();
         iniciarTutorial();
+        
     }
 }

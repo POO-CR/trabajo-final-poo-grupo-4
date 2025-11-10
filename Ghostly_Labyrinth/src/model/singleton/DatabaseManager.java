@@ -43,6 +43,7 @@ public class DatabaseManager {
         try {
         // Verificación de conexión: Si es null O si está cerrada
         if (conexion == null || conexion.isClosed()) { 
+            conexion = DriverManager.getConnection(URL, USER, PASSWORD);
             System.out.println("DEBUG: Reconexión exitosa a la BD.");
         }
     } catch (SQLException e) {

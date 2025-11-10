@@ -338,6 +338,9 @@ public void paintVida(Graphics grafico, int vidaActual) {
     }
 
     public void detenergifTutorial(){
+        if (this.tiempoTutorial == null) {
+            return;
+        }
         this.tutorialActivo = false;
         this.tiempoTutorial.stop();
         repaint(); 

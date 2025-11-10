@@ -25,7 +25,7 @@ public class MenuPanel extends JPanel {
     private JLabel lblLogo;
 
     // lista por si despues queremos manipular los botones mediante base de datos
-    private ArrayList<JButton> buttons = new ArrayList<>();
+    //private ArrayList<JButton> buttons = new ArrayList<>();
 
     public MenuPanel() {
 
@@ -106,7 +106,7 @@ public class MenuPanel extends JPanel {
         bttnSonido.setRolloverIcon(musicOnHover);
 
         // version del juego
-        JLabel version = new JLabel("Version: 0.0.4");
+        JLabel version = new JLabel("Version: 1.0.0");
         version.setForeground(Color.white);
         version.setFont(new Font("Calibri", Font.BOLD, 18));
 
@@ -171,11 +171,11 @@ public class MenuPanel extends JPanel {
         background.setOpaque(true);  // el fondo pinta
         GridBagConstraints gb = new GridBagConstraints();
         // gridbagconstraints para centrar el main panel dentro del background
-        gb.gridx = 0;
+        gb.gridx = 0; 
         gb.gridy = 0;
-        gb.weightx = 1.0;
-        gb.fill = GridBagConstraints.BOTH;
-        gb.weighty = 1.0;
+        gb.weightx = 1.0; // para centrar horizontalmente
+        gb.fill = GridBagConstraints.BOTH; // ocupA todo el espacio
+        gb.weighty = 1.0; // para centrar verticalmente
         gb.anchor = GridBagConstraints.CENTER;
         
         background.add(main, gb);
@@ -204,9 +204,9 @@ public class MenuPanel extends JPanel {
 
     // getters para acceder a los botones
 
-    public ArrayList<JButton> getButtons() { 
-        return this.buttons; 
-    }
+    //public ArrayList<JButton> getButtons() { 
+      //  return this.buttons; 
+    //}
 
     public JButton getBttnJugar() { 
         return this.bttnJugar; 

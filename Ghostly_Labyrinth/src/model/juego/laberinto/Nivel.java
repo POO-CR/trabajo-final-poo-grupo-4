@@ -7,7 +7,7 @@ import model.juego.tile.*;
 
 public class Nivel {
 
-    Tile [][] matBaldosas;
+    protected Tile [][] matBaldosas;
     private static record Dimension(int alto, int ancho){}
     private static record Posicion(int x, int y){}
     Dimension dim;

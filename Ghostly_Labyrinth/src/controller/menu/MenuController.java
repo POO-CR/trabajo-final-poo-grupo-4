@@ -49,6 +49,7 @@ public class MenuController {
         });
     }
 
+    
     private void actions() {
 
         // boton Jugar

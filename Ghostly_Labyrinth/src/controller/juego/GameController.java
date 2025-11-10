@@ -201,7 +201,7 @@ public class GameController {
         //CargaPanel cargaPanel = juegoView.getPanelCarga();
         
         nivelWorker.addPropertyChangeListener(evt -> { // escuchamos cuando cambia la propiedad del worker
-            switch (evt.getPropertyName()) {
+            switch (evt.getPropertyName()) {  
                 case "progress" -> {
                     int progress = (Integer) evt.getNewValue();
                     // Actualizamos la barra de progreso
@@ -272,6 +272,7 @@ public class GameController {
         int nuevaY = jugador.getMundoY();
         int movimiento = jugador.getMovimiento();
         
+        // determinar direccion segun teclas presionadas
         if (keyH.upPressed == true || keyH.downPressed == true ||
             keyH.leftPressed == true || keyH.rightPressed == true){
             
@@ -439,7 +440,7 @@ public class GameController {
     public void iniciarGameLoop() {
         int delay = 1000 / FPS; // 16 ms aprox
 
-        gameTimer = new Timer(delay, e -> {
+        gameTimer = new Timer(delay, e -> { // esto se ejecuta cada frame
             update();
             //juegoView.pintarPanel();
             juegoPanel.repaint();
@@ -642,6 +643,7 @@ public class GameController {
         // metodo que vuelve al menu principal desde el juego
         public void salirAlMenuPrincipal() {
 
+            juegoPanel.detenergifTutorial();
         // se detiene el loop del juego y cronometro
         if (gameTimer != null) gameTimer.stop();
         if (stopwatch != null) stopwatch.detener();

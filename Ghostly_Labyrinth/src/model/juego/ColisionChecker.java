@@ -20,6 +20,7 @@ public class ColisionChecker {
 
     public void checkearTile(Entity entidad) {
         this.nivel = gc.getNivel();
+
         // calcula la posición de las esquinas del rectángulo de colisión
         int entidadLeftX = entidad.getMundoX() + entidad.getAreaColisionDefaultX();
         int entidadRightX = entidad.getMundoX() + entidad.getAreaColisionDefaultX() + entidad.getAnchoColision();
@@ -27,6 +28,7 @@ public class ColisionChecker {
         int entidadBottomY = entidad.getMundoY() + entidad.getAreaColisionDefaultY() + entidad.getAltoColision();
 
         // dividimos los valores por el tamaño del tile para obtener las coordenadas en fila y columna
+        // EJEMPLO: si el personaje esta en x=48 y el tile es de 20, entonces 48/20=2.4 -> fila 2 (ya que la fila 0 es de 0 a 19, fila 1 de 20 a 39, fila 2 de 40 a 59)
         int entidadColumnaIzquierda = entidadLeftX / gc.getAnchoBloque();
         int entidadColumnaDerecha = entidadRightX / gc.getAnchoBloque();
         int entidadFilaSuperior = entidadTopY / gc.getAltoBloque();
@@ -48,6 +50,7 @@ public class ColisionChecker {
                 entidadFilaSuperior = (entidadTopY - entidad.getMovimiento()) / gc.getAltoBloque();
 
                 // hay solo 2 en frente del personaje, entonces guardamos esas dos tiles
+                // y vemos si alguna de las dos tiene colisión
                 tile1 = nivel.getTile(entidadFilaSuperior, entidadColumnaIzquierda);
                 tile2 = nivel.getTile(entidadFilaSuperior, entidadColumnaDerecha);
                 if (tile1.tieneAcceso(this, entidad) || tile2.tieneAcceso(this, entidad)){ 

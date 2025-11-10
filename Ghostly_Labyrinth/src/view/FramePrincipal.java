@@ -83,12 +83,12 @@ public class FramePrincipal extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(true);
-        //setVisible(true);
+        
         setContentPane(mainPanel);
 
         
         setVisible(true);
-        mostrarMenu();
+        //mostrarMenu();
     }
 
     

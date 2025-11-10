@@ -1,0 +1,20 @@
+{
+    "java.project.sourcePaths": [
+        "Ghostly_Labyrinth\\src"
+    ],
+    
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "c:\\Users\\Lucas\\Documents\\GitHub\\ultimomain\\trabajo-final-poo-grupo-4\\Ghostly_Labyrinth\\lib\\postgresql-42.7.8.jar",
+        
+        "C:\\Users\\belin\\Downloads\\postgresql-42.7.2.jar"
+    ],
+    "java.debug.settings.onBuildFailureProceed": true,
+
+    "java.project.resourceFilters": [
+        "!**/*.java", // Ignora los archivos .java
+        "!**/*.class" // Ignora los archivos .class
+    ],
+    "sarif-viewer.connectToGithubCodeScanning": "off"
+
+}

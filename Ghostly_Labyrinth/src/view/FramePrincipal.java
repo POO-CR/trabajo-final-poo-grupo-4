@@ -1,0 +1,178 @@
+package view;
+
+import javax.swing.*;
+
+import model.juego.KeyHandler;
+import view.juego.CargaPanel;
+import view.juego.JuegoPanel;
+import view.menu.MenuPanel;
+import view.menu.ScorePanel;
+import view.juego.PanelFinJuego;
+import java.awt.*;
+
+public class FramePrincipal extends JFrame {
+
+
+    /* MenuController menuController;
+    GameController gameController;
+    TutorialController tutorialController; */
+
+
+    // cardlayout que maneje todos los paneles
+    // PROPIEDADES de la ventana
+    // pantalla completa, setvisible, undecorated
+    // NO!! botones, pintar en pantalla NO!!
+    // getters setters de los paneles
+
+    private JPanel mainPanel;
+
+    private JuegoPanel juegoPanel;
+    private CargaPanel cargaPanel;
+    private MenuPanel menuPanel;
+    private ScorePanel scorePanel;
+    private PanelFinJuego panelFinJuego;
+
+    private CardLayout cardLayout;
+    
+    private static final String PANEL_CARGA = "carga";
+    private static final String PANEL_JUEGO = "juego";
+    private static final String PANEL_MENU = "menu";
+    private static final String PANEL_SCORE = "score";
+    private static final String PANEL_FIN = "fin";
+    
+        
+    public FramePrincipal (){
+
+        
+        // usamos el layout del MenuPanel como BorderLayout y agregamos el fondo dentro
+        //this.add(background);
+
+        this.cardLayout = new CardLayout();
+        mainPanel = new JPanel(cardLayout);
+
+        this.menuPanel = new MenuPanel();
+        this.cargaPanel = new CargaPanel();
+        this.juegoPanel = new JuegoPanel();
+        this.scorePanel = new ScorePanel();
+        this.panelFinJuego = new PanelFinJuego();
+
+
+        
+        mainPanel.add(menuPanel, PANEL_MENU);
+        mainPanel.add(cargaPanel, PANEL_CARGA);
+        mainPanel.add(juegoPanel, PANEL_JUEGO);
+        mainPanel.add(scorePanel, PANEL_SCORE);
+        mainPanel.add(panelFinJuego, PANEL_FIN);
+
+        mainPanel.setOpaque(true);
+
+        setTitle("Ghostly Labyrinth");
+         // quita la barra de titulo y bordes
+        setExtendedState(JFrame.MAXIMIZED_BOTH); // ocupa toda la pantalla
+        setUndecorated(true);
+
+
+        //icono de la ventana
+        try {
+            ImageIcon windowIcon = new ImageIcon(getClass().getResource("/assets/img/GhostlyMansionLogo.png"));
+            if (windowIcon.getImage() != null) this.setIconImage(windowIcon.getImage());
+        } catch (Exception e) {
+            System.err.println("Error al cargar el icono del juego: " + e.getMessage());
+        } 
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setResizable(true);
+        
+        setContentPane(mainPanel);
+
+        
+        setVisible(true);
+        //mostrarMenu();
+    }
+
+    
+
+        
+    public void mostrarMenu() {
+
+        System.out.println("mostrando menu");
+
+        cardLayout.show(mainPanel, PANEL_MENU);
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            mainPanel.validate();
+            mainPanel.repaint();
+            mainPanel.requestFocusInWindow();
+        });
+    }
+
+    public void mostrarJuego(KeyHandler keyH) {
+        cardLayout.show(mainPanel, PANEL_JUEGO);
+        añadirJuegoListener(keyH);
+
+        
+    }
+
+    public void mostrarScore() {
+        cardLayout.show(mainPanel, PANEL_SCORE);
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            mainPanel.validate();
+            mainPanel.repaint();
+            mainPanel.requestFocusInWindow();
+    });
+    }
+
+    public void añadirJuegoListener(KeyHandler keyH){
+        mainPanel.addKeyListener(keyH);
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            mainPanel.validate();
+            mainPanel.requestFocusInWindow();
+            repaint();
+        });
+    }
+
+    public void mostrarCarga() {
+        cardLayout.show(mainPanel, PANEL_CARGA);
+            javax.swing.SwingUtilities.invokeLater(() -> {
+            mainPanel.validate();
+            mainPanel.repaint();
+            mainPanel.requestFocusInWindow();
+        });
+    }
+
+    public void mostrarFinJuego(PanelFinJuego.TipoFin tipoFin) {
+        panelFinJuego.mostrarFin(tipoFin);
+        cardLayout.show(mainPanel, PANEL_FIN);
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            mainPanel.validate();
+            mainPanel.repaint();
+            mainPanel.requestFocusInWindow();
+        });
+    }
+
+    
+    public MenuPanel getMenuPanel(){
+        return this.menuPanel;
+    }
+
+    public JuegoPanel getJuegoPanel(){
+        return this.juegoPanel;
+    }
+
+    public CargaPanel getCargaPanel(){
+        return this.cargaPanel;
+    }
+
+    public ScorePanel getScorePanel() {
+        return this.scorePanel;
+    }
+
+    public PanelFinJuego getPanelFinJuego() {
+        return this.panelFinJuego;
+    }
+
+    
+    
+
+        
+}
